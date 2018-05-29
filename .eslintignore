@@ -1,0 +1,4 @@
+./node_modules/*
+
+# eslint-parallel pulls in all files, so exclude non-js
+**/*.{md,scss,json,snap,png,mp3,html}

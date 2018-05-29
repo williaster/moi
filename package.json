@@ -1,0 +1,41 @@
+{
+  "name": "moi",
+  "version": "0.0.0",
+  "description": "A site for moi.",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher Card Williams <williaster@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.0",
+    "eslint-plugin-react": "^7.5.0",
+    "prettier": "^1.9.2",
+    "next": "^6.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "dependencies": {
+    "@vx/responsive": "0.0.150",
+    "classnames": "^2.2.5",
+    "nprogress": "^0.2.0",
+    "prop-types": "^15.6.1",
+    "react-ga": "^2.4.1"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
+}
