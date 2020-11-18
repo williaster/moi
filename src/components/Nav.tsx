@@ -4,48 +4,36 @@ import NavItem from './NavItem';
 
 const Nav = () => (
   <div className="nav">
-    <div className="nav-inner wrapper">
-      <Link href="/">
-        <div className="logo">
-          christopher card williams
-        </div>
-      </Link>
+    <div className="nav-inner">
+      <NavItem href="/">christopher card williams</NavItem>
       <ul>
-        <NavItem href="/">
-          Home
-        </NavItem>
-        <NavItem href="/projects">Projects</NavItem>
-        <NavItem href="/about">About</NavItem>
+        <NavItem href="/projects">projects</NavItem>
+        <NavItem href="/about">about</NavItem>
       </ul>
     </div>
 
     <style jsx>{`
-      .logo {
-      }
-    
-      .nav-inner {
-        width: 95vw;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-      }
       .nav {
         display: flex;
         flex-direction: row;
         flex: 1;
         align-items: center;
         justify-content: center;
-        padding: 0.5rem 1rem;
         font-size: 16px;
         z-index: 3;
-        position: fixed;
+        position: sticky;
         top: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        background: #ffffff;
+        margin: 0 -16px;
+        background-color: #d5fdff99;
+        padding-left: 16px;
+      }
+      .nav-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: space-between;
+        justify-content: center;
+        flex-wrap: wrap;
       }
       ul {
         list-style-type: none;
@@ -54,7 +42,7 @@ const Nav = () => (
         flex-direction: row;
         padding: 0;
         margin: 0;
-        justify-content: flex-start;
+        justify-content: flex-end;
         align-items: center;
       }
       @media (max-width: 600px) {
@@ -63,8 +51,10 @@ const Nav = () => (
           padding-right: 1rem;
         }
 
-        .nav-inner {
-          width: 99vw;
+        ul {
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
         }
       }
     `}</style>

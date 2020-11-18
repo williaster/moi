@@ -26,11 +26,11 @@ const NavItem = ({ id, href, children, className, external }: NavItemProps) => (
     <style jsx>{`
       .nav-item a {
         display: inline-block;
-        padding: 10px;
+        padding: 12px 12px 12px 0;
         text-decoration: none;
-        color: #272727;
         font-weight: 400;
         font-size: 18px;
+        color: #ac73ff;
       }
 
       @media (max-width: 600px) {

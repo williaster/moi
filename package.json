@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "create-config": "nimbus create-config --silent",
+    "lint": "nimbus eslint",
+    "prettier": "nimbus prettier"
   },
   "author": "Christopher Card Williams <williaster@gmail.com>",
   "license": "MIT",

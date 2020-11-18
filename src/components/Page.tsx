@@ -1,7 +1,14 @@
 import React from 'react';
 import cx from 'classnames';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
 import Meta from './Meta';
 import Nav from './Nav';
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const Page = ({
   children,
@@ -18,23 +25,18 @@ const Page = ({
       <Nav />
     </div>
     <div className="page-content">{children}</div>
-    <style jsx>{`
+    <style jsx global>{`
       .main {
-        width: 95vw;
-        margin: 0 auto;
-        overflow-x: hidden;
+        width: 100%;
+        height: 100%;
+        padding: 0 24px;
       }
-      
+
       .page-content {
-        margin: 69px 0 40px;
-        color: #161616;
+        margin: 24px 0 40px;
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
-      }
-
-      .nav-container {
-        background: #ffffff;
       }
 
       /* loading progress bar styles */
@@ -43,27 +45,14 @@ const Page = ({
       }
 
       #nprogress .bar {
-        background: violet;
+        background: #ac73ff;
         position: fixed;
-        z-index: 1031;
+        z-index: 1001;
         top: 0;
         left: 0;
         width: 100%;
-        height: 2px;
+        height: 3px;
       }
-
-      #nprogress .peg {
-        display: block;
-        position: absolute;
-        right: 0px;
-        width: 100px;
-        height: 100%;
-        box-shadow: 0 0 10px purple, 0 0 5px purple;
-        opacity: 1;
-        transform: rotate(3deg) translate(0px, -4px);
-      }
-
-      
     `}</style>
   </div>
 );
