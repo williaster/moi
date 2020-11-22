@@ -24,7 +24,7 @@ const Nav = () => (
         position: sticky;
         top: 0;
         margin: 0 -16px;
-        background-color: #d5fdff99;
+        background-color: inherit;
         padding-left: 16px;
       }
       .nav-inner {

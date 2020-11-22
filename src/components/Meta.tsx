@@ -17,9 +17,9 @@ const Meta = ({ title = 'christopher card williams' }) => (
         overflow-x: hidden;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell',
           'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        background: #d5fdff;
+        background: #f0f5f9;
         display: flex;
-        color: #ac73ff;
+        color: #384259;
         padding: 0;
         margin: 0;
         font-size: 18px;
@@ -73,13 +73,13 @@ const Meta = ({ title = 'christopher card williams' }) => (
       }
 
       h2 {
-        font-size: 19px;
         margin-bottom: 0.2rem;
-        margin-top: 2rem;
+        margin-top: 0.5rem;
         display: block;
       }
 
       a {
+        color: #1e2022;
         font-weight: 400;
         text-decoration: none;
       }

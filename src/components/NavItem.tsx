@@ -30,7 +30,6 @@ const NavItem = ({ id, href, children, className, external }: NavItemProps) => (
         text-decoration: none;
         font-weight: 400;
         font-size: 18px;
-        color: #ac73ff;
       }
 
       @media (max-width: 600px) {
