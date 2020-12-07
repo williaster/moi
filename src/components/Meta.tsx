@@ -6,6 +6,7 @@ const Meta = ({ title = 'christopher card williams' }) => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Hind"></link>
       <title>{title}</title>
       <link rel="shortcut icon" type="image/png" href="static/favicon.png" />
     </Head>
@@ -15,8 +16,7 @@ const Meta = ({ title = 'christopher card williams' }) => (
         width: 100vw;
         height: 100%;
         overflow-x: hidden;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell',
-          'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        font-family: 'Hind', -apple-system, BlinkMacSystemFont, sans-serif;
         background: #f0f5f9;
         display: flex;
         color: #384259;
@@ -67,14 +67,17 @@ const Meta = ({ title = 'christopher card williams' }) => (
       }
 
       h1 {
-        font-size: 54px;
+        font-size: 3em;
+        line-height: 1em;
         display: block;
         margin-bottom: 3rem;
       }
 
       h2 {
+        font-size: 2.5em;
+        line-height: 1em;
         margin-bottom: 0.2rem;
-        margin-top: 0.5rem;
+        margin-top: 1rem;
         display: block;
       }
 

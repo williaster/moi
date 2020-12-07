@@ -126,9 +126,6 @@ function ProjectCard(project: Project) {
             className="img"
             style={{
               backgroundImage: `url(${project.thumbnailUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
             }}
           />
         </div>
@@ -155,6 +152,9 @@ function ProjectCard(project: Project) {
           min-height: 200px;
           flex-shrink: 0;
           border-radius: inherit;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
         }
         .subtitle {
           font-size: 14px;

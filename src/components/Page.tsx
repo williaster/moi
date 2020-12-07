@@ -14,17 +14,21 @@ const Page = ({
   children,
   title,
   className,
+  showNav = true,
 }: {
   children: React.ReactNode;
   title?: string;
   className?: string | boolean;
+  showNav?: boolean;
 }) => (
   <div className={cx('main', className)}>
     <Meta title={title} />
-    <div className="nav-container">
-      <Nav />
-    </div>
-    <div className="page-content">{children}</div>
+    {showNav && (
+      <div className="nav-container">
+        <Nav />
+      </div>
+    )}
+    <div className={cx('page-content', showNav && 'page-content--with-nav')}>{children}</div>
     <style jsx global>{`
       .main {
         width: 100%;
@@ -33,10 +37,12 @@ const Page = ({
       }
 
       .page-content {
-        margin: 24px 0 40px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
+        height: 100%;
+        width: 100%;
+      }
+
+      .page-content--with-nav {
+        margin-bottom: 40px;
       }
 
       /* loading progress bar styles */
