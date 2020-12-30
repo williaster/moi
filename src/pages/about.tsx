@@ -1,17 +1,177 @@
 import React from 'react';
+import Link from 'next/link';
 import Page from '../components/Page';
+import YearsDuration from '../components/YearsDuration';
+import { blues, linearGradientRed } from '../theme';
 
 function AboutPage() {
   return (
     <Page>
-      <h1>About moi.</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      <div className="about">
+        <div className="header">
+          <h2>About</h2>
+          <p>
+            I am passionate about <span className="emphasis">interface design & engineering</span>.
+            My background in genome sequencing led me to develop a love for{' '}
+            <span className="emphasis">data visualization</span> which opened the door to frontend
+            engineering, design, & product design.
+            <br />
+            <br />I have <YearsDuration year="2012" />+ years experience crafting complex data
+            visualizations & data tools that power data intelligence at many major companies, and
+            have contributed to several large open-source software{' '}
+            <Link href="/projects">projects</Link>.
+          </p>
+        </div>
+
+        <div className="skills">
+          <h3>Skills</h3>
+          <ul>
+            <li>
+              Frontend & data vis engineering (TypeScript, CSS, React, GraphQL, d3, WebGL, redux)
+            </li>
+            <li>Figma/Illustrator design & prototyping</li>
+            <li>Data analysis (SQL, Machine Learning, stats)</li>
+            <li>Product managment</li>
+            <li>User research</li>
+            <li>Full-stack engineering (Python, Java, Ruby)</li>
+            <li>Academic & blog post writing</li>
+          </ul>
+        </div>
+        <div className="experience">
+          <h3>Experience</h3>
+          <div className="card">
+            <h3>Airbnb</h3>
+            <div className="subtitle">
+              Staff Engineer – Data Visualization • 2016-current (
+              <YearsDuration year="2016" /> years)
+            </div>
+            <p>
+              <ul>
+                <li>
+                  Co-created and was the tech lead for a 10-person{' '}
+                  <span className="emphasis">Data Experience</span> (DX) team, consisting of
+                  engineers, designers, product managers, and researchers with domain expertise in
+                  data.
+                </li>
+                <li>
+                  Drove collaborations with <span className="emphasis">20+ teams</span> across most
+                  Airbnb orgs, to build a wide range of{' '}
+                  <span className="emphasis">30+ internal data products</span>
+                </li>
+                <li>
+                  Unified Airbnb's visualization infrastructure by co-creating{' '}
+                  <Link href="/projects/visx">visx</Link>, an open-source collection of low-level
+                  visualization components for React
+                </li>
+              </ul>
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>Interna – Interactive Analytics</h3>
+            <div className="subtitle">Frontend engineer • 2015 - 2016 (1 year)</div>
+            <p>
+              Acquired by Twitter in 2020,{' '}
+              <a href="https://interana.com" target="_blank" rel="noopener noreferrer">
+                Interana
+              </a>{' '}
+              is a fast and scalable event-based analytics solution to answer critical business
+              questions about how customers behave and products are used. Used by Asana, Bing,
+              Microsoft Azur, Microsoft Office, Microsoft Outlook, SurveyMonkey, Uber, Salesforce,
+              Comcast, Sonos, and others.
+              <br />
+              <br />I lead development of all visualization-related features, including exploration
+              and dashboarding.
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>Insight Data Science</h3>
+            <div className="subtitle">Fellow • Aug - Nov 2015 (4 months)</div>
+            <p>
+              Insight is "bootcamp" program in the Bay Area to help quantitative PhD "fellows"
+              transition into data science or data- roles at top tech & biotech companies. Fellows
+              uplevel their skills in Python, SQL, statistics, and machine learning with a personal
+              project which forms the basis of an interview at prospective companies.
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>University of California, San Francisco</h3>
+            <div className="subtitle">PhD Genomics & Cell Biology • 2010 - 2014 (4 years)</div>
+            <p>
+              <ul>
+                <li>
+                  Developed a novel genome sequencing methodology to understand spatial (3D) gene
+                  expression in cells with unprecedented precision
+                </li>
+                <li>
+                  Published <Link href="/projects/ucsf">two papers</Link> in top-tier{' '}
+                  <em>Science</em> magazine applying this methodology to clarify two decades-old
+                  problems in cell biology
+                </li>
+              </ul>
+            </p>
+          </div>
+
+          <div className="card">
+            <h3>Grinnell College</h3>
+            <div className="subtitle">Bachelors of Science, Chemistry • 2006 - 2010 (4 years)</div>
+            <p>Validictorian, 4.0 GPA</p>
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        .about {
+          height: 100%;
+          max-width: 680px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+        }
+        .about > div {
+          width: 100%;
+        }
+        .card {
+          background: white;
+          border-radius: 4px;
+          padding: 24px;
+          margin-bottom: 32px;
+          flex-direction: row;
+          box-shadow: 0 10px 40px -10px ${blues[blues.length - 1]}33;
+        }
+        .subtitle {
+          color: #8b8488;
+          font-weight: 300;
+        }
+        li,
+        .card p {
+          font-size: 0.8rem;
+          font-weight: 200;
+        }
+        li {
+          list-style-type: disc;
+          list-style-position: inside;
+        }
+        .card li {
+          margin-bottom: 0.75em;
+        }
+        .emphasis {
+          font-weight: 600;
+          color: transparent;
+          background: ${linearGradientRed};
+          background-clip: text;
+          -webkit-background-clip: text;
+        }
+        @media (max-width: 1000px) {
+          .aside {
+            width: 100%;
+            margin-left: 0;
+            margin-top: 0;
+          }
+        }
+      `}</style>
     </Page>
   );
 }

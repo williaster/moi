@@ -26,16 +26,19 @@ const NavItem = ({ id, href, children, className, external }: NavItemProps) => (
     <style jsx>{`
       .nav-item a {
         display: inline-block;
-        padding: 12px 12px 12px 0;
+        padding: 16px 0;
         text-decoration: none;
-        font-weight: 400;
         font-size: 18px;
       }
-
+      .nav-item {
+        margin-right: 16px;
+      }
+      .nav-item:last-child {
+        margin-right: 0;
+      }
       @media (max-width: 600px) {
-        .nav-item {
-          display: block;
-          float: left;
+        .nav-item a {
+          padding: 8px 0;
         }
       }
     `}</style>

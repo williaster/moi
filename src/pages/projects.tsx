@@ -7,7 +7,7 @@ const projects: Project[] = [
   {
     title: 'visx',
     subtitle:
-      'visx is a collection of reusable low-level visualization components. visx combines the power of d3 to generate your visualization with the benefits of react for updating the DOM.',
+      'visx is a collection of reusable low-level visualization components for React. visx combines the power of d3 to generate your visualization with the benefits of react for updating the DOM.',
     date: ['2017-01-01', 'current'],
     tags: ['design', 'visualization', 'web', 'library'],
     roles: ['engineering', 'design', 'visualization'],
@@ -140,6 +140,7 @@ function ProjectCard(project: Project) {
           display: flex;
           flex-direction: row;
           box-shadow: 0 10px 40px -10px rgba(0, 64, 128, 0.2);
+          cursor: pointer;
         }
         .content {
           padding: 24px;
@@ -157,7 +158,9 @@ function ProjectCard(project: Project) {
           background-repeat: no-repeat;
         }
         .subtitle {
-          font-size: 14px;
+          margin-top: -1.75em;
+          margin-bottom: 1.75em;
+          font-size: 0.8rem;
         }
         .tags {
           display: flex;
@@ -165,7 +168,7 @@ function ProjectCard(project: Project) {
           flex-wrap: wrap;
         }
         .tag {
-          font-size: 12px;
+          font-size: 0.6rem;
           font-weight: 300;
           line-height: 1em;
           margin-right: 8px;
@@ -190,11 +193,24 @@ function ProjectCard(project: Project) {
 function ProjectsPage() {
   return (
     <Page>
-      <h1>Projects by moi.</h1>
-
-      {projects.map(project => (
-        <ProjectCard key={project.title} {...project} />
-      ))}
+      <div className="projects">
+        <h2>Projects</h2>
+        <p>Below is collection of selected projects. Try filtering by project type or time.</p>
+        <br />
+        {projects.map(project => (
+          <ProjectCard key={project.title} {...project} />
+        ))}
+      </div>
+      <style>{`
+        .projects {
+          height: 100%;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+        }
+      `}</style>
     </Page>
   );
 }

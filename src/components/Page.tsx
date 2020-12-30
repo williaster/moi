@@ -5,6 +5,7 @@ import NProgress from 'nprogress';
 
 import Meta from './Meta';
 import Nav from './Nav';
+import { linearGradient } from '../theme';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -15,11 +16,13 @@ const Page = ({
   title,
   className,
   showNav = true,
+  padding = true,
 }: {
   children: React.ReactNode;
   title?: string;
   className?: string | boolean;
   showNav?: boolean;
+  padding?: boolean;
 }) => (
   <div className={cx('main', className)}>
     <Meta title={title} />
@@ -28,21 +31,32 @@ const Page = ({
         <Nav />
       </div>
     )}
-    <div className={cx('page-content', showNav && 'page-content--with-nav')}>{children}</div>
+    <div className={cx('page', showNav && 'page--nav', padding && 'page--padding')}>{children}</div>
     <style jsx global>{`
       .main {
         width: 100%;
         height: 100%;
-        padding: 0 24px;
       }
 
-      .page-content {
+      .nav-container {
+        background: transparent;
+      }
+
+      .page {
         height: 100%;
-        width: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
       }
 
-      .page-content--with-nav {
-        margin-bottom: 40px;
+      .page--nav {
+        padding-bottom: 40px;
+      }
+
+      .page--padding {
+        padding: 0 24px;
       }
 
       /* loading progress bar styles */
@@ -51,10 +65,10 @@ const Page = ({
       }
 
       #nprogress .bar {
-        background: #ac73ff;
+        background: ${linearGradient};
         position: fixed;
         z-index: 1001;
-        top: 0;
+        top: 1px;
         left: 0;
         width: 100%;
         height: 3px;

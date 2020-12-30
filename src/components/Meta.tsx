@@ -1,12 +1,38 @@
 import React from 'react';
 import Head from 'next/head';
+import { linearGradient, linearGradientBlue, linearGradientDark } from '../theme';
+
+const colors = [
+  '#ab8499',
+  '#c7b3d6',
+  '#DFD4E8',
+  '#db994c',
+  '#e9b35c',
+  '#f2ca8a',
+  '#fae298',
+  '#CE7270',
+  '#df7c79',
+  '#f3ad95',
+  '#938e5a',
+  '#b2a673',
+  '#e3dbb0',
+  '#5E989C',
+  '#95D1D5',
+  '#C4E6E8',
+  '#8b8488',
+  '#b0b0b0',
+  '#dddddd',
+];
 
 const Meta = ({ title = 'christopher card williams' }) => (
   <div>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Hind"></link>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700"
+      ></link>
       <title>{title}</title>
       <link rel="shortcut icon" type="image/png" href="static/favicon.png" />
     </Head>
@@ -17,12 +43,12 @@ const Meta = ({ title = 'christopher card williams' }) => (
         height: 100%;
         overflow-x: hidden;
         font-family: 'Hind', -apple-system, BlinkMacSystemFont, sans-serif;
-        background: #f0f5f9;
+        background: #fff;
         display: flex;
-        color: #384259;
+        color: #222;
         padding: 0;
         margin: 0;
-        font-size: 18px;
+        font-size: 22px;
         line-height: 1.5em;
       }
 
@@ -54,6 +80,7 @@ const Meta = ({ title = 'christopher card williams' }) => (
       }
 
       p {
+        font-weight: 300;
         margin: 1rem 0;
       }
 
@@ -68,22 +95,48 @@ const Meta = ({ title = 'christopher card williams' }) => (
 
       h1 {
         font-size: 3em;
-        line-height: 1em;
+        font-weight: 700;
+        line-height: 1.2em;
         display: block;
         margin-bottom: 3rem;
+        color: transparent;
+        background: ${linearGradient};
+        background-clip: text;
+        -webkit-background-clip: text;
       }
 
       h2 {
-        font-size: 2.5em;
-        line-height: 1em;
+        font-size: 2em;
+        font-weight: 600;
+        line-height: 1.2em;
+        margin-bottom: 1em;
+        margin-top: 1em;
+        display: block;
+        color: transparent;
+        background: ${linearGradient};
+        background-clip: text;
+        -webkit-background-clip: text;
+      }
+
+      h3 {
+        font-size: 1.5em;
+        font-weight: 500;
+        line-height: 1.2em;
         margin-bottom: 0.2rem;
         margin-top: 1rem;
         display: block;
+        color: transparent;
+        background: ${linearGradient};
+        background-clip: text;
+        -webkit-background-clip: text;
       }
 
       a {
-        color: #1e2022;
-        font-weight: 400;
+        color: transparent;
+        background: ${linearGradientBlue};
+        background-clip: text;
+        -webkit-background-clip: text;
+        font-weight: 600;
         text-decoration: none;
       }
 

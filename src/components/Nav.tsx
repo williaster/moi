@@ -1,11 +1,10 @@
 import React from 'react';
-import Link from 'next/link';
 import NavItem from './NavItem';
 
 const Nav = () => (
   <div className="nav">
     <div className="nav-inner">
-      <NavItem href="/">christopher card williams</NavItem>
+      <NavItem href="/">chris williams</NavItem>
       <ul>
         <NavItem href="/projects">projects</NavItem>
         <NavItem href="/about">about</NavItem>
@@ -16,6 +15,7 @@ const Nav = () => (
       .nav {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         flex: 1;
         align-items: center;
         justify-content: center;
@@ -23,9 +23,8 @@ const Nav = () => (
         z-index: 3;
         position: sticky;
         top: 0;
-        margin: 0 -16px;
-        background-color: inherit;
-        padding-left: 16px;
+        padding: 0 24px;
+        background: #fff;
       }
       .nav-inner {
         width: 100%;
@@ -45,12 +44,8 @@ const Nav = () => (
         justify-content: flex-end;
         align-items: center;
       }
-      @media (max-width: 600px) {
-        .nav {
-          padding: 0;
-          padding-right: 1rem;
-        }
-
+      @media (max-width: 200px) {
+        .nav-inner,
         ul {
           flex-direction: column;
           align-items: flex-start;

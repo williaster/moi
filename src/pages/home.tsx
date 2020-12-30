@@ -1,126 +1,60 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React from 'react';
 import Page from '../components/Page';
-import * as THREE from 'three';
-import { extend, Canvas, useFrame } from 'react-three-fiber';
-import * as meshline from 'threejs-meshline';
+import HomeBackground from '../components/HomeBackground';
+import Link from 'next/link';
+import { reds } from '../theme';
 
-extend(meshline);
+const BACKGROUND_SIZE = 840;
 
-const LINE_COUNT = 30;
-const POSITIONS_PER_LINE = 50;
-
-function Scene() {
-  let group = useRef();
-  let theta = 0;
-  // Hook into the render loop and rotate the scene along y-axis
-  useFrame(() =>
-    group.current?.rotation.set(
-      THREE.Math.degToRad(45),
-      5 * Math.sin(THREE.Math.degToRad((theta += 0.005))),
-      0,
-    ),
-  );
-  return (
-    <group ref={group}>
-      <Lines count={LINE_COUNT} colors={['#ffd9e8', '#de95ba', '#7f4a88', '#fecd1a']} />
-    </group>
-  );
-}
-
-function Lines({ count, colors }) {
-  const lines = useMemo(
-    () =>
-      new Array(count).fill(null).map(() => {
-        const pos = new THREE.Vector3(30 - 60 * Math.random(), -50, 10 - 20 * Math.random());
-        const points = new Array(POSITIONS_PER_LINE).fill(null).map(() =>
-          pos
-            .add(
-              new THREE.Vector3(
-                2 - Math.random() * 4, // -2,2
-                4 - Math.random() * 2, //  2,4 => move along the y-direction
-                2 - Math.random() * 4, // -5,5
-              ),
-            )
-            .clone(),
-        );
-        const curve = new THREE.CatmullRomCurve3(points).getPoints(500);
-        return {
-          color: colors[Math.floor(colors.length * Math.random())],
-          width: Math.max(0.1, 0.3 * Math.random()),
-          speed: Math.max(0.0001, 0.0005 * Math.random()),
-          curve,
-        };
-      }),
-    [colors, count],
-  );
-  return lines.map((props, index) => <Line key={index} {...props} />);
-}
-
-function Line({ curve, width, color, speed }) {
-  const material = useRef();
-  const [dashRatio] = useState(() => 0.8 - 0.5 * Math.random());
-  useFrame(() => (material.current.uniforms.dashOffset.value -= speed));
-  return (
-    <mesh>
-      <meshLine attach="geometry" vertices={curve} />
-      <meshLineMaterial
-        attach="material"
-        ref={material}
-        transparent
-        depthTest={false}
-        lineWidth={width}
-        color={color}
-        dashArray={0.1}
-        dashRatio={dashRatio}
-      />
-    </mesh>
-  );
-}
-
-function HomePage() {
-  return (
-    <>
-      <Page showNav={false}>
-        <div className="canvas">
-          <Canvas camera={{ position: [50, 0, 0], fov: 40 }}>
-            <Scene />
-          </Canvas>
-        </div>
-        <div className="home">
+const HomePage = () => (
+  <>
+    <Page showNav={false} padding={false}>
+      <HomeBackground />
+      <div className="home">
+        <div className="text-background" />
+        <div className="content">
+          <h2>Hi, my name is Chris Williams.</h2>
+          <p>I currently craft data visualizations & interfaces at Airbnb.</p>
+          <br />
           <div>
-            <h2>Hi, my name is Chris Williams.</h2>
-            <p>I currently design and engineer data visualizations and interfaces at Airbnb.</p>
+            <Link href="/about">About</Link>
+          </div>
+          <div>
+            <Link href="/projects">Projects</Link>
           </div>
         </div>
-      </Page>
-      <style global jsx>{`
-        .home {
-          display: flex;
-          width: 100%;
-          height: 80%;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .home p {
-          font-size: 1.25em;
-          font-weight: 100;
-        }
-
-        .canvas,
-        canvas {
-          opacity: 0.75;
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          top: 0;
-          pointer-events: none;
-          overflow: hidden;
-        }
-      `}</style>
-    </>
-  );
-}
+      </div>
+    </Page>
+    <style jsx>{`
+      .home {
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        font-size: 0.8rem;
+      }
+      .text-background {
+        width: ${BACKGROUND_SIZE}px;
+        height: ${BACKGROUND_SIZE}px;
+        background: ${reds[0]}66;
+        position: absolute;
+        left: ${Math.floor(BACKGROUND_SIZE * 0.25)}px;
+        top: -${Math.floor(BACKGROUND_SIZE * 0.25)}px;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .content {
+        max-width: ${Math.floor(BACKGROUND_SIZE * 0.64)}px;
+        padding: 100px 40px;
+        z-index: 0;
+      }
+      p {
+        font-size: 1.25em;
+        font-weight: 100;
+      }
+    `}</style>
+  </>
+);
 
 export default HomePage;
