@@ -1,15 +1,22 @@
 import React from 'react';
-import Page from '../../components/Page';
+import ProjectPage from '../../components/ProjectPage';
+import projects from '../../projects';
+
+const visxProject = projects.filter(p => p.title === 'visx')[0];
 
 function Visx() {
   return (
     <>
-      <Page>
-        <div className="img" />
-        <div className="content">
+      <ProjectPage
+        title="chris williams – visx"
+        imageStyles={{
+          backgroundColor: '#000',
+          backgroundImage: `url('/static/images/visx/hero-dark.png')`,
+        }}
+        project={visxProject}
+      >
+        <div className="visx">
           <div>
-            <h1>visx</h1>
-            <div>tags tags tags</div>
             <p>
               At Airbnb, we made it a goal to unify our visualization stack across the company, and
               in the process we created a new project that brings together the power of D3 with the
@@ -39,55 +46,11 @@ function Visx() {
               feel at home in any React codebase. We’re excited to see what you build with it!
             </p>
           </div>
-          <div className="aside">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-              dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum.
-            </p>
-          </div>
         </div>
-      </Page>
+      </ProjectPage>
       <style jsx>{`
-        .img {
-          min-height: 400px;
-          background-color: #000;
-          background-image: url('/static/images/visx/hero-dark.png');
-          background-size: auto;
-          background-position: center;
-          background-repeat: no-repeat;
-        }
-        .content {
-          display: flex;
-          flex-direction: row;
-        }
-        .content li {
+        .visx li {
           list-style-type: disc;
-        }
-        .content ul {
-          padding-left: 18px;
-        }
-        .aside {
-          flex-shrink: 0;
-          margin-top: 3rem;
-          margin-left: 32px;
-          width: 30%;
-        }
-        @media (max-width: 600px) {
-          .content {
-            flex-direction: column-reverse;
-          }
-          .img {
-            width: 100%;
-            margin: 0;
-          }
-          .aside {
-            width: 100%;
-            margin-left: 0;
-          }
         }
       `}</style>
     </>

@@ -1,5 +1,5 @@
 export type ProjectTag =
-  | 'visualization'
+  | 'data vis'
   | 'open-source'
   | 'web'
   | 'tool'
@@ -7,7 +7,8 @@ export type ProjectTag =
   | 'color'
   | 'physical'
   | 'maps'
-  | 'personal-project';
+  | 'personal-project'
+  | 'biology';
 
 export type ProjectRole = 'design' | 'engineering' | 'product' | 'prototyping' | 'visualization';
 
@@ -21,7 +22,7 @@ export type Project = {
   externalUrls?: { url: string; label: string }[];
   href: string;
   tags: ProjectTag[];
-  date: string | [string, string];
+  dates: [string, string];
   roles?: ProjectRole[];
   employer?: 'personal' | 'airbnb' | 'interana' | 'ucsf' | 'insight';
 };

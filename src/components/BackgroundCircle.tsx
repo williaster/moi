@@ -1,8 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
 import cx from 'classnames';
 
-const BACKGROUND_SIZE = 800;
+const fixedSizeSize = 800;
 
 type BackgroundCircleProps = {
   position?: 'top' | 'bottom';
@@ -15,15 +14,18 @@ const BackgroundCircle = ({
   fixedSize = false,
   color,
 }: BackgroundCircleProps) => (
-  <div
-    className={cx(
-      'circle',
-      position === 'top' && 'circle--top',
-      position === 'bottom' && 'circle--bottom',
-      fixedSize && 'circle--fixedSize',
-    )}
-    style={{ background: color }}
-  >
+  <>
+    <div
+      className={cx(
+        'circle',
+        position === 'top' && 'circle--top',
+        position === 'bottom' && 'circle--bottom',
+        fixedSize && 'circle--fixedSize',
+        fixedSize && (position === 'top' ? 'circle--fixedSize-top' : 'circle--fixedSize-bottom'),
+      )}
+      style={{ background: color }}
+    ></div>
+
     <style jsx>{`
       .circle {
         width: 70vh;
@@ -40,14 +42,22 @@ const BackgroundCircle = ({
       }
       .circle--bottom {
         bottom: -25%;
-        right: 0;
+        right: 25%;
         transform: translateX(50%);
       }
       .circle--fixedSize {
-        width: ${BACKGROUND_SIZE}px;
-        height: ${BACKGROUND_SIZE}px;
+        width: ${fixedSizeSize}px;
+        height: ${fixedSizeSize}px;
+      }
+      .circle--fixedSize-top {
+        left: ${Math.floor(0.25 * fixedSizeSize)}px;
+        top: -${Math.floor(0.25 * fixedSizeSize)}px;
+      }
+      .circle--fixedSize-bottom {
+        right: ${Math.floor(0.25 * fixedSizeSize)}px;
+        bottom: -${Math.floor(0.25 * fixedSizeSize)}px;
       }
     `}</style>
-  </div>
+  </>
 );
 export default BackgroundCircle;

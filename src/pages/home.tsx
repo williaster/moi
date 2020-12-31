@@ -2,7 +2,7 @@ import React from 'react';
 import Page from '../components/Page';
 import HomeBackground from '../components/HomeBackground';
 import Link from 'next/link';
-import { blues, colors, reds } from '../theme';
+import { blues, reds } from '../theme';
 import BackgroundCircle from '../components/BackgroundCircle';
 
 const BACKGROUND_SIZE = 800;

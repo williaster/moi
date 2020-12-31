@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import cx from 'classnames';
+import Tilt from 'react-tilt';
 import Page from '../components/Page';
-import { Project, ProjectTag } from '../types';
-import { blues, boxShadow, colors, linearGradient } from '../theme';
+import { Project, ProjectTag as ProjectTagType } from '../types';
+import { blues, boxShadow, colors } from '../theme';
 import projects from '../projects';
 import BackgroundCircle from '../components/BackgroundCircle';
+import ProjectTag from '../components/ProjectTag';
+import DateRange from '../components/DateRange';
 
 const MAX_WIDTH = 740;
 const allTags = Array.from(
@@ -14,29 +16,34 @@ const allTags = Array.from(
 
 function ProjectCard(project: Project) {
   return (
-    <div>
-      <Link href={project.href || ''}>
-        <div className="card">
-          <div className="content">
-            <h2>{project.title}</h2>
-            {project.subtitle && <p className="subtitle">{project.subtitle}</p>}
-            <div className="tags">
-              {project.tags?.map(tag => (
-                <div className="tag" key={tag}>
-                  {tag}
-                </div>
-              ))}
+    <>
+      <Tilt options={{ scale: 1, max: 25 }}>
+        <Link href={project.href || ''}>
+          <div className="card">
+            <div className="content">
+              <h2 className="title"> {project.title}</h2>
+              {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}
+              {project.subtitle && <p className="subtitle">{project.subtitle}</p>}
+
+              <div className="tags">
+                {project.tags?.map(tag => (
+                  <ProjectTag key={tag} tag={tag} />
+                ))}
+              </div>
             </div>
+            <div
+              className="img"
+              style={{
+                backgroundImage: `url(${project.thumbnailUrl})`,
+              }}
+            />
           </div>
-          <div
-            className="img"
-            style={{
-              backgroundImage: `url(${project.thumbnailUrl})`,
-            }}
-          />
-        </div>
-      </Link>
+        </Link>
+      </Tilt>
       <style jsx>{`
+        .title {
+          margin-bottom: 0rem;
+        }
         .card {
           max-width: ${MAX_WIDTH}px;
           min-height: 300px;
@@ -64,7 +71,6 @@ function ProjectCard(project: Project) {
           background-repeat: no-repeat;
         }
         .subtitle {
-          margin-top: -1.75em;
           margin-bottom: 1.75em;
           font-size: 0.8rem;
         }
@@ -92,18 +98,18 @@ function ProjectCard(project: Project) {
           }
         }
       `}</style>
-    </div>
+    </>
   );
 }
 
 function ProjectsPage() {
-  const [tagFilter, setTagFilter] = useState<ProjectTag | null>(null);
+  const [tagFilter, setTagFilter] = useState<ProjectTagType | null>(null);
   const filteredProjects =
     tagFilter == null
       ? projects
       : projects.filter(project => project.tags.some(tag => tagFilter === tag));
   return (
-    <Page>
+    <Page title="chris williams – projects">
       <BackgroundCircle color={`${blues[0]}15`} />
       <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}15`} />
       <div className="projects">
@@ -117,16 +123,14 @@ function ProjectsPage() {
           <span className="label">Tags</span>
           &nbsp;&nbsp;
           {allTags.map(tag => (
-            <div
+            <ProjectTag
               key={tag}
-              role="button"
+              tag={tag}
+              filled={tag === tagFilter}
               onClick={() => {
                 setTagFilter(tag === tagFilter ? null : tag);
               }}
-              className={cx('tag', tag === tagFilter && 'tag--selected')}
-            >
-              {tag}
-            </div>
+            />
           ))}
         </div>
 
@@ -160,21 +164,6 @@ function ProjectsPage() {
           flex-wrap: wrap;
           align-items: baseline;
           margin-bottom: 2em;
-        }
-        .tag {
-          font-size: 0.6rem;
-          font-weight: 300;
-          line-height: 0.6rem;
-          margin: 8px 8px 0 0;
-          border: 1px solid currentcolor;
-          padding: 2px 8px;
-          border-radius: 2px;
-          cursor: pointer;
-        }
-        .tag:hover,
-        .tag--selected {
-          color: #fff;
-          background: ${linearGradient};
         }
       `}</style>
     </Page>

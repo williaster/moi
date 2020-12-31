@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import Page from '../components/Page';
-import YearsDuration from '../components/YearsDuration';
-import { boxShadow, colors, linearGradientRed, reds } from '../theme';
+import TimeDuration from '../components/TimeDuration';
+import { boxShadow, colors, linearGradientRed, mutedBlack, reds } from '../theme';
 import BackgroundCircle from '../components/BackgroundCircle';
 
 function AboutPage() {
   return (
-    <Page>
+    <Page title="chris williams – about">
       <BackgroundCircle color={`${reds[0]}66`} />
       <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}22`} />
       <div className="about">
@@ -19,10 +19,10 @@ function AboutPage() {
             <span className="emphasis">data visualization</span> which opened the door to frontend
             engineering, design, & product design.
             <br />
-            <br />I have <YearsDuration year="2012" />+ years experience crafting complex data
-            visualizations & data tools that power data intelligence at many major companies, and
-            have contributed to several large open-source software{' '}
-            <Link href="/projects">projects</Link>.
+            <br />I have <TimeDuration start="2012-01-01" end={new Date().toUTCString()} />+ years
+            experience crafting complex data visualizations & data tools that power data
+            intelligence at many major companies, and have contributed to several large open-source
+            software <Link href="/projects">projects</Link>.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ function AboutPage() {
             <h3>Airbnb</h3>
             <div className="subtitle">
               Staff Engineer – Data Visualization • 2016-current (
-              <YearsDuration year="2016" /> years)
+              <TimeDuration start="2016-01-01" end={new Date().toUTCString()} /> years)
             </div>
             <p>
               <ul>
@@ -147,7 +147,7 @@ function AboutPage() {
           box-shadow: ${boxShadow};
         }
         .subtitle {
-          color: #8b8488;
+          color: ${mutedBlack};
           font-weight: 300;
         }
         li,

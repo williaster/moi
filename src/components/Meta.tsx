@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { linearGradient, linearGradientBlue } from '../theme';
 
-const Meta = ({ title = 'christopher card williams' }) => (
+const Meta = ({ title = 'chris williams' }) => (
   <div>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />

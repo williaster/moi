@@ -5,7 +5,7 @@ const projects: Project[] = [
     title: 'visx',
     subtitle:
       'visx is a collection of reusable low-level visualization components for React. visx combines the power of d3 to generate your visualization with the benefits of react for updating the DOM.',
-    date: ['2017-01-01', 'current'],
+    dates: ['2017-01-01', 'current'],
     tags: ['data vis', 'web', 'library', 'open-source'],
     href: 'projects/visx',
     thumbnailUrl: '/static/images/visx/hero.png',
@@ -16,7 +16,7 @@ const projects: Project[] = [
     title: 'Airbnb Org Chart',
     subtitle:
       'A visual product for exploring the Airbnb company, both team hierarchies and their functional composition.',
-    date: ['2019-09-01', '2020-03-01'],
+    dates: ['2019-09-01', '2020-03-01'],
     tags: ['color', 'data vis', 'web', 'tool'],
     href: 'projects/airbnb-org-chart',
     thumbnailUrl: 'static/images/org-chart/donut-circle-pack.png',
@@ -26,7 +26,7 @@ const projects: Project[] = [
   {
     title: 'SLA Tracker',
     subtitle: 'An advanced analytical tool to explore & understand data pipeline landing times.',
-    date: ['2019-06-01', '2020-06-01'],
+    dates: ['2019-06-01', '2020-06-01'],
     tags: ['data vis', 'web', 'tool'],
     href: 'projects/sla-tracker',
     thumbnailUrl: 'static/images/sla-tracker/lineage-thumbnail.png',
@@ -37,7 +37,7 @@ const projects: Project[] = [
     title: 'Metric Explorer',
     subtitle:
       'Intuitive business analytics product that enables non-technical users to explore curated, high-quality metrics easily.',
-    date: ['2017-06-01', '2019-01-01'],
+    dates: ['2017-06-01', '2019-01-01'],
     tags: ['data vis', 'web', 'tool'],
     href: 'projects/metric-explorer',
     thumbnailUrl: 'static/images/metric-explorer/metric-collection.png',
@@ -47,7 +47,7 @@ const projects: Project[] = [
   {
     title: 'Data Visualization Colors',
     subtitle: 'First Airbnb color palette designed specifically for data visualization.',
-    date: ['2019-06-01', '2019-09-01'],
+    dates: ['2019-06-01', '2019-09-01'],
     tags: ['data vis', 'color'],
     roles: ['design'],
     href: 'projects/airbnb-color-palette',
@@ -59,7 +59,7 @@ const projects: Project[] = [
     title: 'Geo Explorer',
     subtitle:
       'Product to facilitate improve reliability, coverage, and precision of Airbnb geo definitions worldwide.',
-    date: ['2018-03-01', '2018-06-01'],
+    dates: ['2018-03-01', '2018-06-01'],
     tags: ['data vis', 'color', 'maps', 'tool', 'web'],
     roles: ['engineering', 'design', 'visualization', 'product'],
     href: 'projects/geo-explorer',
@@ -71,7 +71,7 @@ const projects: Project[] = [
     title: 'Superset Dashboard 2.0',
     subtitle:
       'Re-imagined dashboarding experience with drag-and-drop, grid, and new components to support effective information hierarchy.',
-    date: ['2018-01-01', '2019-01-01'],
+    dates: ['2018-01-01', '2019-01-01'],
     tags: ['tool', 'web', 'open-source'],
     href: 'projects/superset-dashboard',
     thumbnailUrl: 'static/images/superset-dashboard-v2/thumbnail.png',
@@ -90,6 +90,16 @@ const projects: Project[] = [
     tags: ['physical', 'maps', 'color', 'data vis'],
     thumbnailUrl: 'static/images/pin-map/pin-map-1.png',
     employer: 'airbnb',
+  },
+
+  {
+    title: 'Spatial gene expression',
+    subtitle: 'Novel genome sequencing methodology to understand spatial (3D) gene expression.',
+    tags: ['biology', 'data vis'],
+    href: 'projects/ucsf',
+    thumbnailUrl: 'static/images/ucsf/thumbnail.png',
+    employer: 'ucsf',
+    dates: ['2006-08-01', '2010-08-01'],
   },
 
   {
