@@ -1,28 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { linearGradient, linearGradientBlue, linearGradientDark } from '../theme';
-
-const colors = [
-  '#ab8499',
-  '#c7b3d6',
-  '#DFD4E8',
-  '#db994c',
-  '#e9b35c',
-  '#f2ca8a',
-  '#fae298',
-  '#CE7270',
-  '#df7c79',
-  '#f3ad95',
-  '#938e5a',
-  '#b2a673',
-  '#e3dbb0',
-  '#5E989C',
-  '#95D1D5',
-  '#C4E6E8',
-  '#8b8488',
-  '#b0b0b0',
-  '#dddddd',
-];
+import { linearGradient, linearGradientBlue } from '../theme';
 
 const Meta = ({ title = 'christopher card williams' }) => (
   <div>

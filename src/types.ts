@@ -1,12 +1,13 @@
 export type ProjectTag =
   | 'visualization'
+  | 'open-source'
   | 'web'
-  | 'design'
   | 'tool'
   | 'library'
   | 'color'
   | 'physical'
-  | 'map';
+  | 'maps'
+  | 'personal-project';
 
 export type ProjectRole = 'design' | 'engineering' | 'product' | 'prototyping' | 'visualization';
 
@@ -17,8 +18,10 @@ export type Project = {
   subtitle?: string;
   description?: string;
   thumbnailUrl?: string;
+  externalUrls?: { url: string; label: string }[];
   href: string;
   tags: ProjectTag[];
   date: string | [string, string];
   roles?: ProjectRole[];
+  employer?: 'personal' | 'airbnb' | 'interana' | 'ucsf' | 'insight';
 };

@@ -1,110 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import cx from 'classnames';
 import Page from '../components/Page';
-import { Project } from '../types';
+import { Project, ProjectTag } from '../types';
+import { blues, boxShadow, colors, linearGradient } from '../theme';
+import projects from '../projects';
+import BackgroundCircle from '../components/BackgroundCircle';
 
-const projects: Project[] = [
-  {
-    title: 'visx',
-    subtitle:
-      'visx is a collection of reusable low-level visualization components for React. visx combines the power of d3 to generate your visualization with the benefits of react for updating the DOM.',
-    date: ['2017-01-01', 'current'],
-    tags: ['design', 'visualization', 'web', 'library'],
-    roles: ['engineering', 'design', 'visualization'],
-    href: 'projects/visx',
-    thumbnailUrl: '/static/images/visx/hero.png',
-  },
-
-  {
-    title: 'Airbnb Org Chart',
-    subtitle:
-      'A visual product for exploring the Airbnb company, both team hierarchies and their functional composition.',
-    date: ['2019-09-01', '2020-03-01'],
-    tags: ['color', 'design', 'visualization', 'web', 'tool'],
-    roles: ['design', 'visualization', 'product', 'prototyping'],
-    href: 'projects/airbnb-org-chart',
-    thumbnailUrl: 'static/images/org-chart/donut-circle-pack.png',
-  },
-
-  {
-    title: 'SLA Tracker',
-    subtitle:
-      'An advanced visualization UI that surfaces typical critical paths of data pipelines based on pipeline lineage.',
-    date: ['2019-06-01', '2020-06-01'],
-    tags: ['design', 'visualization', 'web', 'tool'],
-    roles: ['engineering', 'design', 'visualization', 'product', 'prototyping'],
-    href: 'projects/sla-tracker',
-    thumbnailUrl: 'static/images/sla-tracker/lineage-thumbnail.png',
-  },
-
-  {
-    title: 'Metric Explorer',
-    subtitle:
-      'Intuitive business analytics product that enables non-technical users to explore curated, high-quality metrics easily.',
-    date: ['2017-06-01', '2019-01-01'],
-    tags: ['design', 'visualization', 'web', 'tool'],
-    roles: ['engineering', 'design', 'visualization', 'product'],
-    href: 'projects/metric-explorer',
-    thumbnailUrl: 'static/images/metric-explorer/metric-collection.png',
-  },
-
-  {
-    title: 'Data Visualization Colors',
-    subtitle: 'First Airbnb color palette designed specifically for data visualization.',
-    date: ['2019-06-01', '2019-09-01'],
-    tags: ['design', 'visualization', 'color'],
-    roles: ['design'],
-    href: 'projects/airbnb-color-palette',
-  },
-
-  {
-    title: 'Geo Explorer',
-    subtitle:
-      'Product to facilitate improve reliability, coverage, and precision of Airbnb geo definitions worldwide.',
-    date: ['2018-03-01', '2018-06-01'],
-    tags: ['design', 'visualization', 'color', 'map', 'tool', 'web'],
-    roles: ['engineering', 'design', 'visualization', 'product'],
-    href: 'projects/geo-explorer',
-  },
-
-  {
-    title: 'Superset Dashboard 2.0',
-    subtitle:
-      'Re-imagined dashboarding experience with drag-and-drop, and new components to effective information hierarchy for reporting.',
-    date: ['2018-01-01', '2019-01-01'],
-    tags: ['design', 'tool', 'web'],
-    roles: ['engineering', 'design', 'product'],
-    href: 'projects/superset-dashboard',
-  },
-
-  {
-    title: '10 years of Airbnb Pin Map',
-  },
-
-  {
-    title: 'Custom bike design',
-  },
-
-  {
-    title: 'Fraud Trace 2.0',
-  },
-
-  {
-    title: 'Dataportal',
-  },
-
-  {
-    title: 'Event Flow',
-  },
-
-  {
-    title: 'data-ui',
-  },
-
-  {
-    title: 'Search Session Explorer',
-  },
-];
+const MAX_WIDTH = 740;
+const allTags = Array.from(
+  new Set(projects.reduce((all, project) => all.concat(project.tags), [])),
+).sort();
 
 function ProjectCard(project: Project) {
   return (
@@ -132,14 +38,14 @@ function ProjectCard(project: Project) {
       </Link>
       <style jsx>{`
         .card {
-          max-width: 740px;
+          max-width: ${MAX_WIDTH}px;
           min-height: 300px;
           background: white;
           border-radius: 4px;
           margin-bottom: 32px;
           display: flex;
           flex-direction: row;
-          box-shadow: 0 10px 40px -10px rgba(0, 64, 128, 0.2);
+          box-shadow: ${boxShadow};
           cursor: pointer;
         }
         .content {
@@ -171,7 +77,7 @@ function ProjectCard(project: Project) {
           font-size: 0.6rem;
           font-weight: 300;
           line-height: 1em;
-          margin-right: 8px;
+          margin: 8px 8px 0 0;
           border: 1px solid currentcolor;
           padding: 2px 8px;
           border-radius: 2px;
@@ -191,24 +97,84 @@ function ProjectCard(project: Project) {
 }
 
 function ProjectsPage() {
+  const [tagFilter, setTagFilter] = useState<ProjectTag | null>(null);
+  const filteredProjects =
+    tagFilter == null
+      ? projects
+      : projects.filter(project => project.tags.some(tag => tagFilter === tag));
   return (
     <Page>
+      <BackgroundCircle color={`${blues[0]}15`} />
+      <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}15`} />
       <div className="projects">
         <h2>Projects</h2>
-        <p>Below is collection of selected projects. Try filtering by project type or time.</p>
+        <p>
+          Below is collection of selected projects. Try filtering by project tag, click a project to
+          learn more.
+        </p>
         <br />
-        {projects.map(project => (
+        <div className="tags">
+          <span className="label">Tags</span>
+          &nbsp;&nbsp;
+          {allTags.map(tag => (
+            <div
+              key={tag}
+              role="button"
+              onClick={() => {
+                setTagFilter(tag === tagFilter ? null : tag);
+              }}
+              className={cx('tag', tag === tagFilter && 'tag--selected')}
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
+
+        {tagFilter && (
+          <div className="label">{`Filtered to ${filteredProjects.length} of ${projects.length} projects`}</div>
+        )}
+
+        {filteredProjects.map(project => (
           <ProjectCard key={project.title} {...project} />
         ))}
       </div>
-      <style>{`
+      <style jsx>{`
         .projects {
+          position: relative;
+          z-index: 1;
           height: 100%;
+          max-width: ${MAX_WIDTH}px;
           padding: 0;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
           justify-content: flex-start;
+        }
+        .label {
+          font-size: 0.8em;
+          font-weight: 200;
+        }
+        .tags {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: baseline;
+          margin-bottom: 2em;
+        }
+        .tag {
+          font-size: 0.6rem;
+          font-weight: 300;
+          line-height: 0.6rem;
+          margin: 8px 8px 0 0;
+          border: 1px solid currentcolor;
+          padding: 2px 8px;
+          border-radius: 2px;
+          cursor: pointer;
+        }
+        .tag:hover,
+        .tag--selected {
+          color: #fff;
+          background: ${linearGradient};
         }
       `}</style>
     </Page>

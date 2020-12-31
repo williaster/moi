@@ -2,11 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import Page from '../components/Page';
 import YearsDuration from '../components/YearsDuration';
-import { blues, linearGradientRed } from '../theme';
+import { boxShadow, colors, linearGradientRed, reds } from '../theme';
+import BackgroundCircle from '../components/BackgroundCircle';
 
 function AboutPage() {
   return (
     <Page>
+      <BackgroundCircle color={`${reds[0]}66`} />
+      <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}22`} />
       <div className="about">
         <div className="header">
           <h2>About</h2>
@@ -123,6 +126,8 @@ function AboutPage() {
       </div>
       <style jsx>{`
         .about {
+          position: relative;
+          z-index: 1;
           height: 100%;
           max-width: 680px;
           display: flex;
@@ -139,7 +144,7 @@ function AboutPage() {
           padding: 24px;
           margin-bottom: 32px;
           flex-direction: row;
-          box-shadow: 0 10px 40px -10px ${blues[blues.length - 1]}33;
+          box-shadow: ${boxShadow};
         }
         .subtitle {
           color: #8b8488;

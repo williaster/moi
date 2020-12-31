@@ -5,7 +5,7 @@ import NProgress from 'nprogress';
 
 import Meta from './Meta';
 import Nav from './Nav';
-import { linearGradient } from '../theme';
+import { blues, linearGradient, reds } from '../theme';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -17,12 +17,14 @@ const Page = ({
   className,
   showNav = true,
   padding = true,
+  centerContent = false,
 }: {
   children: React.ReactNode;
   title?: string;
   className?: string | boolean;
   showNav?: boolean;
   padding?: boolean;
+  centerContent?: boolean;
 }) => (
   <div className={cx('main', className)}>
     <Meta title={title} />
@@ -31,7 +33,16 @@ const Page = ({
         <Nav />
       </div>
     )}
-    <div className={cx('page', showNav && 'page--nav', padding && 'page--padding')}>{children}</div>
+    <div
+      className={cx(
+        'page',
+        showNav && 'page--nav',
+        padding && 'page--padding',
+        centerContent && 'page--center',
+      )}
+    >
+      {children}
+    </div>
     <style jsx global>{`
       .main {
         width: 100%;
@@ -43,11 +54,16 @@ const Page = ({
       }
 
       .page {
+        position: relative;
         height: 100%;
         padding: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
+        z-index: 1;
+      }
+
+      .page--center {
         justify-content: center;
       }
 
