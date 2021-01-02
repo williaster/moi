@@ -21,8 +21,8 @@ export type Project = {
   thumbnailUrl?: string;
   externalUrls?: { url: string; label: string }[];
   href: string;
-  tags: ProjectTag[];
-  dates: string[];
+  tags?: ProjectTag[];
+  dates?: string[];
   roles?: ProjectRole[];
   employer?: 'personal' | 'airbnb' | 'interana' | 'ucsf' | 'insight';
 };

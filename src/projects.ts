@@ -90,6 +90,7 @@ const projects: Project[] = [
     tags: ['physical', 'maps', 'color', 'data vis'],
     thumbnailUrl: 'static/images/pin-map/pin-map-1.png',
     employer: 'airbnb',
+    href: 'projects/pin-map',
   },
 
   {
@@ -119,6 +120,7 @@ const projects: Project[] = [
     tags: ['data vis', 'web', 'tool'],
     thumbnailUrl: 'static/images/fraudtrace/thumbnail.png',
     employer: 'airbnb',
+    href: 'projects/fraud-trace',
   },
 
   {
@@ -127,6 +129,7 @@ const projects: Project[] = [
     tags: ['web', 'tool'],
     thumbnailUrl: 'static/images/dataportal/search-input.gif',
     employer: 'airbnb',
+    href: 'projects/dataportal',
   },
 
   {
@@ -135,6 +138,7 @@ const projects: Project[] = [
     tags: ['web', 'data vis'],
     thumbnailUrl: 'static/images/data-ui/event-flow.gif',
     employer: 'airbnb',
+    href: 'projects/event-flow',
   },
 
   {
@@ -143,6 +147,7 @@ const projects: Project[] = [
     tags: ['data vis', 'web', 'library', 'open-source'],
     thumbnailUrl: 'static/images/data-ui/data-ui-sparkline.gif',
     employer: 'airbnb',
+    href: 'projects/data-ui',
   },
 
   {
@@ -151,6 +156,7 @@ const projects: Project[] = [
     tags: ['data vis', 'web', 'tool'],
     thumbnailUrl: 'static/images/search-session-explorer/search-session-explorer.png',
     employer: 'airbnb',
+    href: 'projects/search-session-explorer',
   },
 ];
 
