@@ -22,7 +22,7 @@ export type Project = {
   externalUrls?: { url: string; label: string }[];
   href: string;
   tags: ProjectTag[];
-  dates: [string, string];
+  dates: string[];
   roles?: ProjectRole[];
   employer?: 'personal' | 'airbnb' | 'interana' | 'ucsf' | 'insight';
 };

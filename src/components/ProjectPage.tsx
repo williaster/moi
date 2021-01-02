@@ -1,18 +1,21 @@
 import React from 'react';
 import { Project } from '../types';
 import DateRange from './DateRange';
+import FlexContainer from './FlexContainer';
 import Page from './Page';
 import ProjectTag from './ProjectTag';
 
 function ProjectPage({
   children,
-  imageStyles,
+  heroStyles,
+  heroUrl,
   title,
   className,
   project,
 }: {
   children: React.ReactNode;
-  imageStyles: React.CSSProperties;
+  heroUrl?: string;
+  heroStyles?: React.CSSProperties;
   title?: string;
   className?: string;
   project: Project;
@@ -20,11 +23,22 @@ function ProjectPage({
   return (
     <>
       <Page title={title} className={className}>
-        <div className="img" style={imageStyles} />
-
+        {(heroUrl || heroStyles) && (
+          <div className="hero" style={{ backgroundImage: `url(${heroUrl})`, ...heroStyles }} />
+        )}
         <div className="content">
           <h1>{project.title}</h1>
-          {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}
+          {(project.dates || project.employer) && (
+            <FlexContainer alignItems="center">
+              {project.employer && (
+                <>
+                  <strong>@{project.employer.toUpperCase()}</strong>&nbsp;&nbsp;
+                </>
+              )}
+              {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}
+            </FlexContainer>
+          )}
+
           {project.tags && (
             <div className="tags">
               {project.tags.map(tag => (
@@ -36,15 +50,18 @@ function ProjectPage({
         </div>
       </Page>
       <style jsx>{`
-        .img {
+        .hero {
           min-height: 400px;
           width: 100vw;
-          background-size: auto;
+          background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
         }
         .content {
           max-width: 800px;
+        }
+        .content > h1 {
+          margin-bottom: 0;
         }
         .tags {
           display: flex;

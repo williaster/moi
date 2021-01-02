@@ -14,7 +14,8 @@ const DateRange = ({
 }) => (
   <>
     <span className="date-range">
-      {start} — {end}
+      {start}
+      {end && ` – ${end}`}
       {showDuration && <>{<TimeDuration start={start} end={end} />}</>}
     </span>
     <style jsx>{`

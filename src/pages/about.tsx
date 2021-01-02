@@ -4,6 +4,7 @@ import Page from '../components/Page';
 import TimeDuration from '../components/TimeDuration';
 import { boxShadow, colors, linearGradientRed, mutedBlack, reds } from '../theme';
 import BackgroundCircle from '../components/BackgroundCircle';
+import Emphasize from '../components/Emphasize';
 
 function AboutPage() {
   return (
@@ -14,10 +15,10 @@ function AboutPage() {
         <div className="header">
           <h2>About</h2>
           <p>
-            I am passionate about <span className="emphasis">interface design & engineering</span>.
-            My background in genome sequencing led me to develop a love for{' '}
-            <span className="emphasis">data visualization</span> which opened the door to frontend
-            engineering, design, & product design.
+            I am passionate about <Emphasize>interface design & engineering</Emphasize>. My
+            background in genome sequencing led me to develop a love for{' '}
+            <Emphasize>data visualization</Emphasize> which opened the door to frontend engineering,
+            design, & product design.
             <br />
             <br />I have <TimeDuration start="2012-01-01" end={new Date().toUTCString()} />+ years
             experience crafting complex data visualizations & data tools that power data
@@ -52,14 +53,12 @@ function AboutPage() {
               <ul>
                 <li>
                   Co-created and was the tech lead for a 10-person{' '}
-                  <span className="emphasis">Data Experience</span> (DX) team, consisting of
-                  engineers, designers, product managers, and researchers with domain expertise in
-                  data.
+                  <Emphasize>Data Experience</Emphasize> (DX) team, consisting of engineers,
+                  designers, product managers, and researchers with domain expertise in data.
                 </li>
                 <li>
-                  Drove collaborations with <span className="emphasis">20+ teams</span> across most
-                  Airbnb orgs, to build a wide range of{' '}
-                  <span className="emphasis">30+ internal data products</span>
+                  Drove collaborations with <Emphasize>20+ teams</Emphasize> across most Airbnb
+                  orgs, to build a wide range of <Emphasize>30+ internal data products</Emphasize>
                 </li>
                 <li>
                   Unified Airbnb's visualization infrastructure by co-creating{' '}
@@ -161,20 +160,6 @@ function AboutPage() {
         }
         .card li {
           margin-bottom: 0.75em;
-        }
-        .emphasis {
-          font-weight: 600;
-          color: transparent;
-          background: ${linearGradientRed};
-          background-clip: text;
-          -webkit-background-clip: text;
-        }
-        @media (max-width: 1000px) {
-          .aside {
-            width: 100%;
-            margin-left: 0;
-            margin-top: 0;
-          }
         }
       `}</style>
     </Page>

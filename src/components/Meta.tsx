@@ -28,6 +28,7 @@ const Meta = ({ title = 'chris williams' }) => (
         margin: 0;
         font-size: 22px;
         line-height: 1.5em;
+        font-weight: 300;
       }
 
       #__next,
@@ -51,6 +52,10 @@ const Meta = ({ title = 'chris williams' }) => (
 
       blockquote {
         margin-left: 0;
+        padding-left: 16px;
+        border-left: 4px solid #ccc;
+        font-style: oblique;
+        color: #888;
       }
 
       li {

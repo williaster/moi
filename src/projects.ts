@@ -94,7 +94,8 @@ const projects: Project[] = [
 
   {
     title: 'Spatial gene expression',
-    subtitle: 'Novel genome sequencing methodology to understand spatial (3D) gene expression.',
+    subtitle:
+      'I developed a novel genome sequencing methodology to understand spatial (3D) gene expression.',
     tags: ['biology', 'data vis'],
     href: 'projects/ucsf',
     thumbnailUrl: 'static/images/ucsf/thumbnail.png',
@@ -107,6 +108,8 @@ const projects: Project[] = [
     subtitle: 'Custom personal road bike paint job design',
     tags: ['color', 'physical', 'personal-project'],
     thumbnailUrl: 'static/images/bike/figma.png',
+    href: 'projects/bike',
+    dates: ['2018'],
   },
 
   {

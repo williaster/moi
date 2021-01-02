@@ -1,4 +1,10 @@
 import React from 'react';
+// @ts-ignore
+import GithubButton from 'react-github-button';
+import 'react-github-button/assets/style.css';
+import FlexContainer from '../../components/FlexContainer';
+import ProjectImage from '../../components/ProjectImage';
+
 import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 
@@ -9,48 +15,78 @@ function Visx() {
     <>
       <ProjectPage
         title="chris williams – visx"
-        imageStyles={{
-          backgroundColor: '#000',
-          backgroundImage: `url('/static/images/visx/hero-dark.png')`,
-        }}
+        heroUrl="/static/images/visx/hero-dark.png"
+        heroStyles={{ backgroundColor: '#000' }}
         project={visxProject}
       >
         <div className="visx">
-          <div>
-            <p>
-              At Airbnb, we made it a goal to unify our visualization stack across the company, and
-              in the process we created a new project that brings together the power of D3 with the
-              joy of React. Here are the advantages of visx:
-            </p>
-            <ul>
-              <li>
-                <strong>Keep bundle sizes down</strong> visx is split into multiple packages. Start
-                small and use only what you need.
-              </li>
-              <li>
-                <strong>Un-opinionated on purpose.</strong> Bring your own state management,
-                animation library, or CSS-in-JS solution. Odds are good your React app already has
-                an opinion on how animation, theming, or styling is done. visx is careful not to add
-                another one and integrates with all of them.
-              </li>
-              <li>
-                <strong>Not a charting library.</strong> As you start using visualization
-                primitives, you’ll end up building your own charting library that’s optimized for
-                your use case. You’re in control.
-              </li>
-            </ul>
-
-            <p>
-              And most importantly — it’s just React. If you know React, you can make
-              visualizations. It’s all the same standard APIs and familiar patterns. visx should
-              feel at home in any React codebase. We’re excited to see what you build with it!
-            </p>
+          <p>
+            At Airbnb, we made it a goal to unify our visualization stack across the company, and in
+            the process we created a collection of novel visualization primitives for{' '}
+            <code>React</code>, filling a major gap in available frontend visualization tooling.
+          </p>
+          <div className="links">
+            <FlexContainer alignItems="center">
+              Check it out on Github&nbsp;&nbsp;
+              <GithubButton type="stargazers" namespace="airbnb" repo="visx" />
+            </FlexContainer>
+            <FlexContainer alignItems="center">
+              Read the full blog post&nbsp;&nbsp;
+              <a
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+                href="https://medium.com/airbnb-engineering/introducing-visx-from-airbnb-fd6155ac4658"
+              >
+                on Medium
+              </a>
+            </FlexContainer>
           </div>
+
+          <ProjectImage src="/static/images/visx/gallery.png" />
+
+          <p>
+            <h3>What is visx?</h3>
+            <code>visx</code> stands for visualization components, and is a suite of over 30
+            separate packages of <code>React</code> visualization primitives that fall into several
+            categories. It is un-opinionated on state management, animation, and styling so it can
+            integrate with any <code>React</code> codebase, and its emphasis on modularity (similar
+            to <code>D3</code>) lets you keep your bundle sizes down by only using the packages you
+            need to create your reusable chart library or a custom one-off chart.
+            <ProjectImage src="/static/images/visx/visx-packages.png" />
+          </p>
+
+          <hr />
+
+          <p>
+            <h3>What makes visx unique?</h3>
+            Looking at the problem space below, there was clearly an opportunity for a highly
+            expressive <code>React</code> library to thrive. By creating low-level visualization
+            primitives with a first-class <code>React</code> API, we hoped we could deliver
+            learnability, expressiveness, and performance that any frontend developer could pick up.
+            <ProjectImage src="/static/images/visx/visx-overview.png" />
+          </p>
+
+          <p>
+            <h3>Want to read more?</h3>
+            <p>
+              Read the full blog post&nbsp;&nbsp;
+              <a
+                rel="nofollow noopener noreferrer"
+                target="_blank"
+                href="https://medium.com/airbnb-engineering/introducing-visx-from-airbnb-fd6155ac4658"
+              >
+                on Medium
+              </a>
+            </p>
+          </p>
         </div>
       </ProjectPage>
       <style jsx>{`
         .visx li {
           list-style-type: disc;
+        }
+        .links {
+          margin: 1em 0;
         }
       `}</style>
     </>
