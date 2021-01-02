@@ -40,16 +40,28 @@ function Lines({ count, colors }) {
       }),
     [colors, count],
   );
-  return lines.map((props, index) => <Line key={index} {...props} />);
+  return (
+    <>
+      {lines.map((props, index) => (
+        <Line key={index} {...props} />
+      ))}
+    </>
+  );
 }
 
 function Line({ curve, width, color, speed }) {
-  const material = useRef();
+  const material = useRef<any>();
   const [dashRatio] = useState(getDashRatio);
-  useFrame(() => (material.current.uniforms.dashOffset.value -= speed));
+  useFrame(() => {
+    if (material.current) {
+      material.current.uniforms.dashOffset.value -= speed;
+    }
+  });
   return (
     <mesh>
+      {/** @ts-expect-error meshline not a jsx element */}
       <meshLine attach="geometry" vertices={curve} />
+      {/** @ts-expect-error */}
       <meshLineMaterial
         attach="material"
         ref={material}
@@ -65,16 +77,20 @@ function Line({ curve, width, color, speed }) {
 }
 
 function Scene() {
-  let group = useRef();
+  let group = useRef<any>();
   let [theta] = useState(0);
-  useFrame(() =>
-    // rotate the scene along y-axis
-    group.current?.rotation.set(
-      THREE.Math.degToRad(-15),
-      5 * Math.sin(THREE.Math.degToRad((theta += 0.01))),
-      0,
-    ),
-  );
+  useFrame(() => {
+    if (group && group.current) {
+      // rotate the scene along y-axis
+      group.current.rotation.set(
+        // @ts-expect-error Three.Math
+        THREE.Math.degToRad(-15),
+        // @ts-expect-error Three.Math
+        5 * Math.sin(THREE.Math.degToRad((theta += 0.01))),
+        0,
+      );
+    }
+  });
   return (
     <group ref={group}>
       <Lines count={LINE_COUNT} colors={COLORS} />
