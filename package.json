@@ -4,7 +4,7 @@
   "description": "A site for moi.",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "preview": "yarn build && cd ./out && npx serve",
     "deploy": "rm -rf out && yarn build && cd out && touch .nojekyll && git init && git add . && git commit -m \"Deploy commit\" && git remote add origin git@github.com:williaster/moi.git && git push -f origin master:gh-pages",

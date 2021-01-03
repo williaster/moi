@@ -55,8 +55,6 @@ function Visx() {
             <ProjectImage src="/static/images/visx/visx-packages.png" />
           </p>
 
-          <hr />
-
           <p>
             <h3>What makes visx unique?</h3>
             Looking at the problem space below, there was clearly an opportunity for a highly

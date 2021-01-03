@@ -7,6 +7,7 @@
 /.eslintcache
 coverage
 node_modules
+out
 package-lock.json
 prettier.config.js
 yarn.lock
