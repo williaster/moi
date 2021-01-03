@@ -8,13 +8,13 @@ import ProjectImage from '../../components/ProjectImage';
 import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 
-const visxProject = projects.filter(p => p.title === 'visx')[0];
+const visxProject = projects.filter(p => p.href === 'projects/visx')[0];
 
 function Visx() {
   return (
     <>
       <ProjectPage
-        title="chris williams – visx"
+        title="Chris Williams – visx"
         heroUrl="/static/images/visx/hero-dark.png"
         heroStyles={{ backgroundColor: '#000' }}
         project={visxProject}
@@ -31,12 +31,12 @@ function Visx() {
               <a target="_blank" href="https://airbnb.io/visx">
                 project page
               </a>
-              , view on&nbsp;
+              view on&nbsp;
               <a target="_blank" href="https://github.com/airbnb/visx">
                 Github
               </a>
               &nbsp;&nbsp;
-              <GithubButton type="stargazers" namespace="airbnb" repo="visx" />, or read the full
+              <GithubButton type="stargazers" namespace="airbnb" repo="visx" /> or read the full
               blog post&nbsp;
               <a
                 rel="nofollow noopener noreferrer"

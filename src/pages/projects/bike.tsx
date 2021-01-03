@@ -1,17 +1,16 @@
 import React from 'react';
 import ProjectImage from '../../components/ProjectImage';
-
 import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 
-const bikeProject = projects.filter(p => p.title.toLowerCase().includes('polka dot'))[0];
+const bikeProject = projects.filter(p => p.href === 'projects/bike')[0];
 const imageStyles = { marginTop: 16, marginRight: 16 };
 
 function Bike() {
   return (
     <>
       <ProjectPage
-        title="chris williams – Polka dot bike design"
+        title="Chris Williams – Polka dot bike design"
         heroUrl="/static/images/bike/figma.png"
         project={bikeProject}
       >

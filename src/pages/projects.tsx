@@ -103,7 +103,7 @@ function ProjectsPage() {
       ? projects
       : projects.filter(project => project.tags.some(tag => tagFilter === tag));
   return (
-    <Page title="chris williams – projects">
+    <Page title="Chris Williams – projects">
       <BackgroundCircle color={`${blues[0]}15`} />
       <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}15`} />
       <div className="projects">
@@ -134,6 +134,9 @@ function ProjectsPage() {
         {filteredProjects.map(project => (
           <ProjectCard key={project.title} {...project} />
         ))}
+        <br />
+        <br />
+        <br />
       </div>
       <style jsx>{`
         .projects {

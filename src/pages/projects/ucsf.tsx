@@ -7,13 +7,13 @@ import projects from '../../projects';
 import { boxShadow } from '../../theme';
 import getStaticUrl from '../../utils/getStaticUrl';
 
-const uscfProject = projects.filter(p => p.employer === 'ucsf')[0];
+const uscfProject = projects.filter(p => p.href === 'projects/ucsf')[0];
 
 function UCSF() {
   return (
     <>
       <ProjectPage
-        title="chris williams – UC, San Francisco"
+        title="Chris Williams – UC, San Francisco"
         heroUrl="/static/images/ucsf/thumbnail.png"
         project={uscfProject}
       >
@@ -119,7 +119,7 @@ function UCSF() {
         </div>
       </ProjectPage>
       <style jsx>{`
-        .ucsf li {
+        .ucsf ol li {
           list-style-type: decimal;
           list-style-position: inside;
           font-weight: bold;

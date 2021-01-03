@@ -36,7 +36,7 @@ function ProjectPage({
             <FlexContainer alignItems="center">
               {project.employer && (
                 <>
-                  <strong>@{project.employer.toUpperCase()}</strong>&nbsp;&nbsp;
+                  <strong>@{project.employer}</strong>&nbsp;&nbsp;
                 </>
               )}
               {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}

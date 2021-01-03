@@ -24,5 +24,5 @@ export type Project = {
   tags?: ProjectTag[];
   dates?: string[];
   roles?: ProjectRole[];
-  employer?: 'personal' | 'airbnb' | 'interana' | 'ucsf' | 'insight';
+  employer?: 'Personal' | 'Airbnb' | 'Interana' | 'UCSF' | 'Insight';
 };

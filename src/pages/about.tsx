@@ -8,7 +8,7 @@ import Emphasize from '../components/Emphasize';
 
 function AboutPage() {
   return (
-    <Page title="chris williams – about">
+    <Page title="Chris Williams – about">
       <BackgroundCircle color={`${reds[0]}66`} />
       <BackgroundCircle position="bottom" color={`${colors[colors.length - 1]}22`} />
       <div className="about">

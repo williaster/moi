@@ -3,13 +3,13 @@ import React from 'react';
 import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 
-const orgChartProject = projects.filter(p => p.title.toLowerCase().includes('org chart'))[0];
+const orgChartProject = projects.filter(p => p.href === 'projects/airbnb-org-chart')[0];
 
 function OrgChart() {
   return (
     <>
       <ProjectPage
-        title="chris williams – Airbnb Org Chart"
+        title="Chris Williams – Airbnb org chart"
         heroUrl="/static/images/org-chart/prototype-icicle.png"
         project={orgChartProject}
       >
