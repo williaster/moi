@@ -19,7 +19,7 @@ const Meta = ({ title = 'chris williams' }) => (
         href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700"
       ></link>
       <title>{title}</title>
-      <link rel="shortcut icon" type="image/png" href="static/favicon.png" />
+      <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
     </Head>
     <style jsx global>{`
       html,
