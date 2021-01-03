@@ -1,5 +1,6 @@
 import React from 'react';
 import { Project } from '../types';
+import getStaticUrl from '../utils/getStaticUrl';
 import DateRange from './DateRange';
 import FlexContainer from './FlexContainer';
 import Page from './Page';
@@ -24,7 +25,10 @@ function ProjectPage({
     <>
       <Page title={title} className={className}>
         {(heroUrl || heroStyles) && (
-          <div className="hero" style={{ backgroundImage: `url(${heroUrl})`, ...heroStyles }} />
+          <div
+            className="hero"
+            style={{ backgroundImage: `url(${getStaticUrl(heroUrl)})`, ...heroStyles }}
+          />
         )}
         <div className="content">
           <h1>{project.title}</h1>

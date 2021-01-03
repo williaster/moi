@@ -1,8 +1,9 @@
 import React from 'react';
+import getStaticUrl from '../utils/getStaticUrl';
 
 const ProjectImage = ({ src, imageStyles }: { src: string; imageStyles?: React.CSSProperties }) => (
   <>
-    <img className="img" src={src} style={imageStyles} />
+    <img className="img" src={getStaticUrl(src)} style={imageStyles} />
     <style jsx>{`
       .img {
         width: 100%;

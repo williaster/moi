@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Tilt from 'react-tilt';
 import Page from '../components/Page';
 import { Project, ProjectTag as ProjectTagType } from '../types';
@@ -8,6 +9,7 @@ import projects from '../projects';
 import BackgroundCircle from '../components/BackgroundCircle';
 import ProjectTag from '../components/ProjectTag';
 import DateRange from '../components/DateRange';
+import getStaticUrl from '../utils/getStaticUrl';
 
 const MAX_WIDTH = 740;
 const allTags = Array.from(
@@ -34,7 +36,7 @@ function ProjectCard(project: Project) {
             <div
               className="img"
               style={{
-                backgroundImage: `url(${project.thumbnailUrl})`,
+                backgroundImage: `url(${getStaticUrl(project.thumbnailUrl)})`,
               }}
             />
           </div>
