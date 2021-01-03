@@ -5,6 +5,7 @@ import ProjectImage from '../../components/ProjectImage';
 import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 import { boxShadow } from '../../theme';
+import getStaticUrl from '../../utils/getStaticUrl';
 
 const uscfProject = projects.filter(p => p.employer === 'ucsf')[0];
 
@@ -80,7 +81,7 @@ function UCSF() {
               <div
                 className="img"
                 style={{
-                  backgroundImage: `url(${'/static/images/ucsf/er.png'})`,
+                  backgroundImage: `url(${getStaticUrl('/static/images/ucsf/er.png')})`,
                 }}
               />
             </div>
@@ -101,7 +102,7 @@ function UCSF() {
               <div
                 className="img"
                 style={{
-                  backgroundImage: `url(${'/static/images/ucsf/mito.png'})`,
+                  backgroundImage: `url(${getStaticUrl('/static/images/ucsf/mito.png')})`,
                 }}
               />
             </div>

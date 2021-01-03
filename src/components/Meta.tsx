@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import ReactGA from 'react-ga';
 import { linearGradient, linearGradientBlue } from '../theme';
+import getStaticUrl from '../utils/getStaticUrl';
 
 if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
   ReactGA.initialize('UA-112403196-1');
@@ -44,7 +45,7 @@ const Meta = ({ title = 'chris williams' }) => (
       />
       <meta name="twitter:image:alt" content="chris williams logo is a collection of circles" />
       <title>{title}</title>
-      <link rel="shortcut icon" type="image/png" href="/static/favicon.png" />
+      <link rel="shortcut icon" type="image/png" href={getStaticUrl('/static/favicon.png')} />
     </Head>
     <style jsx global>{`
       html,

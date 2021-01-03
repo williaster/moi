@@ -19,10 +19,10 @@ const HomePage = () => (
           <p>I currently craft data visualizations & interfaces at Airbnb.</p>
           <br />
           <div>
-            <Link href="/about">About</Link>
+            <Link href="/projects">Projects</Link>
           </div>
           <div>
-            <Link href="/projects">Projects</Link>
+            <Link href="/about">About</Link>
           </div>
         </div>
       </div>
