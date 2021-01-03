@@ -21,8 +21,6 @@ const Nav = () => (
         justify-content: center;
         font-size: 16px;
         z-index: 3;
-        position: sticky;
-        top: 0;
         padding: 0 24px;
         background: #fff;
       }

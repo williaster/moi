@@ -26,12 +26,18 @@ function Visx() {
             <code>React</code>, filling a major gap in available frontend visualization tooling.
           </p>
           <div className="links">
-            <FlexContainer alignItems="center">
-              Check it out on Github&nbsp;&nbsp;
-              <GithubButton type="stargazers" namespace="airbnb" repo="visx" />
-            </FlexContainer>
-            <FlexContainer alignItems="center">
-              Read the full blog post&nbsp;&nbsp;
+            <FlexContainer wrap alignItems="center">
+              Check out the&nbsp;
+              <a target="_blank" href="https://airbnb.io/visx">
+                project page
+              </a>
+              , view on&nbsp;
+              <a target="_blank" href="https://github.com/airbnb/visx">
+                Github
+              </a>
+              &nbsp;&nbsp;
+              <GithubButton type="stargazers" namespace="airbnb" repo="visx" />, or read the full
+              blog post&nbsp;
               <a
                 rel="nofollow noopener noreferrer"
                 target="_blank"
@@ -39,13 +45,14 @@ function Visx() {
               >
                 on Medium
               </a>
+              .
             </FlexContainer>
           </div>
 
           <ProjectImage src="/static/images/visx/gallery.png" />
 
+          <h3>What is visx?</h3>
           <p>
-            <h3>What is visx?</h3>
             <code>visx</code> stands for visualization components, and is a suite of over 30
             separate packages of <code>React</code> visualization primitives that fall into several
             categories. It is un-opinionated on state management, animation, and styling so it can
@@ -55,28 +62,31 @@ function Visx() {
             <ProjectImage src="/static/images/visx/visx-packages.png" />
           </p>
 
+          <h3>What makes visx unique?</h3>
           <p>
-            <h3>What makes visx unique?</h3>
-            Looking at the problem space below, there was clearly an opportunity for a highly
+            There are dozens of libraries for creating visualizations for the web, but upon
+            examining the problem space below, there was clearly an opportunity for a highly
             expressive <code>React</code> library to thrive. By creating low-level visualization
             primitives with a first-class <code>React</code> API, we hoped we could deliver
             learnability, expressiveness, and performance that any frontend developer could pick up.
+            <br />
+            <br />
             <ProjectImage src="/static/images/visx/visx-overview.png" />
           </p>
 
+          <h3>Want to read more?</h3>
           <p>
-            <h3>Want to read more?</h3>
-            <p>
-              Read the full blog post&nbsp;&nbsp;
-              <a
-                rel="nofollow noopener noreferrer"
-                target="_blank"
-                href="https://medium.com/airbnb-engineering/introducing-visx-from-airbnb-fd6155ac4658"
-              >
-                on Medium
-              </a>
-            </p>
+            Check out the full blog post&nbsp;&nbsp;
+            <a
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              href="https://medium.com/airbnb-engineering/introducing-visx-from-airbnb-fd6155ac4658"
+            >
+              on Medium
+            </a>
           </p>
+          <br />
+          <br />
         </div>
       </ProjectPage>
       <style jsx>{`

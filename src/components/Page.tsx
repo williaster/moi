@@ -5,7 +5,7 @@ import NProgress from 'nprogress';
 
 import Meta from './Meta';
 import Nav from './Nav';
-import { blues, linearGradient, reds } from '../theme';
+import { linearGradient } from '../theme';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
