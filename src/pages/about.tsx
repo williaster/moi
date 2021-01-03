@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Page from '../components/Page';
 import TimeDuration from '../components/TimeDuration';
-import { boxShadow, colors, linearGradientRed, mutedBlack, reds } from '../theme';
+import { boxShadow, colors, mutedBlack, reds } from '../theme';
 import BackgroundCircle from '../components/BackgroundCircle';
 import Emphasize from '../components/Emphasize';
 
@@ -54,7 +54,7 @@ function AboutPage() {
                 <li>
                   Co-created and was the tech lead for a 10-person{' '}
                   <Emphasize>Data Experience</Emphasize> (DX) team, consisting of engineers,
-                  designers, product managers, and researchers with domain expertise in data.
+                  designers, product managers, and researchers with domain expertise in data
                 </li>
                 <li>
                   Drove collaborations with <Emphasize>20+ teams</Emphasize> across most Airbnb
@@ -63,7 +63,7 @@ function AboutPage() {
                 <li>
                   Unified Airbnb's visualization infrastructure by co-creating{' '}
                   <Link href="/projects/visx">visx</Link>, an open-source collection of low-level
-                  visualization components for React
+                  visualization components for <code>React</code>
                 </li>
               </ul>
             </p>
@@ -94,7 +94,7 @@ function AboutPage() {
               Insight is "bootcamp" program in the Bay Area to help quantitative PhD "fellows"
               transition into data science or data- roles at top tech & biotech companies. Fellows
               uplevel their skills in Python, SQL, statistics, and machine learning with a personal
-              project which forms the basis of an interview at prospective companies.
+              project which forms the basis of interviews at prospective companies.
             </p>
           </div>
 

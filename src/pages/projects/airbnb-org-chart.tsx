@@ -10,7 +10,7 @@ function OrgChart() {
     <>
       <ProjectPage
         title="chris williams – Airbnb Org Chart"
-        heroUrl="/static/images/org-chart/prototype-icicle.png"
+        heroUrl="static/images/org-chart/prototype-icicle.png"
         project={orgChartProject}
       >
         <div className="org-chart">{orgChartProject.subtitle}</div>

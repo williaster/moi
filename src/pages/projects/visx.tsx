@@ -15,7 +15,7 @@ function Visx() {
     <>
       <ProjectPage
         title="chris williams – visx"
-        heroUrl="/static/images/visx/hero-dark.png"
+        heroUrl="static/images/visx/hero-dark.png"
         heroStyles={{ backgroundColor: '#000' }}
         project={visxProject}
       >
@@ -42,7 +42,7 @@ function Visx() {
             </FlexContainer>
           </div>
 
-          <ProjectImage src="/static/images/visx/gallery.png" />
+          <ProjectImage src="static/images/visx/gallery.png" />
 
           <p>
             <h3>What is visx?</h3>
@@ -52,7 +52,7 @@ function Visx() {
             integrate with any <code>React</code> codebase, and its emphasis on modularity (similar
             to <code>D3</code>) lets you keep your bundle sizes down by only using the packages you
             need to create your reusable chart library or a custom one-off chart.
-            <ProjectImage src="/static/images/visx/visx-packages.png" />
+            <ProjectImage src="static/images/visx/visx-packages.png" />
           </p>
 
           <p>
@@ -61,7 +61,7 @@ function Visx() {
             expressive <code>React</code> library to thrive. By creating low-level visualization
             primitives with a first-class <code>React</code> API, we hoped we could deliver
             learnability, expressiveness, and performance that any frontend developer could pick up.
-            <ProjectImage src="/static/images/visx/visx-overview.png" />
+            <ProjectImage src="static/images/visx/visx-overview.png" />
           </p>
 
           <p>

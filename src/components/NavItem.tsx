@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { linearGradientRed } from '../theme';
 
 type NavItemProps = {
   href: string;
@@ -29,6 +30,7 @@ const NavItem = ({ id, href, children, className, external }: NavItemProps) => (
         padding: 16px 0;
         text-decoration: none;
         font-size: 18px;
+        background-image: ${linearGradientRed};
       }
       .nav-item {
         margin-right: 16px;

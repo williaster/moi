@@ -1,6 +1,13 @@
 import React from 'react';
 import Head from 'next/head';
+import ReactGA from 'react-ga';
 import { linearGradient, linearGradientBlue } from '../theme';
+
+if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+  ReactGA.initialize('UA-112403196-1');
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+}
 
 const Meta = ({ title = 'chris williams' }) => (
   <div>

@@ -12,7 +12,7 @@ function Bike() {
     <>
       <ProjectPage
         title="chris williams – Polka dot bike design"
-        heroUrl="/static/images/bike/figma.png"
+        heroUrl="static/images/bike/figma.png"
         project={bikeProject}
       >
         <p>
@@ -32,10 +32,10 @@ function Bike() {
           who would do the painting, I settled on two colors and a lot of polka dots:
         </p>
         <div className="flex">
-          <ProjectImage src="/static/images/bike/colors.png" />
-          <ProjectImage src="/static/images/bike/figma-0.png" />
-          <ProjectImage src="/static/images/bike/figma-1.png" />
-          <ProjectImage src="/static/images/bike/figma.png" />
+          <ProjectImage src="static/images/bike/colors.png" />
+          <ProjectImage src="static/images/bike/figma-0.png" />
+          <ProjectImage src="static/images/bike/figma-1.png" />
+          <ProjectImage src="static/images/bike/figma.png" />
         </div>
 
         <h3>Coming to life</h3>
@@ -44,14 +44,14 @@ function Bike() {
           digitally, it was awesome to see a design become physical.
         </p>
         <div className="flex">
-          <ProjectImage src="/static/images/bike/mid-0.jpg" imageStyles={imageStyles} />
-          <ProjectImage src="/static/images/bike/mid-1.jpg" imageStyles={imageStyles} />
+          <ProjectImage src="static/images/bike/mid-0.jpg" imageStyles={imageStyles} />
+          <ProjectImage src="static/images/bike/mid-1.jpg" imageStyles={imageStyles} />
         </div>
 
         <h3>The fun part</h3>
         <div className="flex">
-          <ProjectImage src="/static/images/bike/final-1.jpg" imageStyles={imageStyles} />
-          <ProjectImage src="/static/images/bike/final-0.jpg" imageStyles={imageStyles} />
+          <ProjectImage src="static/images/bike/final-1.jpg" imageStyles={imageStyles} />
+          <ProjectImage src="static/images/bike/final-0.jpg" imageStyles={imageStyles} />
         </div>
         <br />
         <br />

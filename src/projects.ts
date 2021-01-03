@@ -8,7 +8,7 @@ const projects: Project[] = [
     dates: ['2017-01-01', 'current'],
     tags: ['data vis', 'web', 'library', 'open-source'],
     href: 'projects/visx',
-    thumbnailUrl: '/static/images/visx/hero.png',
+    thumbnailUrl: 'static/images/visx/hero.png',
     employer: 'airbnb',
   },
 

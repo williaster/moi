@@ -13,7 +13,7 @@ function UCSF() {
     <>
       <ProjectPage
         title="chris williams – UC, San Francisco"
-        heroUrl="/static/images/ucsf/thumbnail.png"
+        heroUrl="static/images/ucsf/thumbnail.png"
         project={uscfProject}
       >
         <div className="ucsf">
@@ -60,12 +60,12 @@ function UCSF() {
             metazoan organisms.
           </p>
           <ProjectImage
-            src="/static/images/ucsf/methodology.png"
+            src="static/images/ucsf/methodology.png"
             imageStyles={{ width: '50%', display: 'block', margin: 'auto' }}
           />
           <p>Read more in our papers:</p>
 
-          <a target="_blank" href="/static/Science-2014-Jan-Williams.pdf">
+          <a target="_blank" href="static/Science-2014-Jan-Williams.pdf">
             <div className="project-card">
               <div className="content">
                 <h4 className="title">
@@ -80,13 +80,13 @@ function UCSF() {
               <div
                 className="img"
                 style={{
-                  backgroundImage: `url(${'/static/images/ucsf/er.png'})`,
+                  backgroundImage: `url(${'static/images/ucsf/er.png'})`,
                 }}
               />
             </div>
           </a>
 
-          <a target="_blank" href="/static/Science-2014-Williams-Jan.pdf">
+          <a target="_blank" href="static/Science-2014-Williams-Jan.pdf">
             <div className="project-card">
               <div className="content">
                 <h4 className="title">
@@ -101,7 +101,7 @@ function UCSF() {
               <div
                 className="img"
                 style={{
-                  backgroundImage: `url(${'/static/images/ucsf/mito.png'})`,
+                  backgroundImage: `url(${'static/images/ucsf/mito.png'})`,
                 }}
               />
             </div>
