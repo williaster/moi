@@ -18,26 +18,25 @@ function UCSF() {
         project={uscfProject}
       >
         <div className="ucsf">
+          <h3>What is spatial gene expression?</h3>
           <p>
             Most <Emphasize>cells in our body have functionally specialized regions</Emphasize>{' '}
-            containing distinct sets of proteins. The evolution of this complexity from prokaryotic
-            ancestors relied on the capacity to generate, sustain, and regulate subcellular
-            compartments.
+            containing distinct sets of proteins. This complexity relies on the capacity of cells to
+            generate, sustain, and regulate subcellular compartments.
           </p>
           <blockquote>
             For example, multi-cellular organisms begin from <strong>one</strong> cell, which lays
-            the blueprint for multi-cellular asymmetry through localized gene expression
+            the spatial blueprint for multi-cellular asymmetry (e.g., left hand, right foot) through
+            localized gene expression.
           </blockquote>
           <p>
             How the cell achieves such asymmetry is not well understood because of limited
-            experimental approaches for discovering and analyzing such localized gene expression. In
-            grad school{' '}
-            <Emphasize>
-              I co-developed a genome sequencing approach to enable a global view of localized gene
-              expression
-            </Emphasize>{' '}
-            within subcompartments of cells with unprecedented precision.
+            experimental approaches for discovering and analyzing localized gene expression.
+            Historical methods – such as microscopy – are generally low-throughput, enabling study
+            of one or two genes at a time, not the 100s - 10,000s of total genes in an organism.
           </p>
+
+          <h3>Genome sequencing primer</h3>
           <p>In the 2000s, genome sequencing had two major applications:</p>
           <ol>
             <li>
@@ -48,23 +47,33 @@ function UCSF() {
             <li>
               <p>
                 Precisely quantifying <em>how much of which genes</em> are expressed under different
-                conditions (e.g., in cancer cells).
+                conditions (e.g., which genes are over-expressed in cancer cells vs normal cells).
               </p>
             </li>
           </ol>
 
+          <h3>Sequencing sub-regions of cells</h3>
+          <p>
+            To enable better study of localized gene expression, in grad school{' '}
+            <Emphasize>
+              I co-developed a genome sequencing approach to enable a <em>global</em> view of
+              localized gene expression
+            </Emphasize>{' '}
+            within subcompartments of cells with unprecedented precision.
+          </p>
           <p>
             Our approach was built on a "ribosome profiling" method, previously developed in our lab
-            to quantitatively describe gene expression (#2 above). We sought to refine this method
-            to analyze a localized subset of ribosomes, the cellular machines that create proteins.
-            Our findings may guide the study of region-specific reactions in morphologically complex
-            metazoan organisms.
+            to quantitatively analyze gene expression (#2 above). We refined this methodology to
+            analyze localized sub-populations of ribosomes, the cellular machines that create
+            proteins, encoded by genes. Our findings may guide the study of region-specific
+            reactions in morphologically complex metazoan organisms.
           </p>
           <ProjectImage
             src="/static/images/ucsf/methodology.png"
             imageStyles={{ width: '50%', display: 'block', margin: 'auto' }}
           />
-          <p>Read more in our papers:</p>
+          <h3>Still reading?</h3>
+          <p>Check out our papers:</p>
 
           <a target="_blank" href="/static/Science-2014-Jan-Williams.pdf">
             <div className="project-card">

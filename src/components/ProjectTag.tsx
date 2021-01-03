@@ -30,6 +30,7 @@ const ProjectTag = ({
         padding: 2px 8px;
         border-radius: 2px;
         transition: color 300ms; // can't transition gradient background
+        flex-grow: 0;
       }
       .tag--button {
         cursor: pointer;

@@ -16,8 +16,7 @@ const HomePage = () => (
         <BackgroundCircle position="bottom" color={`${blues[blues.length - 1]}22`} />
         <div className="content">
           <h2>Hi, my name is Chris Williams.</h2>
-          <p>I currently craft data visualizations & interfaces at Airbnb.</p>
-          <br />
+          <p>I currently craft all sorts of data visualizations & interfaces at Airbnb.</p>
           <div>
             <Link href="/projects">Projects</Link>
           </div>

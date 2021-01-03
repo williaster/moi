@@ -50,9 +50,8 @@ const Meta = ({ title = 'chris williams' }) => (
     <style jsx global>{`
       html,
       body {
-        width: 100vw;
+        width: 100%;
         height: 100%;
-        overflow-x: hidden;
         font-family: 'Hind', -apple-system, BlinkMacSystemFont, sans-serif;
         background: #fff;
         display: flex;

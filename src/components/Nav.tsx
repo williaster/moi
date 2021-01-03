@@ -13,6 +13,7 @@ const Nav = () => (
 
     <style jsx>{`
       .nav {
+        position: relative;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;

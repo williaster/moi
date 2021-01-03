@@ -7,10 +7,18 @@ const Emphasize = ({ children }: { children: React.ReactNode }) => (
     <style jsx>{`
       .emphasize {
         font-weight: 600;
-        color: transparent;
-        background: ${linearGradientRed};
-        background-clip: text;
+        background-image: ${linearGradientRed};
+        overflow-wrap: break-word;
         -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -webkit-box-decoration-break: clone; // needed for multi-line gradients in safari
+        -moz-background-clip: text;
+        -moz-text-fill-color: transparent;
+        -ms-background-clip: text;
+        -ms-text-fill-color: transparent;
+        color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
       }
     `}</style>
   </>

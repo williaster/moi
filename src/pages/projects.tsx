@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import Tilt from 'react-tilt';
 import Page from '../components/Page';
 import { Project, ProjectTag as ProjectTagType } from '../types';
 import { blues, boxShadow, colors } from '../theme';
@@ -19,41 +17,41 @@ const allTags = Array.from(
 function ProjectCard(project: Project) {
   return (
     <>
-      <Tilt options={{ scale: 1, max: 25 }}>
-        <Link href={project.href || ''}>
-          <div className="card">
-            <div className="content">
-              <h2 className="title"> {project.title}</h2>
-              {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}
-              {project.subtitle && <p className="subtitle">{project.subtitle}</p>}
+      <Link href={project.href || ''}>
+        <div className="card">
+          <div className="content">
+            <h2 className="title"> {project.title}</h2>
+            {project.dates && <DateRange start={project.dates[0]} end={project.dates[1]} />}
+            {project.subtitle && <p className="subtitle">{project.subtitle}</p>}
 
-              <div className="tags">
-                {project.tags?.map(tag => (
-                  <ProjectTag key={tag} tag={tag} />
-                ))}
-              </div>
+            <div className="tags">
+              {project.tags?.map(tag => (
+                <ProjectTag key={tag} tag={tag} />
+              ))}
             </div>
-            <div
-              className="img"
-              style={{
-                backgroundImage: `url(${getStaticUrl(project.thumbnailUrl)})`,
-              }}
-            />
           </div>
-        </Link>
-      </Tilt>
+          <div
+            className="img"
+            role="image"
+            style={{
+              backgroundImage: `url(${getStaticUrl(project.thumbnailUrl)})`,
+            }}
+          />
+        </div>
+      </Link>
+
       <style jsx>{`
         .title {
-          margin-bottom: 0rem;
+          margin-bottom: 0;
         }
         .card {
           max-width: ${MAX_WIDTH}px;
-          min-height: 300px;
           background: white;
           border-radius: 4px;
           margin-bottom: 32px;
           display: flex;
           flex-direction: row;
+          flex-shrink: 0;
           box-shadow: ${boxShadow};
           cursor: pointer;
         }
@@ -65,7 +63,7 @@ function ProjectCard(project: Project) {
         }
         .img {
           width: 300px;
-          min-height: 200px;
+          min-height: 300px;
           flex-shrink: 0;
           border-radius: inherit;
           background-size: cover;
@@ -81,18 +79,12 @@ function ProjectCard(project: Project) {
           flex-direction: row;
           flex-wrap: wrap;
         }
-        .tag {
-          font-size: 0.6rem;
-          font-weight: 300;
-          line-height: 1em;
-          margin: 8px 8px 0 0;
-          border: 1px solid currentcolor;
-          padding: 2px 8px;
-          border-radius: 2px;
-        }
         @media (max-width: 600px) {
           .card {
             flex-direction: column-reverse;
+          }
+          .title {
+            margin-top: 0;
           }
           .img {
             width: 100%;
@@ -120,7 +112,6 @@ function ProjectsPage() {
           Below is collection of selected projects. Try filtering by project tag, click a project to
           learn more.
         </p>
-        <br />
         <div className="tags">
           <span className="label">Tags</span>
           &nbsp;&nbsp;
@@ -162,9 +153,10 @@ function ProjectsPage() {
         }
         .tags {
           display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
+          flex-flow: row wrap;
           align-items: baseline;
+          flex-shrink: 0;
+          line-height: 1em;
           margin-bottom: 2em;
         }
       `}</style>

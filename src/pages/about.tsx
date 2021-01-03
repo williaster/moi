@@ -15,13 +15,13 @@ function AboutPage() {
         <div className="header">
           <h2>About</h2>
           <p>
-            I am passionate about <Emphasize>interface design & engineering</Emphasize>. My
+            I am passionate about <Emphasize>interface design and engineering</Emphasize>. My
             background in genome sequencing led me to develop a love for{' '}
             <Emphasize>data visualization</Emphasize> which opened the door to frontend engineering,
             design, & product design.
             <br />
             <br />I have <TimeDuration start="2012-01-01" end={new Date().toUTCString()} />+ years
-            experience crafting complex data visualizations & data tools that power data
+            experience crafting complex data visualizations and data tools that power data
             intelligence at many major companies, and have contributed to several large open-source
             software <Link href="/projects">projects</Link>.
           </p>
