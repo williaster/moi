@@ -40,7 +40,7 @@ function GeoExplorer() {
             the 2nd click event). This operation can actually filter out event sequences, e.g., if
             you align by th 3rd event and a sequence only has 2 events or if you align by the first
             event type "x" and a specific sequence has no events of that type. Filtered nodes are
-            shown visually with a pattern line root node, and in the legend./p>
+            shown visually with a pattern line root node, and in the legend.
           </p>
 
           <h4>Event type filtering</h4>
@@ -76,8 +76,8 @@ function GeoExplorer() {
 
           <h4>Node sorting (vertical)</h4>
           <p>
-            By default nodes are ordered top -> bottom based on high -> low event count, meaning
-            that the most common nodes appear at the top. Users can also order by short -> long
+            By default nodes are ordered top ➡️ bottom based on high ➡️ low event count, meaning
+            that the most common nodes appear at the top. Users can also order by short ➡️ long
             elapsed time to the next event.
           </p>
 
