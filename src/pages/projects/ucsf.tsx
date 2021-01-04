@@ -75,7 +75,7 @@ function UCSF() {
           <h3>Still reading?</h3>
           <p>Check out our papers:</p>
 
-          <a target="_blank" href="/static/Science-2014-Jan-Williams.pdf">
+          <a target="_blank" href={getStaticUrl('/static/Science-2014-Jan-Williams.pdf')}>
             <div className="project-card">
               <div className="content">
                 <h4 className="title">
@@ -96,7 +96,7 @@ function UCSF() {
             </div>
           </a>
 
-          <a target="_blank" href="/static/Science-2014-Williams-Jan.pdf">
+          <a target="_blank" href={getStaticUrl('/static/Science-2014-Williams-Jan.pdf')}>
             <div className="project-card">
               <div className="content">
                 <h4 className="title">
