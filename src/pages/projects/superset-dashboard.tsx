@@ -95,17 +95,7 @@ function OrgChart() {
           </p>
         </div>
       </ProjectPage>
-      <style jsx>{`
-        .dashboard ol li {
-          list-style-type: decimal;
-          list-style-position: inside;
-          font-weight: bold;
-        }
-        .dashboard li p {
-          display: inline;
-          font-weight: 300;
-        }
-      `}</style>
+      <style jsx>{``}</style>
     </>
   );
 }

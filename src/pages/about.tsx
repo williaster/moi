@@ -17,8 +17,8 @@ function AboutPage() {
           <p>
             I am passionate about <Emphasize>interface design and engineering</Emphasize>. My
             background in genome sequencing led me to develop a love for{' '}
-            <Emphasize>data visualization</Emphasize> which opened the door to frontend engineering,
-            design, & product design.
+            <Emphasize>data visualization</Emphasize> which opened the door to frontend engineering
+            and digital product design.
             <br />
             <br />I have <TimeDuration start="2012-01-01" end={new Date().toUTCString()} />+ years
             experience crafting complex data visualizations and data tools that power data
@@ -35,7 +35,7 @@ function AboutPage() {
             </li>
             <li>Figma/Illustrator design & prototyping</li>
             <li>Data analysis (SQL, Machine Learning, stats)</li>
-            <li>Product managment</li>
+            <li>Product management</li>
             <li>User research</li>
             <li>Full-stack engineering (Python, Java, Ruby)</li>
             <li>Academic & blog post writing</li>
@@ -70,7 +70,7 @@ function AboutPage() {
           </div>
 
           <div className="card">
-            <h3>Interna – Interactive Analytics</h3>
+            <h3>Interana – Interactive Analytics</h3>
             <div className="subtitle">Frontend engineer • 2015 - 2016 (1 year)</div>
             <p>
               Acquired by Twitter in 2020,{' '}
@@ -78,11 +78,11 @@ function AboutPage() {
                 Interana
               </a>{' '}
               is a fast and scalable event-based analytics solution to answer critical business
-              questions about how customers behave and products are used. Used by Asana, Bing,
+              questions about how customers behave and how products are used. Used by Asana, Bing,
               Microsoft Azur, Microsoft Office, Microsoft Outlook, SurveyMonkey, Uber, Salesforce,
-              Comcast, Sonos, and others.
+              Tinder, Comcast, Sonos, and others.
               <br />
-              <br />I lead development of all visualization-related features, including exploration
+              <br />I led development of all visualization-related features, including exploration
               and dashboarding.
             </p>
           </div>
@@ -91,8 +91,8 @@ function AboutPage() {
             <h3>Insight Data Science</h3>
             <div className="subtitle">Fellow • Aug - Nov 2015 (4 months)</div>
             <p>
-              Insight is "bootcamp" program in the Bay Area to help quantitative PhD "fellows"
-              transition into data science or data- roles at top tech & biotech companies. Fellows
+              Insight is a "bootcamp" program in the Bay Area to help quantitative PhD "fellows"
+              transition into data and data science roles at top tech & biotech companies. Fellows
               uplevel their skills in Python, SQL, statistics, and machine learning with a personal
               project which forms the basis of interviews at prospective companies.
             </p>
@@ -118,7 +118,7 @@ function AboutPage() {
 
           <div className="card">
             <h3>Grinnell College</h3>
-            <div className="subtitle">Bachelors of Science, Chemistry • 2006 - 2010 (4 years)</div>
+            <div className="subtitle">Bachelor of Science, Chemistry • 2006 - 2010 (4 years)</div>
             <p>Validictorian, 4.0 GPA</p>
           </div>
         </div>

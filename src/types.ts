@@ -7,8 +7,9 @@ export type ProjectTag =
   | 'color'
   | 'physical'
   | 'maps'
-  | 'personal-project'
-  | 'biology';
+  | 'personal'
+  | 'biology'
+  | 'drawing';
 
 export type ProjectRole = 'design' | 'engineering' | 'product' | 'prototyping' | 'visualization';
 

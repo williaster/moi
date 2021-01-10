@@ -71,7 +71,7 @@ const projects: Project[] = [
     title: 'Superset dashboard 2.0',
     subtitle:
       'Re-imagined dashboarding experience with drag-and-drop, grid, and new components to support effective information hierarchy.',
-    dates: ['2018-01-01', '2019-01-01'],
+    dates: ['2018', '2019'],
     tags: ['tool', 'web', 'open-source'],
     href: 'projects/superset-dashboard',
     thumbnailUrl: '/static/images/superset-dashboard-v2/thumbnail.png',
@@ -101,7 +101,7 @@ const projects: Project[] = [
   {
     title: 'Polka dot bike design',
     subtitle: 'Custom personal road bike paint job design',
-    tags: ['color', 'physical', 'personal-project'],
+    tags: ['color', 'physical', 'personal'],
     thumbnailUrl: '/static/images/bike/figma.png',
     href: 'projects/bike',
     dates: ['2018'],
@@ -144,6 +144,16 @@ const projects: Project[] = [
     thumbnailUrl: '/static/images/data-ui/data-ui-sparkline.gif',
     employer: 'Airbnb',
     href: 'projects/data-ui',
+  },
+
+  {
+    title: '100 days of drawing',
+    subtitle: 'A mission to progress my ability to draw and sketch.',
+    dates: ['2020-09-13', '2020-12-23'],
+    tags: ['drawing', 'personal'],
+    thumbnailUrl: '/static/images/100-days-of-drawing/collage.jpg',
+    employer: 'Personal',
+    href: 'projects/100-days-of-drawing',
   },
 
   {

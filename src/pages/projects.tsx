@@ -109,12 +109,11 @@ function ProjectsPage() {
       <div className="projects">
         <h2>Projects</h2>
         <p>
-          Below is collection of selected projects. Try filtering by project tag, click a project to
-          learn more.
+          Below is collection of selected professional and personal projects, tap a card to learn
+          more.
         </p>
         <div className="tags">
-          <span className="label">Tags</span>
-          &nbsp;&nbsp;
+          <div className="label label--filter">Filter by category</div>
           {allTags.map(tag => (
             <ProjectTag
               key={tag}
@@ -152,15 +151,24 @@ function ProjectsPage() {
         }
         .label {
           font-size: 0.8em;
-          font-weight: 200;
+          font-weight: 600;
+        }
+        .label--filter {
+          flex-basis: 100%;
         }
         .tags {
           display: flex;
           flex-flow: row wrap;
           align-items: baseline;
+          justify-content: space-between;
           flex-shrink: 0;
           line-height: 1em;
           margin-bottom: 2em;
+        }
+        @media (max-width: 784px) {
+          .tags {
+            justify-content: initial;
+          }
         }
       `}</style>
     </Page>

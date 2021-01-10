@@ -119,12 +119,12 @@ function UCSF() {
         </div>
       </ProjectPage>
       <style jsx>{`
-        .ucsf ol li {
+        ol li {
           list-style-type: decimal;
           list-style-position: inside;
           font-weight: bold;
         }
-        .ucsf li p {
+        li p {
           display: inline;
           font-weight: 300;
         }

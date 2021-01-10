@@ -90,7 +90,7 @@ function Visx() {
         </div>
       </ProjectPage>
       <style jsx>{`
-        .visx li {
+        li {
           list-style-type: disc;
         }
         .links {
