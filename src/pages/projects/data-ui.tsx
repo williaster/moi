@@ -8,7 +8,7 @@ import ProjectPage from '../../components/ProjectPage';
 import projects from '../../projects';
 
 const dataUiProject = projects.filter(p => p.href === 'projects/data-ui')[0];
-const imageStyles = { width: '50%', display: 'block', margin: 'auto' };
+const imageStyles = { width: '50%' };
 
 function DataUiProject() {
   return (

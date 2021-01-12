@@ -9,6 +9,8 @@ const ProjectImage = ({ src, imageStyles }: { src: string; imageStyles?: React.C
         width: 100%;
         height: auto;
         min-width: 200px;
+        display: block;
+        margin: auto;
       }
     `}</style>
   </>

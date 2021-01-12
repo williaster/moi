@@ -68,10 +68,7 @@ function UCSF() {
             proteins, encoded by genes. Our findings may guide the study of region-specific
             reactions in morphologically complex metazoan organisms.
           </p>
-          <ProjectImage
-            src="/static/images/ucsf/methodology.png"
-            imageStyles={{ width: '50%', display: 'block', margin: 'auto' }}
-          />
+          <ProjectImage src="/static/images/ucsf/methodology.png" imageStyles={{ width: '50%' }} />
           <h3>Still reading?</h3>
           <p>Check out our papers:</p>
 
