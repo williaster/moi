@@ -36,8 +36,8 @@ function Visx() {
                 Github
               </a>
               &nbsp;&nbsp;
-              <GithubButton type="stargazers" namespace="airbnb" repo="visx" /> or read the full
-              blog post&nbsp;
+              <GithubButton type="stargazers" namespace="airbnb" repo="visx" />
+              &nbsp;&nbsp;or read the full blog post&nbsp;
               <a
                 rel="nofollow noopener noreferrer"
                 target="_blank"
