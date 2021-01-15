@@ -82,7 +82,7 @@ const projects: Project[] = [
     title: '10 years of Airbnb pin map',
     subtitle: 'An interactive physical visualization presenting 10 years of Airbnb growth.',
     tags: ['physical', 'maps', 'color', 'data vis'],
-    thumbnailUrl: '/static/images/pin-map/pin-map-1.png',
+    thumbnailUrl: '/static/images/pin-map/pins-far.png',
     employer: 'Airbnb',
     href: 'projects/pin-map',
   },
