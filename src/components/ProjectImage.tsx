@@ -12,6 +12,11 @@ const ProjectImage = ({ src, imageStyles }: { src: string; imageStyles?: React.C
         display: block;
         margin: 0 auto;
       }
+      img:not(:last-child)::after {
+        content: '""';
+        margin-right: 8px;
+        margin-bottom: 8px;
+      }
     `}</style>
   </>
 );

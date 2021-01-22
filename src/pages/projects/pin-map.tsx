@@ -127,7 +127,7 @@ function PinProject() {
           <div className="flex">
             <ProjectImage
               src="/static/images/pin-map/pin-installation-1.png"
-              imageStyles={{ width: '71%' }}
+              imageStyles={{ ...imageStyles, width: '71%' }}
             />
             &nbsp;
             <ProjectImage

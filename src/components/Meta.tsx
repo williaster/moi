@@ -138,7 +138,7 @@ const Meta = ({ title = 'chris williams' }) => (
         font-weight: 500;
         line-height: 1.2em;
         margin-bottom: 0.2rem;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
         display: block;
         color: transparent;
         background: ${linearGradient};
