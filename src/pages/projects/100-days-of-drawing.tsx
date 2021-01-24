@@ -31,7 +31,7 @@ function HundredDaysOfDrawing() {
           <p>
             Minimally I had to spend <Emphasize> 5 minutes per day drawing</Emphasize>, and I could
             spend more than one day on the same drawing. 90% of days I spent an hour or more, but on
-            days when I really didn't have a lot of time, 5 minutes was still very achieveable.
+            days when I really didn't have a lot of time, 5 minutes was still very achievable.
           </p>
           <h4>Medium</h4>
           <p>
@@ -50,7 +50,7 @@ function HundredDaysOfDrawing() {
             <a target="_blank" href="https://www.pinterest.com/williaster/draw-me/">
               Pinterest board
             </a>{' '}
-            I made of sketches and draings of all sorts. Because I wanted to focus on repitition of
+            I made of sketches and drawings of all sorts. Because I wanted to focus on repitition of
             fundamentals, I largely tried to <em>replicate</em> images from others rather than{' '}
             <em>de novo</em> creation of visuals on my own.
           </p>
@@ -110,7 +110,7 @@ function HundredDaysOfDrawing() {
             in a science lab is the sense of physical craft and precision that comes with working
             with your hands – good experiment hands we called it. It's no surprise, then, that one
             of my favorite things from 100 days of drawing was crafting things with my hands,
-            practicing fine motor control and muscile memory day to day. I came to appreciate how
+            practicing fine motor control and muscle memory day to day. I came to appreciate how
             much of precision drawing comes from this ability, which only experience can build.
           </p>
 

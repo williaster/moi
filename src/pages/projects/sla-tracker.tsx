@@ -65,8 +65,8 @@ function SLATracker() {
           />
           <p>
             To enable reasoning about the sequence of landing times, this view was designed around a{' '}
-            <Emphasize>dependency-inclusive gantt chart</Emphasize> – an extension of the well-known
-            gantt chart – with the following features:
+            <Emphasize>dependency-inclusive Gantt chart</Emphasize> – an extension of the well-known
+            Gantt chart – with the following features:
           </p>
           <ul>
             <li>
@@ -105,20 +105,20 @@ function SLATracker() {
               transformation from starting
             </Emphasize>
             , thus delaying the entire pipeline. The “bottleneck” sequence significantly reduces the
-            complexity of the gantt chart view.
+            complexity of the Gantt chart view.
           </p>
           <ProjectImage src="/static/images/sla-tracker/bottlenecks.png" />
           <p>
-            To more easily understand lineage, users can switch from the Timeline View (gantt chart)
+            To more easily understand lineage, users can switch from the Timeline View (Gantt chart)
             to the Tree View, which shows the same lineage data but emphasizes hierarchical
             dependencies. In this view, temporal “bottlenecks” are emphasized through edge color and
             thickness.
           </p>
           <ProjectImage src="/static/images/sla-tracker/graph-view.png" />
           <p>
-            Data producers can also view detailed historical runtimes of a single data consumable.
-            This visualization allows producers to distinguish whether delays were due to long
-            runtimes or simply caused by starting later than normal, e.g., because an upstream
+            Data producers can also view detailed historical run times of a single data consumable.
+            This visualization allows producers to distinguish whether delays were due to long run
+            times or simply caused by starting later than normal, e.g., because an upstream
             dependency was delayed.
           </p>
           <ProjectImage
@@ -139,14 +139,14 @@ function SLATracker() {
 
           <h3>Process</h3>
           <p>
-            We prototyped the gantt chart extensively with sample datasets before producing our
+            We prototyped the Gantt chart extensively with sample datasets before producing our
             final design. Our initial explorations focused on summarizing{' '}
             <Emphasize>landing time distributions</Emphasize>
             over time, which yielded{' '}
             <a target="_blank" href="https://xeno.graphics/">
               xenographic
             </a>{' '}
-            gantt chart box plots (below, left). The gantt chart effectively shows duration, start,
+            Gantt chart box plots (below, left). The Gantt chart effectively shows duration, start,
             and end times for a single run, and we found that we could improve interpretation by
             using <Emphasize>arcs</Emphasize> to highlight hierarchical dependencies between
             entities (below, middle). Prototyping with large pipelines revealed the need for{' '}

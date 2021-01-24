@@ -81,7 +81,7 @@ function PinProject() {
             <Emphasize>
               We planned to represent each point in our digital visualization with a physical pin
             </Emphasize>
-            . To accomodate these pins, we canvased our European map quilts on top of a cork
+            . To accommodate these pins, we canvased our European map quilts on top of a cork
             backing, into which pins could be pushed. To do this accurately, the{' '}
             <Emphasize>
               points in our digital representation had to be scaled to precisely match the size of a

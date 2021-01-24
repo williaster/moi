@@ -119,7 +119,7 @@ function AboutPage() {
           <div className="card">
             <h3>Grinnell College</h3>
             <div className="subtitle">Bachelor of Science, Chemistry • 2006 - 2010 (4 years)</div>
-            <p>Validictorian, 4.0 GPA</p>
+            <p>Valedictorian, 4.0 GPA</p>
           </div>
         </div>
       </div>

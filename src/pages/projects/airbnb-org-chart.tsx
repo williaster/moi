@@ -49,7 +49,7 @@ function OrgChart() {
             <li>Reporting structure</li>
           </ul>
           <p>
-            Individual contributors thought about team hiearchies, while leaders and managers more
+            Individual contributors thought about team hierarchies, while leaders and managers more
             often thought in terms of reporting lines. This tool was meant for the masses, and thus
             our primary focus was the former (though we have future plans for a second,
             reporting-focused view).
@@ -69,7 +69,7 @@ function OrgChart() {
 
           <h4>Left-panel</h4>
           <p>
-            Because teams are fundamentally hiearchical, we employed a modified{' '}
+            Because teams are fundamentally hierarchical, we employed a modified{' '}
             <Emphasize>Icicle Chart</Emphasize> as the primary mode of navigating teams, where each
             rectangle represents a team or sub-team. In a traditional Icicle Chart – first developed
             in 1983 by Kruskal and Landwher – the area of a given rectangle represents the size of
@@ -95,7 +95,7 @@ function OrgChart() {
             present different views of the data (team size, hierarchy, time trends, reporting
             structure). While this sparked the idea to build a proper internal tool,{' '}
             <Emphasize>
-              desinging a data product is vastly different from designing a visualization
+              designing a data product is vastly different from designing a visualization
             </Emphasize>
             . We had to significantly simplify the interface and reduce the scope of the tool so it
             would be useable by employees of all data literacy levels. We focused only on team

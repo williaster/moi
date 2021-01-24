@@ -41,7 +41,7 @@ function UCSF() {
           <ol>
             <li>
               <p>
-                De-novo sequencing of uknown genomes (e.g., strawberry genome, or the cov-2 virus).
+                De-novo sequencing of unknown genomes (e.g., strawberry genome, or the cov-2 virus).
               </p>
             </li>
             <li>
@@ -59,7 +59,7 @@ function UCSF() {
               I co-developed a genome sequencing approach to enable a <em>global</em> view of
               localized gene expression
             </Emphasize>{' '}
-            within subcompartments of cells with unprecedented precision.
+            within sub-compartments of cells with unprecedented precision.
           </p>
           <p>
             Our approach was built on a "ribosome profiling" method, previously developed in our lab

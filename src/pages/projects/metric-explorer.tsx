@@ -12,7 +12,7 @@ function MetricExplorer() {
     <>
       <ProjectPage
         title="Chris Williams – Metric explorer"
-        heroUrl="/static/images/metric-explorer/metric-collection.png"
+        heroUrl="/static/images/metric-explorer/thumbnail.png"
         project={metricExplorerProject}
       >
         <div className="metric-explorer">
@@ -23,13 +23,13 @@ function MetricExplorer() {
               confidence
             </Emphasize>
             . Compared to other free-form data exploration platforms, it was designed with an
-            opinionated feature set to reduce complexity and with extensive micro-interactions that
+            opinionated feature set to reduce complexity and with extensive microinteractions that
             make data exploration easier.
           </p>
           <h3>Why build a custom analytics product?</h3>
           <p>
             Before the Metric Explorer, Airbnb had several (5+) major tools to support business
-            analtyics and reporting. Despite the plethora of options (and partially because of
+            analytics and reporting. Despite the plethora of options (and partially because of
             them), it was still hard to answer analytics questions. Some of the{' '}
             <Emphasize>major challenges</Emphasize>
             were:
@@ -57,7 +57,7 @@ function MetricExplorer() {
             </li>
             <li>
               Simplified information architecture and well-designed microinteractions to support{' '}
-              <Emphasize>varying levls of data expertise</Emphasize>
+              <Emphasize>varying levels of data expertise</Emphasize>
             </li>
           </ul>
           <ProjectImage src="/static/images/metric-explorer/user-journey.png" />
@@ -92,11 +92,6 @@ function MetricExplorer() {
             <Emphasize>intentional microinteractions that abstract away complexity</Emphasize>. One
             example of this is the design of our filter and groupby components.
           </p>
-          <ProjectImage
-            src="/static/images/metric-explorer/filter-microinteractions.gif"
-            imageStyles={{ width: '60%' }}
-          />
-
           <p>Some key design notes:</p>
           <ul>
             <li>
@@ -104,9 +99,16 @@ function MetricExplorer() {
               <Emphasize>column or a column value</Emphasize>. We designed a robust typeahead which
               matches on both, as well as descriptions so users can more easily find values.
             </li>
+          </ul>
+          <ProjectImage
+            src="/static/images/metric-explorer/filter-microinteractions.gif"
+            imageStyles={{ width: '60%' }}
+          />
+
+          <ul>
             <li>
               Column names and values can get incredibly long and break the UI. Filter "chips"
-              allowed us to accomodate full-length values during editing, and gracefully truncate
+              allowed us to accommodate full-length values during editing, and gracefully truncate
               upon save.
             </li>
           </ul>

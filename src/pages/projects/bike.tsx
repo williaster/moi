@@ -20,7 +20,7 @@ function Bike() {
           <a target="blank" href="https://www.strava.com/athletes/1153632">
             a lot
           </a>
-          . So much that in 2018 I broke my bike frame and ended up with a stock warranty
+          . So much that in 2018 I cracked my bike frame and ended up with a stock warranty
           replacement. I didn't like the bland white color, so designed my own paint job 💖.
         </p>
         <p>
