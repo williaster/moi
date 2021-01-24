@@ -1,4 +1,4 @@
-import { basePath } from '../basePath';
+import { basePath } from '../../basePath.js';
 
 // transforms static asset urls with appropriate `basePath`,
 // depending on dev vs prod environment. note: this doesn't

@@ -1,4 +1,4 @@
-const { basePath } = require('./src/basePath.ts');
+const { basePath } = require('./basePath');
 
 module.exports = {
   // note: these don't apply to manually-set urls, e.g., for non-`next/image` images
