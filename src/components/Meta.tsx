@@ -71,7 +71,6 @@ const Meta = ({ title = 'chris williams' }) => (
         align-items: center;
         -webkit-box-pack: center;
         justify-content: center;
-        max-width: 105rem;
         margin: 0 auto;
         height: 100%;
         width: 100%;
