@@ -7,7 +7,7 @@
     "build": "next build && next export",
     "start": "next start",
     "preview": "yarn build && cd ./out && npx serve",
-    "deploy": "rm -rf out && yarn build && cd out && touch .nojekyll && git init && git add . && git commit -m \"Deploy commit\" && git remote add origin git@github.com:williaster/moi.git && git push -f origin master:gh-pages",
+    "deploy": "rm -rf out && yarn build && cd out && touch .nojekyll && touch CNAME && echo 'www.chris-williams.me' > CNAME && git init && git add . && git commit -m \"Deploy commit\" && git remote add origin git@github.com:williaster/moi.git && git push -f origin master:gh-pages",
     "create-config": "nimbus create-config --silent",
     "lint": "nimbus eslint",
     "prettier": "nimbus prettier"

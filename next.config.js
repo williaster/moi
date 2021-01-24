@@ -1,7 +1,7 @@
-const isProd = process.env.NODE_ENV === 'production';
+const { basePath } = require('./src/basePath.ts');
 
 module.exports = {
-  basePath: isProd ? '/moi' : '',
-  // note: this doesn't apply to manually-set urls, e.g., for non-`next/image` images
-  assetPrefix: isProd ? '/moi/' : '',
+  // note: these don't apply to manually-set urls, e.g., for non-`next/image` images
+  basePath,
+  assetPrefix: basePath,
 };

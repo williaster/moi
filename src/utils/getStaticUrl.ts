@@ -1,12 +1,8 @@
-const isProd = process.env.NODE_ENV === 'production';
+import { basePath } from '../basePath';
 
-// if prod is e.g., williaster.github.io/moi, this should be `/moi`
-// if prod is e.g., chris-williams.me, this should be ``
-const prodRootPath = '';
-
-// transforms static asset urls with appropriate `prodRootPath`,
-// depending on dev vs prod environment
-// `/static/images/hi.png` => `${prodRootPath}/static/images/hi.png`
+// transforms static asset urls with appropriate `basePath`,
+// depending on dev vs prod environment. note: this doesn't
+// apply to things handled by next e.g., bundles (see next.config.js)
 export default function getStaticUrl(url: string) {
-  return isProd ? `${prodRootPath}${url}` : url;
+  return `${basePath}${url}`;
 }
