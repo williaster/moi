@@ -1,7 +1,12 @@
 const isProd = process.env.NODE_ENV === 'production';
 
-// transforms static asset urls with appropriate `/moi/`, depending on environment
-// in prod `/static/images/hi.png` => `/moi/static/images/hi.png`
+// if prod is e.g., williaster.github.io/moi, this should be `/moi`
+// if prod is e.g., chris-williams.me, this should be ``
+const prodRootPath = '';
+
+// transforms static asset urls with appropriate `prodRootPath`,
+// depending on dev vs prod environment
+// `/static/images/hi.png` => `${prodRootPath}/static/images/hi.png`
 export default function getStaticUrl(url: string) {
-  return isProd ? `/moi${url}` : url;
+  return isProd ? `${prodRootPath}${url}` : url;
 }
