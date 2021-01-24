@@ -14,7 +14,11 @@ function FraudTrace() {
         project={fraudtraceProject}
       >
         <div className="fraud-trace">
-          <p>{fraudtraceProject.subtitle}</p>
+          <p>
+            This was a collaboration with the Airbnb Trust & Safety organization. We designed and
+            built a tool which enabled exploration of how Airbnb users are connected to help fight
+            fraud.
+          </p>
           <ProjectImage src="/static/images/fraud-trace/fraudtrace.gif" />
         </div>
       </ProjectPage>
