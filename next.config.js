@@ -1,7 +1,10 @@
 const { basePath } = require('./basePath');
+const transpileModules = require('next-transpile-modules');
 
-module.exports = {
+const withTM = transpileModules(['@react-three/drei', 'three']);
+
+module.exports = withTM({
   // note: these don't apply to manually-set urls, e.g., for non-`next/image` images
   basePath,
   assetPrefix: basePath,
-};
+});
