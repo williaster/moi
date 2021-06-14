@@ -1,0 +1,22 @@
+import React from 'react';
+import Link from 'next/link';
+import Page from '../components/Page';
+
+export default function ThreeJs() {
+  return (
+    <Page showNav={false} centerContent>
+      <h2>Three-JS Journey</h2>
+      <ul>
+        <li>
+          <Link href="/threejs/basics">Basics</Link>
+        </li>
+        <li>
+          <Link href="/threejs/particles">Particles</Link>
+        </li>
+        <li>
+          <Link href="/threejs/galaxy">Galaxy</Link>
+        </li>
+      </ul>
+    </Page>
+  );
+}
