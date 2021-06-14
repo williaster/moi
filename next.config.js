@@ -7,4 +7,10 @@ module.exports = withTM({
   // note: these don't apply to manually-set urls, e.g., for non-`next/image` images
   basePath,
   assetPrefix: basePath,
+
+  // handle react suspense for three loaders
+  react: {
+    useSuspense: true,
+    wait: true,
+  },
 });
