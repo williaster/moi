@@ -16,6 +16,9 @@ export default function ThreeJs() {
         <li>
           <Link href="/threejs/galaxy">Galaxy</Link>
         </li>
+        <li>
+          <Link href="/threejs/physics">Physics</Link>
+        </li>
       </ul>
     </Page>
   );

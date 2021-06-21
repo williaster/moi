@@ -1,9 +1,8 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree } from 'react-three-fiber';
-import { OrbitControls, useTexture } from '@react-three/drei';
-import { Leva, useControls, folder } from 'leva';
-import getStaticUrl from '../../utils/getStaticUrl';
+import { Canvas } from 'react-three-fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Leva, useControls } from 'leva';
 import CanvasPage from './CanvasPage';
 
 const controlsConfig = {
@@ -131,7 +130,6 @@ function generateGalaxy({
 
   for (let i = 0; i < count; i += 1) {
     // indices
-
     const i3 = i * 3;
     const x = i3;
     const y = i3 + 1;
@@ -143,6 +141,7 @@ function generateGalaxy({
     const branchAngle = (branch / branches) * Math.PI * 2;
     const spinAngle = radius * spin; // increase going outward
 
+    // add randomness to each direction
     const randomX =
       Math.pow(Math.random(), randomPower) * (Math.random() > 0.5 ? 1 : -1) * randomness;
     const randomY =
