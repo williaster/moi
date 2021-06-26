@@ -34,28 +34,34 @@ function Scene() {
 
   useEffect(() => {
     camera.position.set(-30, 20, 30);
-
-    if (pointLightRef.current) {
-      pointLightRef.current.shadow.mapSize.width = 2048;
-      pointLightRef.current.shadow.mapSize.height = 2048;
-      pointLightRef.current.shadow.camera.near = 1;
-      pointLightRef.current.shadow.camera.far = 100;
-    }
-  }, [pointLightRef.current]);
+  }, []);
 
   const ref = useCannon();
 
   return (
     <>
       <ambientLight intensity={0.5} />
-      <pointLight castShadow intensity={0.5} color="#0ff" position={[5, 5, -5]} />
-      {/* {pointLightRef.current && <pointLightHelper args={[pointLightRef.current]} />} */}
+      <pointLight
+        castShadow
+        intensity={0.5}
+        color="#0ff"
+        position={[5, 5, -5]}
+        shadow-mapSize={[3 * 1024, 3 * 1024]}
+        shadow-normalBias={0.05}
+        shadow-camera-near={1}
+        shadow-camera-far={50}
+      />
+      {pointLightRef.current && <cameraHelper args={[pointLightRef.current.shadow.camera]} />}
       <pointLight
         ref={pointLightRef}
         castShadow
         intensity={1}
         color="#ffff8f"
         position={[15, 15, -25]}
+        shadow-mapSize={[3 * 1024, 3 * 1024]}
+        shadow-normalBias={0.05}
+        shadow-camera-near={1}
+        shadow-camera-far={50}
       />
 
       <mesh receiveShadow position={[0, 0, 0]} rotation={[Math.PI * 0.5, 0, 0]}>

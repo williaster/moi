@@ -19,6 +19,12 @@ export default function ThreeJs() {
         <li>
           <Link href="/threejs/physics">Physics</Link>
         </li>
+        <li>
+          <Link href="/threejs/models">Models</Link>
+        </li>
+        <li>
+          <Link href="/threejs/realistic-render">Realistic Render</Link>
+        </li>
       </ul>
     </Page>
   );
