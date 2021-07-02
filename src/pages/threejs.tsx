@@ -23,7 +23,13 @@ export default function ThreeJs() {
           <Link href="/threejs/models">Models</Link>
         </li>
         <li>
-          <Link href="/threejs/realistic-render">Realistic Render</Link>
+          <Link href="/threejs/realistic-render">Realistic render</Link>
+        </li>
+        <li>
+          <Link href="/threejs/shaders">Shaders</Link>
+        </li>
+        <li>
+          <Link href="/threejs/shader-patterns">Shader patterns</Link>
         </li>
       </ul>
     </Page>
