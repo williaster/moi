@@ -31,6 +31,22 @@ export default function ThreeJs() {
         <li>
           <Link href="/threejs/shader-patterns">Shader patterns</Link>
         </li>
+        <li>
+          <Link href="/threejs/raging-sea">Raging sea</Link>
+        </li>
+        <li>
+          <Link href="/threejs/animated-galaxy">Animated galaxy</Link>
+        </li>
+      </ul>
+
+      <h2>Experiments</h2>
+      <ul>
+        <li>
+          <Link href="/threejs/flying">Flying</Link>
+        </li>
+        <li>
+          <Link href="/threejs/valley">Valley</Link>
+        </li>
       </ul>
     </Page>
   );
