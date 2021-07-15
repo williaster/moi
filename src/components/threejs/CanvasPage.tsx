@@ -11,8 +11,7 @@ export default function CanvasPage({
     <>
       <div className="canvas">{children}</div>
       <style>{`
-        .canvas,
-        canvas {
+        .canvas {
           width: 100%;
           height: 100%;
           position: absolute;

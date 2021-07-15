@@ -12,7 +12,7 @@
  */
 import React, { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree } from 'react-three-fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import { Leva, useControls, folder } from 'leva';
 import getStaticUrl from '../../utils/getStaticUrl';

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree, useLoader } from 'react-three-fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Leva, useControls, buttonGroup } from 'leva';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
