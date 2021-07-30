@@ -47,6 +47,12 @@ export default function ThreeJs() {
         <li>
           <Link href="/threejs/valley">Valley</Link>
         </li>
+        {/* <li>
+          <Link href="/threejs/twisted">Twisted</Link>
+        </li> */}
+        <li>
+          <Link href="/threejs/sun-path">Sun Path</Link>
+        </li>
       </ul>
     </Page>
   );
