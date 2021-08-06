@@ -1,236 +1,466 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { Leva, useControls, folder } from 'leva';
+import * as meshline from 'threejs-meshline';
+
 import CanvasPage from '../CanvasPage';
 import ThreeJs from '../../../pages/threejs';
 import { ArrowHelper, MathUtils, PointLight, SphereGeometry, Vector3 } from 'three';
 import SidePanel from './SidePanel';
 import { getPosition, getTimes, getPositionDaysHours } from './solarCalculations-2';
-import { polarToCartesian } from './getSunPosition';
+import Effects from './Effects';
+
+extend(meshline);
+
+const getVec3FromPolar = (polar: ReturnType<typeof getPositionDaysHours>, radius: number) => {
+  const vec3 = new Vector3().setFromSphericalCoords(
+    radius,
+    Math.PI * 0.5 - polar.altitude,
+    polar.azimuth,
+  );
+  return vec3;
+};
 
 export default function SunPath() {
-  const { background, day, hour, latitude, longitude } = useControls({
-    background: '#10232e',
+  const {
+    background,
+    day,
+    hour,
+    lat,
+    lng,
+    planeColor,
+    dayColor,
+    solsticeColor,
+    analemmaColor,
+  } = useControls({
+    background: '#377780',
+    planeColor: '#581286',
+    dayColor: '#c6ffe5',
+    solsticeColor: '#e3b7ff', // '#e0e887',
+    analemmaColor: '#ffa7be',
     day: { value: 0, min: 1, max: 365, step: 1 },
-    hour: { value: 11, min: -5, max: 24, step: 1 },
-    latitude: { value: 37.775, min: -90, max: 90, step: 0.001 },
-    longitude: { value: -122.419, min: -180, max: 180, step: 0.001 },
+    hour: { value: 11, min: 0, max: 24, step: 0.5 },
+    lat: { value: 37.775, min: -90, max: 90, step: 0.001 },
+    lng: { value: -122.419, min: -180, max: 180, step: 0.001 },
   });
   return (
     <CanvasPage>
       <Leva titleBar={false} />
-      <Canvas camera={{ position: [0, 10, 20] }}>
+      <Canvas>
         <React.Suspense fallback={null}>
+          {/* <axesHelper /> */}
           <color attach="background" args={[background]} />
-          <group rotation={[0, 0, Math.PI]}>
-            <Scene latitude={latitude} longitude={longitude} day={day} hour={hour} />
-          </group>
-          <OrbitControls listenToKeyEvents={false} />
+          <Scene
+            lat={lat}
+            lng={lng}
+            day={day}
+            hour={hour}
+            planeColor={planeColor}
+            dayColor={dayColor}
+            solsticeColor={solsticeColor}
+            analemmaColor={analemmaColor}
+            backgroundColor={background}
+          />
+          <OrbitControls />
+          {/* <Effects /> */}
         </React.Suspense>
       </Canvas>
-      <SidePanel latitude={latitude} longitude={longitude} />
+      {/* <SidePanel lat={lat} lng={lng} /> */}
     </CanvasPage>
   );
 }
 
-const horizonSize = 50;
+const horizonSize = 200;
 const horizonSegments = 2;
-const atmosphereRadius = horizonSize * 0.4 * 0.5;
+const atmosphereRadius = horizonSize * 0.2;
 
-const now = new Date();
+const msPerDay = 24 * 60 * 60 * 1000;
+const msPerMinute = 60 * 1000;
+
+// @TODO this is not correct timezone-wise
+const zeroDate = new Date(
+  new Date('2020-01-01').valueOf() - new Date('2020-01-01').getTimezoneOffset() * msPerMinute,
+).valueOf();
 const origin = new THREE.Vector3(0, 0, 0);
 const direction = new THREE.Vector3(1, 1, 1).normalize();
 
 function Scene({
-  latitude,
-  longitude,
+  lat,
+  lng,
   day,
   hour,
-}: {
-  latitude: number;
-  longitude: number;
-  day: number;
-  hour: number;
+  planeColor,
+  dayColor,
+  solsticeColor,
+  analemmaColor,
+  backgroundColor,
 }) {
-  const arrowRef = useRef<ArrowHelper>();
-  const { plane: planeColor } = useControls({
-    // thetaStart: { value: 0, min: 0, max: 2 * Math.PI, step: 0.1 },
-    // thetaLength: { value: Math.PI, min: 0, max: Math.PI, step: 0.1 },
-    // rotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.1 },
-    plane: '#2a2a2a',
-  });
-  useEffect(() => {
-    const date = new Date(+now + day * 24 * 60 * 60 * 1000);
-    const polar = getPositionDaysHours(date, hour, latitude, longitude);
-    direction.setFromSphericalCoords(
-      atmosphereRadius,
-      Math.PI * 0.5 - polar.altitude,
-      polar.azimuth,
-    );
-    arrowRef.current.setDirection(direction.normalize());
-  }, [latitude, longitude, day, hour]);
-
   return (
     <>
-      <ambientLight intensity={1} />
+      <ambientLight color="#05055e" intensity={1.5} />
 
-      {/** Plane of reference */}
-      <mesh position={[0, 0, 0.1]}>
-        <planeGeometry args={[horizonSize, horizonSize, horizonSegments, horizonSegments]} />
-        <meshStandardMaterial transparent opacity={0.9} side={THREE.FrontSide} color={planeColor} />
-      </mesh>
+      <group rotation={[Math.PI * 0.5, 0, 0]}>
+        <mesh>
+          <circleGeometry args={[atmosphereRadius, 50, 10]} />
+          <meshStandardMaterial
+            transparent
+            opacity={0.5}
+            side={THREE.DoubleSide}
+            color={planeColor}
+            metalness={0.1}
+            roughness={0.5}
+          />
+        </mesh>
+      </group>
 
-      <Sun latitude={latitude} longitude={longitude} day={day} hour={hour} />
-      <Arc latitude={latitude} longitude={longitude} day={day} />
-      <Analemma latitude={latitude} longitude={longitude} hour={hour} />
+      <Sun lat={lat} lng={lng} day={day} hour={hour} />
+
+      {/** arcs for current day/hour/lat/lng */}
+      <Arc lat={lat} lng={lng} day={day} hour={hour} color={dayColor} />
+      <WinterSolsticeArc lat={lat} lng={lng} color={solsticeColor} />
+      <SummerSolsticeArc lat={lat} lng={lng} color={solsticeColor} />
+
+      {/** position for all days at current hour/lat/lng */}
+      <Analemma lat={lat} lng={lng} hour={hour} color={analemmaColor} />
+
+      {/** Sun rays on floor */}
+      <SunRays lat={lat} lng={lng} day={day} hour={hour} />
 
       {/** compass */}
-      <Compass />
-
-      {/** Vector toward sun */}
-      <arrowHelper ref={arrowRef} args={[direction, origin, atmosphereRadius, '#222', 1.25, 1]} />
-
-      {/* <mesh position={[0, 0, 0]} rotation={[Math.PI * 0.5, 0, rotateZ]}>
-        <sphereGeometry
-          args={[atmosphereRadius, 30, 15, 0, Math.PI * 2, thetaStart, thetaLength]}
-        />
-        <shaderMaterial
-          key={Math.random()}
-          wireframe
-          transparent
-          //   colorWrite={false}
-          //   depthWrite={false}
-          side={THREE.DoubleSide}
-          vertexShader={`
-            varying vec4 modelPosition;
-
-            void main() {
-                modelPosition = modelMatrix * vec4(position, 1.0);
-                vec4 viewPosition = viewMatrix * modelPosition;
-                vec4 projectedPosition = projectionMatrix * viewPosition;
-                gl_Position = projectedPosition;
-            }
-        `}
-          fragmentShader={`
-            varying vec4 modelPosition;
-            void main() {
-                if (modelPosition.z < 0.0) {
-                    discard;
-                }
-                
-                gl_FragColor = vec4(0.0, 0.5, 0.5, 0.5);
-            }
-          `}
-        />
-      </mesh> */}
+      <Compass lat={lat} color={backgroundColor} />
     </>
   );
 }
 
-function Arc({ latitude, longitude, day }) {
-  const ref = useRef();
-  const points = useMemo(() => {
-    return new Array(100).fill(null).map((_, quarterHour) => {
-      const date = new Date(+now + day * 24 * 60 * 60 * 1000);
-      const polar = getPositionDaysHours(date, quarterHour * 0.25, latitude, longitude);
-      return new Vector3().setFromSphericalCoords(
-        atmosphereRadius,
-        Math.PI * 0.5 - polar.altitude,
-        polar.azimuth,
-      );
+const invisible = new THREE.Color('yellow');
+
+function SunRays({ lat, lng, day, hour }) {
+  const { rayColor, raySpacing, rayLength } = useControls({
+    rayColor: '#de6868',
+    raySpacing: {
+      value: 5,
+      min: 1,
+      max: 50,
+      step: 1,
+    },
+    rayLength: {
+      value: 3,
+      min: 1,
+      max: 15,
+      step: 0.5,
+    },
+  });
+  const meshRef = useRef<THREE.InstancedMesh>();
+  const object3d = useMemo(() => new THREE.Object3D(), []);
+
+  // direction for a single ray, which is instanced below
+  const rayPolar = useMemo(() => {
+    const date = new Date(zeroDate + day * 24 * 60 * 60 * 1000);
+    return getPositionDaysHours(date, hour, lat, lng);
+  }, [lat, lng, day, hour]);
+
+  const rayPoint = useMemo(() => getVec3FromPolar(rayPolar, rayLength).normalize(), [
+    rayPolar,
+    rayLength,
+  ]);
+
+  // grid of rays
+  const rayCountPerRow = Math.floor(horizonSize / raySpacing);
+  const rayCount = rayCountPerRow ** 2;
+
+  useEffect(() => {
+    // translate each ray across the grid
+    for (let i = 0; i < rayCount; i += 1) {
+      const rayX = (Math.floor(i / rayCountPerRow) + 0.5) * raySpacing - horizonSize / 2;
+      const rayY = ((i % rayCountPerRow) + 0.5) * raySpacing - horizonSize / 2;
+      // translate z such that bottom is on plane
+      const rayZ = rayLength * 0.3 * Math.sin(rayPolar.altitude);
+
+      // raypoint is only correct from origin
+      object3d.position.set(0, 0, 0);
+      object3d.lookAt(rayPoint);
+      // cylinder face that is looking at rayPoint is incorrect, so rotate it another 90deg
+      object3d.rotateOnAxis(new THREE.Vector3(-1, 0, 0), Math.PI * 0.5);
+
+      object3d.position.set(rayX, rayZ, rayY);
+      // object3d.position.set(rayX, rayY, 0);
+      // object3d.translateOnAxis(new THREE.Vector3(0, 0, -1), rayZ);
+
+      // hide rays outside circle
+      const isHidden = Math.sqrt(rayX ** 2 + rayY ** 2) > atmosphereRadius;
+      if (isHidden) {
+        // how to just make transparent? .setColorAt doesn't seem to work
+        object3d.position.set(10000, 10000, 10000);
+      }
+
+      object3d.updateMatrix();
+      // And apply the matrix to the instanced item
+      meshRef.current.setMatrixAt(i, object3d.matrix);
+    }
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    // meshRef.current.instanceColor.needsUpdate = true;
+  }, [rayCountPerRow, raySpacing, rayPoint.x, rayPoint.y, rayPoint.z]);
+
+  return (
+    <instancedMesh ref={meshRef} args={[null, null, rayCount]}>
+      <cylinderBufferGeometry args={[0.015, 0.3, rayLength, 10, 10]} />
+      <meshStandardMaterial color={rayColor} metalness={0.1} roughness={1} />
+    </instancedMesh>
+  );
+}
+
+function WinterSolsticeArc({ lat, lng, color }) {
+  // winter solstice is usually Dec 21/22
+  const winterSolsticeDay = 365.25 - 9.5;
+  return <Arc dashed lat={lat} lng={lng} day={winterSolsticeDay} color={color} />;
+}
+
+function SummerSolsticeArc({ lat, lng, color }) {
+  // summer solstice is usually June 21/22
+  const summerSolsticeDay = (171.25 + 172.25) / 2;
+  return <Arc dashed lat={lat} lng={lng} day={summerSolsticeDay} color={color} />;
+}
+
+function Arc({ lat, lng, hour = null, day, color, dashed = false }) {
+  const [solidPoints, dashedPoints] = useMemo(() => {
+    const solidPts = [];
+    const dashedPts = [];
+
+    // point for each quarter hour
+    new Array(24 * 4 + 1).fill(null).forEach((_, quarterHour) => {
+      const date = new Date(zeroDate + day * 24 * 60 * 60 * 1000);
+      const currHour = quarterHour * 0.25;
+      const polar = getPositionDaysHours(date, currHour, lat, lng);
+      const vec3 = getVec3FromPolar(polar, atmosphereRadius);
+
+      // don't show below plane
+      // note: doing this compresses the dash offset :(
+      // if (vec3.z < -5) return;
+
+      const pointIsSolid = !dashed; // && (hour == null || (lat > 0 ? currHour <= hour : currHour >= hour));
+
+      if (pointIsSolid) {
+        solidPts.push(vec3);
+      } else {
+        dashedPts.push(vec3);
+      }
     });
-  }, [latitude, longitude, day]);
-  const onUpdate = useCallback(self => self.setFromPoints(points), [points]);
+    return [solidPts, dashedPts];
+  }, [lat, lng, day, hour]);
+
+  const dashedMaterial = useRef<any>();
+  useFrame(() => {
+    // only animate !dashed && hour case
+    if (!dashed && hour != null && dashedMaterial.current) {
+      const direction = lat > 0 ? -1 : 1;
+      dashedMaterial.current.uniforms.dashOffset.value += direction * 0.0005;
+    }
+  });
 
   return (
     <>
-      <line ref={ref}>
-        <bufferGeometry attach="geometry" onUpdate={onUpdate} />
-        <lineBasicMaterial color="#ffdb49" />
-      </line>
+      {solidPoints.length > 0 && (
+        <mesh>
+          {/** @ts-expect-error meshline not a jsx element */}
+          <meshLine attach="geometry" vertices={solidPoints} />
+          {/** @ts-expect-error */}
+          <meshLineMaterial transparent attach="material" lineWidth={0.5} color={color} />
+        </mesh>
+      )}
+
+      {dashedPoints.length > 0 && (
+        <mesh>
+          {/** @ts-expect-error meshline not a jsx element */}
+          <meshLine attach="geometry" vertices={dashedPoints} />
+          {/** @ts-expect-error */}
+          <meshLineMaterial
+            ref={dashedMaterial}
+            transparent
+            attach="material"
+            // depthTest={false}
+            lineWidth={0.3}
+            color={color}
+            dashArray={0.02}
+            lineCap
+          />
+        </mesh>
+      )}
     </>
   );
 }
 
-function Analemma({ latitude, longitude, hour = 15 }) {
-  const ref = useRef();
+function Analemma({ lat, lng, hour = 15, color }) {
   const points = useMemo(() => {
-    return new Array(365).fill(null).map((_, day) => {
-      const date = new Date(+now + (day + 1) * 24 * 60 * 60 * 1000);
-      const polar = getPositionDaysHours(date, hour, latitude, longitude);
-      return new Vector3().setFromSphericalCoords(
-        atmosphereRadius,
-        Math.PI * 0.5 - polar.altitude,
-        polar.azimuth,
-      );
+    // +1 day to avoid gap
+    return new Array(366).fill(null).map((_, day) => {
+      const date = new Date(zeroDate + (day + 1) * 24 * 60 * 60 * 1000);
+      const polar = getPositionDaysHours(date, hour, lat, lng);
+      return getVec3FromPolar(polar, atmosphereRadius);
     });
-  }, [latitude, longitude, hour]);
-  const onUpdate = useCallback(self => self.setFromPoints(points), [points]);
+  }, [lat, lng, hour]);
 
   return (
-    <>
-      <line ref={ref}>
-        <bufferGeometry attach="geometry" onUpdate={onUpdate} />
-        <lineBasicMaterial color="#5249ff" />
-      </line>
-    </>
+    <mesh>
+      {/** @ts-expect-error meshline not a jsx element */}
+      <meshLine attach="geometry" vertices={points} />
+      {/** @ts-expect-error */}
+      <meshLineMaterial
+        transparent
+        attach="material"
+        // depthTest={false}
+        lineWidth={0.2}
+        color={color}
+      />
+    </mesh>
   );
 }
 
-function Sun({ latitude, longitude, day, hour }) {
+function Sun({ lat, lng, day, hour, radius = 3 }) {
   const pointLightRef = useRef<PointLight>();
   const sunPosition = useMemo(() => {
-    const date = new Date(+now + day * 24 * 60 * 60 * 1000);
-    const polar = getPositionDaysHours(date, hour, latitude, longitude);
-    const pos = new Vector3().setFromSphericalCoords(
-      atmosphereRadius,
-      Math.PI * 0.5 - polar.altitude,
-      polar.azimuth,
-    );
+    const date = new Date(zeroDate + day * 24 * 60 * 60 * 1000);
+    const polar = getPositionDaysHours(date, hour, lat, lng);
+    const pos = getVec3FromPolar(polar, atmosphereRadius);
     pointLightRef.current?.position.set(pos.x, pos.y, pos.z);
     return pos;
-  }, [latitude, longitude, day, hour]);
+  }, [lat, lng, day, hour]);
 
   return (
     <>
       <pointLight ref={pointLightRef} color="#ffff26" intensity={10} />
       <mesh position={sunPosition}>
-        <sphereBufferGeometry args={[0.3, 10, 10]} />
-        <meshBasicMaterial color="#ffffa4" />
+        <sphereBufferGeometry args={[radius, 40, 40]} />
+        <meshPhongMaterial flatShading color="#a7a79c" emissive="#ffff00" shininess={100} />
       </mesh>
     </>
   );
 }
 
-const compassSize = horizonSize * 0.5;
-const z = 0.5; // above plane
-const compassPoints = [
-  // NS along y-axis
-  new THREE.Vector3(0, -compassSize / 2, z),
-  // back to zero
-  new THREE.Vector3(0, 0, z),
-];
+const compassSize = atmosphereRadius * 2;
+const compassFontSize = 5;
+const compassFontColor = '#aeaeae';
+const compassOffset = 0.1; // above plane
 
-function Compass() {
-  const ref = useRef();
-  const onUpdate = useCallback(self => self.setFromPoints(compassPoints), []);
+function Compass({ lat, color }) {
+  const [ns, ew] = useMemo(
+    () => [
+      [
+        // N goes -Z
+        new THREE.Vector3(0, compassOffset, (lat > 0 ? -1 : 1) * compassSize * 0.5),
+
+        // S goes +Z
+        new THREE.Vector3(0, compassOffset, (lat < 0 ? -1 : 1) * compassSize * 0.5),
+      ],
+
+      [
+        // E goes +X
+        new THREE.Vector3((lat > 0 ? 1 : -1) * compassSize * 0.5, compassOffset, 0),
+
+        // W goes -X
+        new THREE.Vector3((lat < 0 ? 1 : -1) * compassSize * 0.5, compassOffset, 0),
+      ],
+    ],
+    [lat],
+  );
   return (
     <>
-      <line ref={ref}>
-        <bufferGeometry attach="geometry" onUpdate={onUpdate} />
-        <lineBasicMaterial color="#1e1f1f" />
-      </line>
+      <mesh>
+        {/** @ts-expect-error meshline not a jsx element */}
+        <meshLine attach="geometry" vertices={ns} />
+        {/** @ts-expect-error */}
+        <meshLineMaterial
+          transparent
+          attach="material"
+          lineWidth={0.1}
+          color={color}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      <mesh>
+        {/** @ts-expect-error meshline not a jsx element */}
+        <meshLine attach="geometry" vertices={ew} />
+        {/** @ts-expect-error */}
+        <meshLineMaterial
+          transparent
+          attach="material"
+          lineWidth={0.1}
+          color={color}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
       <Text
-        fontSize={2}
-        color="#1e1f1f"
-        position={compassPoints[0]}
-        rotation={[0, 0, Math.PI]}
-        anchorY="bottom"
+        fontSize={compassFontSize}
+        color={compassFontColor}
+        position={ns[0]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        anchorY={lat > 0 ? 'bottom' : 'top'}
       >
         N
       </Text>
+
+      <Text
+        fontSize={compassFontSize}
+        color={compassFontColor}
+        position={ns[1]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        anchorY={lat < 0 ? 'bottom' : 'top'}
+      >
+        S
+      </Text>
+
+      <Text
+        fontSize={compassFontSize}
+        color={compassFontColor}
+        position={ew[0]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        anchorX={lat > 0 ? 'left' : 'right'}
+      >
+        E
+      </Text>
+
+      <Text
+        fontSize={compassFontSize}
+        color={compassFontColor}
+        position={ew[1]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+        anchorX={lat < 0 ? 'left' : 'right'}
+      >
+        W
+      </Text>
     </>
+  );
+}
+
+function HideBelowZMaterial({ color }) {
+  return (
+    <shaderMaterial
+      attach="material"
+      side={THREE.DoubleSide}
+      uniforms={{ uColor: { value: new THREE.Color(color) } }}
+      vertexShader={`
+        varying vec4 modelPosition;
+        
+        void main() {
+          modelPosition = modelMatrix * vec4(position, 1.0);
+          vec4 viewPosition = viewMatrix * modelPosition;
+          vec4 projectedPosition = projectionMatrix * viewPosition;
+          gl_Position = projectedPosition;
+        }
+       `}
+      fragmentShader={`
+        varying vec4 modelPosition;
+        uniform vec3 uColor;
+        
+        void main() {
+          // if (modelPosition.z < 0.0) {
+          //     discard;
+          // }
+
+          gl_FragColor = vec3(uColor, 1.0);
+        }
+      `}
+    />
   );
 }
