@@ -7,6 +7,7 @@ const withTM = transpileModules([
   '@webxr-input-profiles/motion-controllers',
   'three',
   'd3-time',
+  'd3-dsv',
 ]);
 
 module.exports = withTM({

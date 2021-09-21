@@ -6,6 +6,7 @@ import * as THREE from 'three';
 
 import CanvasPage from '../../components/threejs/CanvasPage';
 import Arrow from '../../components/threejs/models/Arrow';
+import SunModel from '../../components/threejs/SunPath/SunModel';
 
 export default function TestPage() {
   // const [latlng, setLatlng] = useState<{ lat: number; lng: number } | null | 'error'>(null);
@@ -30,6 +31,24 @@ export default function TestPage() {
   );
 }
 
+function useLatLng() {
+  const [latlng, setLatlng] = useState<{ lat: number; lng: number } | null | 'error'>(null);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        setLatlng(() => ({ lat: pos.coords.latitude, lng: pos.coords.longitude }));
+      },
+      () => {
+        console.warn('Could not get location');
+        setLatlng('error');
+      },
+    );
+  }, []);
+
+  return latlng;
+}
+
 /**
  * TODO
  * - get user lat lng
@@ -42,15 +61,23 @@ const cameraPosition = new THREE.Vector3();
 const cameraQuaternion = new THREE.Quaternion();
 
 function Scene() {
-  const [north, setNorth] = useState<THREE.Vector3 | null>(null);
+  const [north, setNorth] = useState<THREE.Vector3 | null>(
+    typeof window !== 'undefined' && window.location.hash === '#local'
+      ? new THREE.Vector3(0, 0, 0)
+      : null,
+  );
+  const latlng = useLatLng();
   return (
     <>
       <axesHelper />
       <NorthControl north={north} setNorth={setNorth} />
+      {north && latlng != null && latlng !== 'error' && <SunModel north={north} latlng={latlng} />}
+
+      {/** @TODO add summary / controls */}
+      {/** @TODO handle error state */}
     </>
   );
 }
-
 const textPosition = [0, 0, 0.035] as [number, number, number];
 
 function NorthControl({
