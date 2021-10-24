@@ -4,13 +4,12 @@
  */
 
 import * as THREE from 'three';
-import React, { useRef } from 'react';
-import { useGLTF } from '@react-three/drei';
+import React, { forwardRef, useRef } from 'react';
+import { useGLTF, useScroll } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import getStaticUrl from '../../../utils/getStaticUrl';
 import SplitWireframeMesh, { SplitWireframeProps } from '../SplitWireframeMesh';
-import { useScroll } from '../ScrollControls';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,33 +20,11 @@ type GLTFResult = GLTF & {
 
 const url = getStaticUrl('/static/models/potatoes/potato.gltf');
 
-export default function Potato({
-  stroke,
-  fill,
-  background,
-  ...props
-}: JSX.IntrinsicElements['group'] & Omit<SplitWireframeProps, 'geometry'>) {
+function Potato(props: Omit<SplitWireframeProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  const ref = useRef<THREE.Mesh>();
-  const scroll = useScroll();
-  useFrame(() => {
-    const r = scroll.range(1 / 4 - 0.3, 1 / 4 + 0.3);
-    const interpolated = Math.sin(r * Math.PI);
-    ref.current.position.y = 50 * interpolated * scroll.offset;
-    // Interpolates the range to 0-1-0
-    ref.current.scale.setScalar(1 + 5 * interpolated * scroll.offset);
-  });
-  return (
-    <group {...props}>
-      <SplitWireframeMesh
-        ref={ref}
-        stroke={stroke}
-        fill={fill}
-        background={background}
-        geometry={nodes.potato001.geometry}
-      />
-    </group>
-  );
+  return <SplitWireframeMesh ref={ref} {...props} geometry={nodes.potato001.geometry} />;
 }
+
+export default forwardRef(Potato);
 
 useGLTF.preload(url);

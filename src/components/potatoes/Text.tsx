@@ -2,8 +2,8 @@ import { forwardRef } from 'react';
 import { Text as BaseText } from '@react-three/drei';
 import getStaticUrl from '../../utils/getStaticUrl';
 
-export const Text: React.FC<{}> = forwardRef(({ children, ...props }, ref) => {
-  return (
+export const Text = forwardRef(
+  ({ children, ...props }: Partial<React.ComponentProps<typeof BaseText>>, ref) => (
     <BaseText
       ref={ref}
       letterSpacing={-0.05}
@@ -19,5 +19,5 @@ export const Text: React.FC<{}> = forwardRef(({ children, ...props }, ref) => {
     >
       {children}
     </BaseText>
-  );
-});
+  ),
+);

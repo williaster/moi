@@ -4,16 +4,6 @@ import * as THREE from 'three';
 
 import addBarycentricCoordinates from './utils/addBarycentricCoords';
 
-export interface SplitWireframeProps {
-  stroke: string;
-  fill: string;
-  background: string;
-  geometry: THREE.BufferGeometry;
-}
-
-// needed for anti-alias smoothstep in aastep()
-const shaderExtensions = { derivatives: true };
-
 const vertex = `
   // these should both be added by 
   attribute vec3 barycentric;
@@ -34,7 +24,9 @@ const vertex = `
     // "vec4(0.0,scaleY,0.0,0.0),",
     // "vec4(0.0,0.0,scaleZ,0.0),",
     // "vec4(0.0,0.0,0.0,1.0));",
-    
+    // vPosition =  tPos * rXPos * rZPos * rYPos * sPos;
+    // gl_Position = projectionMatrix * modelViewMatrix * vPosition * vec4(position,1.0);
+
     vRotatedPosition = rotationMatrix * vec4(position.xyz, 1.0);
     gl_Position = projectionMatrix * modelViewMatrix * vRotatedPosition;
     vBarycentric = barycentric;
@@ -67,6 +59,7 @@ const fragment = `
   uniform float thickness;
   uniform float squeezeMin;
   uniform float squeezeMax;
+  uniform float splitPosition;
 
   float PI = 3.14159265359;
 
@@ -114,22 +107,46 @@ const fragment = `
 }
 
   void main () {
-    if (vRotatedPosition.x <= 0.05 && vRotatedPosition.x >= -0.05) {
+    float gapLower = splitPosition -0.05;
+    float gapUpper = splitPosition +0.05;
+    if (vRotatedPosition.x <= gapLower && vRotatedPosition.x >= gapUpper) {
+      // leave gap
       gl_FragColor = vec4(fill, 0.0);
-    } else if (vRotatedPosition.x >= -0.1) {
+    } else if (vRotatedPosition.x >= splitPosition) {
+      // solid with simple "shadow" based on normal
       gl_FragColor = vec4(mix(fill, background * 0.8, -vNormal.y * 1.5), 1.0);
     } else {
+      // wireframe
       gl_FragColor = getStyledWireframe(vBarycentric);
     }
 }    
 `;
 
+// needed for anti-alias smoothstep in aastep()
+const shaderExtensions = { derivatives: true };
+
+export interface SplitWireframeProps {
+  stroke: string;
+  fill: string;
+  background: string;
+  geometry: THREE.BufferGeometry;
+  fillType?: 'split' | 'filled' | 'wireframe'; // @TODO expose splitPosition ref
+  materialRef?: React.RefObject<THREE.Material>;
+}
+
 function SplitWireframeMesh(
-  { stroke, fill, background, geometry: initGeometry }: SplitWireframeProps,
-  ref: React.ForwardedRef<unknown>,
+  {
+    stroke,
+    fill,
+    background,
+    geometry: initGeometry,
+    fillType = 'split',
+    materialRef,
+  }: SplitWireframeProps,
+  ref: React.ForwardedRef<THREE.Mesh>,
 ) {
   const geometry = useMemo(() => {
-    // wireframe shader relies on barycentric coords which requires un-indexing
+    // custom wireframe shader relies on barycentric coords which requires un-indexing
     const geo = initGeometry.toNonIndexed();
     addBarycentricCoordinates(geo);
     return geo;
@@ -137,14 +154,24 @@ function SplitWireframeMesh(
 
   const clock = useThree(state => state.clock);
   const rotationMatrix = useRef({ value: new THREE.Matrix4() });
+  const splitPosition = useRef({
+    value: fillType === 'split' ? 0.05 : fillType === 'filled' ? -3.5 : 3.5,
+  });
   useFrame(() => {
+    // splitPosition.current.value = THREE.MathUtils.lerp(
+    //   splitPosition.current.value,
+    //   fillType === 'split' ? 0.05 : fillType === 'filled' ? -3.5 : 3.5,
+    //   0.1,
+    // );
+    // rotate mesh along y-axis
     rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
   });
 
   return (
     <mesh ref={ref} geometry={geometry}>
       <shaderMaterial
-        key={Math.random()} // @TODO remove
+        key={Math.random()} // @todo remove, how to handle disposal?
+        ref={materialRef}
         transparent
         side={THREE.FrontSide}
         extensions={shaderExtensions}
@@ -153,6 +180,8 @@ function SplitWireframeMesh(
           background: { value: new THREE.Color(background) },
           fill: { value: new THREE.Color(fill) },
           stroke: { value: new THREE.Color(stroke) },
+          splitPosition: splitPosition.current,
+          // @TODO remove unused uniforms (below)
           noiseA: { value: false },
           noiseB: { value: false },
           seeThrough: { value: false },
