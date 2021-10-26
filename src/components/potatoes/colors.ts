@@ -3,3 +3,4 @@ export const backgroundColorDark = '#CECDD2';
 export const textColor = '#9493A3';
 export const textColorDark = '#413f5b';
 export const textColorDarker = '#1b1a39';
+export const highlightColor = '#B7823D';

@@ -30,24 +30,11 @@ export const Vis = forwardRef(({ fill, stroke, datum, gap = 1, segments = 50 }: 
     <group ref={ref}>
       <mesh>
         <ringBufferGeometry args={[0, volumeRadius, segments, Math.floor(segments * 0.1)]} />
-        <meshStandardMaterial
-          flatShading
-          roughness={0.4}
-          metalness={0.5}
-          color={fill}
-          // side={THREE.DoubleSide}
-        />
+        <meshBasicMaterial color={fill} />
       </mesh>
       <mesh>
-        <ringBufferGeometry
-          args={[volumeRadius + gap, areaRadius, segments, Math.floor(segments * 0.1)]}
-        />
-        <meshStandardMaterial
-          roughness={0.4}
-          metalness={0.5}
-          color={stroke}
-          // side={THREE.DoubleSide}
-        />
+        <ringBufferGeometry args={[volumeRadius + gap, areaRadius, segments, 1]} />
+        <meshBasicMaterial color={stroke} />
       </mesh>
     </group>
   );

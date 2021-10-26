@@ -15,18 +15,18 @@ import WaffleModel from './models/Waffle';
 import FryModel from './models/Fry';
 import potatoData from './potatoData';
 import {
-  backgroundColor,
   backgroundColorDark,
-  textColor,
   textColorDark,
   textColorDarker,
+  highlightColor,
+  textColor,
 } from './colors';
-import getStepCurve from './utils/getCurve';
+import getKeyframes from './utils/getCurve';
+import { Vector3 } from 'three';
 
 const numPotatoes = 7;
-const numPages = 7;
 const modelViewportVertical = 0.8;
-const horizontalLineLength = 0.27;
+const horizontalLineLength = 0.615;
 
 // min/max values of fried ratio
 const potatoFriedRatioExtent = Object.keys(potatoData).reduce(
@@ -57,24 +57,44 @@ const labelProps = {
   anchorX: 'left',
 } as const;
 
-const modelPositionXCurve = getStepCurve([0.06, 0.15, 0.15, 0.15, 0.15, 0.04, 0.04]); // relative to viewport.width
-const modelPositionRatioXCurve = getStepCurve([1, 0, 0, 0, 0, 0, 0]); // relative to ratio scale
+const modelScalar =
+  (modelViewportVertical / numPotatoes) * // available space divided by number of potatoes
+  0.1; // reduce the overall model scale by this amount because they are large
 
-const visPositionXCurve = getStepCurve([0.06, 0.06, 0.1, 0.1, 0.1, 0.09, 0.09]); // relative to viewport.width
-const visPositionRatioXCurve = getStepCurve([0, 0, 0, 0, 0, 0, 1]); // relative to ratio scale
+const splitMaterialScalar = 4;
 
-const lineScaleCurve = getStepCurve([1, 0, 0, 0, 0, 1, 1]);
+const keyframes = {
+  model: {
+    positionX: getKeyframes([0.21, 0.5, 0.5, 0.35, 0.35, 0.21, 0.21]), // relative to viewport.width
+    positionXRatio: getKeyframes([1, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
+    positionYHighlight: getKeyframes([0, 0.5, 0.5, 0, 0, 0, 0]), // offset from initial y
+    scale: getKeyframes([1, 0, 0, 0, 0.8, 0.8, 0.8]),
+    scaleHighlight: getKeyframes([1, 2.5, 2.5, 2.5, 0.8, 0.8, 0.8]),
+    splitMaterial: getKeyframes([1, -1, 0, 0, 0, 0, 0]),
+  },
+  vis: {
+    rotateY: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
+    rotateYHighlight: getKeyframes([-0.5, -0.5, -0.5, 0, 0, 0, 0]), // relative to Math.PI
+    positionX: getKeyframes([0.7, 0.7, 0.7, 0.7, 0.7, 0.35, 0.35]), // relative to viewport.width
+    positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
+    scale: getKeyframes([0, 0, 0, 0.45, 0.45, 0.45, 0.45]),
+    scaleHighlight: getKeyframes([0, 0, 0.9, 0.9, 0.45, 0.45, 0.45]),
+  },
+  line: {
+    scaleX: getKeyframes([1, 0, 0, 0, 0, 1, 1]),
+    positionX: getKeyframes([0.225, 0.225, 0.225, 0.225, 0.25, 0.35, 0.35]), // relative to viewport.width
+  },
+  label: {
+    scale: getKeyframes([3, 3, 3, 3, 3, 3, 3]),
+    positionX: getKeyframes([0.05, -0.2, -0.2, -0.2, 0.1, 0.05, 0.05]), // relative to viewport.width
+    rotateX: getKeyframes([0, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
+  },
+  splitLine: {
+    scaleX: getKeyframes([0, 0, 1, 0.5, 0, 0, 0]), // relative to viewport.width
+  },
+};
 
-const modelScaleHighlightCurve = getStepCurve([1, 2.5, 2.5, 2.5, 1, 1, 1]);
-const modelScaleNonHighlightCurve = getStepCurve([1, 0, 0, 0, 1, 1, 1]);
-
-const labelPositionXCurve = getStepCurve([0.015, -0.1, -0.1, -0.1, 0.02, -0.1, -0.1]);
-
-const visScaleHighlightCurve = getStepCurve([0, 0, 0, 0.2, 0.1, 0.1, 0.1]);
-const visScaleNonHighlightCurve = getStepCurve([0, 0, 0, 0, 0.1, 0.1, 0.1]);
-
-const splitMaterialCurve = getStepCurve([1, -1, 0, 0, 0, 0, 0]);
-
+// order of potatoes, this matches the fried ratio data
 const order: (keyof typeof potatoData)[] = [
   'ridged',
   'waffle',
@@ -85,85 +105,139 @@ const order: (keyof typeof potatoData)[] = [
   'potato',
 ];
 
+const yAxisVec3 = new Vector3(0, 1, 0);
+const xAxisVec3 = new Vector3(1, 0, 0);
+
 function usePotatoPositioning(potatoType: keyof typeof potatoData) {
-  const highlight = potatoType === 'curly' || potatoType === 'potato';
+  const shouldHighlight = potatoType === 'curly' || potatoType === 'potato';
   const position = useMemo(() => order.indexOf(potatoType), [potatoType]);
+
+  // refs which are modified by this hook
   const groupRef = useRef<THREE.Group>();
   const modelRef = useRef<THREE.Mesh>();
   const visRef = useRef<THREE.Group>();
   const labelRef = useRef<THREE.Mesh>();
   const lineRef = useRef<THREE.Mesh>();
+  const splitRef = useRef<THREE.Mesh>();
 
   const viewport = useThree(state => state.viewport);
   const scroll = useScroll();
+
+  // fried:unfried ratio scale
   const ratioScale = useMemo(
     () =>
       scaleLinear({
         domain: potatoFriedRatioExtent,
-        range: [0 - 10, viewport.width * horizontalLineLength - 5],
+        range: [0, viewport.width * horizontalLineLength],
         nice: true,
       }),
     [viewport.getCurrentViewport().width],
   );
 
-  useFrame(() => {
-    const currPageFloat = scroll.offset * numPages;
-    const currPage = Math.floor(currPageFloat);
+  const baseModelOffset = useMemo(
+    () =>
+      keyframes.model[shouldHighlight ? 'scaleHighlight' : 'scale'](0) *
+      modelScalar *
+      viewport.height,
+    [viewport.height, shouldHighlight],
+  );
 
+  useFrame(() => {
+    // group
     groupRef.current.position.x = -0.5 * viewport.width; // set to 0
     groupRef.current.position.y =
-      0.5 * viewport.height - // 50% sets 0 to top
+      0.5 * viewport.height - // 50% makes top coord = 0 for easier calculation for other refs
       (1 - modelViewportVertical) * viewport.height - // offset text at top
       (position / numPotatoes) * modelViewportVertical * viewport.height; // offset based on position;
 
-    // scale each potato group
-    const groupScale = (0.07 * viewport.height) / numPotatoes;
-    groupRef.current.scale.setScalar(groupScale);
+    // model
+    modelRef.current.position.x =
+      keyframes.model.positionX(scroll.offset) * viewport.width +
+      keyframes.model.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    if (highlight) {
-      const modelScale = modelScaleHighlightCurve(scroll.offset);
+    modelRef.current.material.uniforms.splitPosition.value =
+      keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
+
+    if (shouldHighlight) {
+      const modelScale =
+        keyframes.model.scaleHighlight(scroll.offset) * modelScalar * viewport.height;
       modelRef.current.scale.setScalar(modelScale);
-      modelRef.current.position.y = (modelScale - 1) * position;
-      visRef.current.position.y = (modelScale - 1) * position;
-      visRef.current.scale.setScalar(visScaleHighlightCurve(scroll.offset));
+      // offset y-value based on the amount scaled (increase y as scale increases)
+      modelRef.current.position.y = (modelScale - baseModelOffset) * position;
     } else {
-      modelRef.current.scale.setScalar(modelScaleNonHighlightCurve(scroll.offset));
-      visRef.current.scale.setScalar(visScaleNonHighlightCurve(scroll.offset));
+      modelRef.current.scale.setScalar(
+        keyframes.model.scale(scroll.offset) * modelScalar * viewport.height,
+      );
     }
 
-    // label scale
-    labelRef.current.position.x = labelPositionXCurve(scroll.offset) * viewport.width;
-
-    // model position
-    modelRef.current.position.x =
-      modelPositionXCurve(scroll.offset) * viewport.width +
-      modelPositionRatioXCurve(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
-
-    lineRef.current.position.x =
-      visPositionXCurve(scroll.offset) * viewport.width +
-      horizontalLineLength * 0.5 * viewport.width -
-      5;
-
-    lineRef.current.scale.x = lineScaleCurve(scroll.offset) ** 2;
-
-    // vis position
+    // vis
+    visRef.current.position.z = 10 * position; // @TODO would distort vis with a perspective camera
     visRef.current.position.x =
-      visPositionXCurve(scroll.offset) * viewport.width +
-      visPositionRatioXCurve(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
+      keyframes.vis.positionX(scroll.offset) * viewport.width +
+      keyframes.vis.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    modelRef.current.material.uniforms.splitPosition.value = splitMaterialCurve(scroll.offset) * 4;
+    if (shouldHighlight) {
+      const modelScale =
+        keyframes.model.scaleHighlight(scroll.offset) * modelScalar * viewport.height;
+      visRef.current.position.y = (modelScale - baseModelOffset) * position;
+      visRef.current.scale.setScalar(keyframes.vis.scaleHighlight(scroll.offset));
+
+      visRef.current.setRotationFromAxisAngle(
+        yAxisVec3,
+        keyframes.vis.rotateYHighlight(scroll.offset) * Math.PI,
+      );
+    } else {
+      visRef.current.scale.setScalar(keyframes.vis.scale(scroll.offset));
+      visRef.current.setRotationFromAxisAngle(
+        yAxisVec3,
+        keyframes.vis.rotateY(scroll.offset) * Math.PI,
+      );
+    }
+
+    // label
+    labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset));
+    labelRef.current.position.x = keyframes.label.positionX(0) * viewport.width;
+    labelRef.current.setRotationFromAxisAngle(
+      xAxisVec3,
+      keyframes.label.rotateX(scroll.offset) * Math.PI,
+    );
+
+    // lines
+    lineRef.current.position.x =
+      keyframes.line.positionX(scroll.offset) * viewport.width +
+      horizontalLineLength * 0.5 * viewport.width;
+
+    lineRef.current.scale.y = keyframes.line.scaleX(scroll.offset) ** 2;
+
+    if (splitRef.current) {
+      splitRef.current.position.x =
+        modelRef.current.position.x +
+        keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar * 10;
+
+      splitRef.current.scale.x = keyframes.splitLine.scaleX(scroll.offset);
+    }
   });
 
-  return { groupRef, labelRef, visRef, modelRef, lineRef };
+  return { groupRef, labelRef, visRef, modelRef, lineRef, splitRef };
 }
 
 const HorizontalLine = forwardRef((_, ref) => {
   const viewport = useThree(state => state.viewport);
   return (
     // set z behind models
-    <mesh ref={ref} position={[0, 0, -1]}>
+    <mesh ref={ref} position={[0, 0, -2]}>
+      <meshBasicMaterial color={highlightColor} />
+      <planeBufferGeometry args={[horizontalLineLength * viewport.width - 10, 0.2]} />
+    </mesh>
+  );
+});
+const VerticalLine = forwardRef((_, ref) => {
+  const viewport = useThree(state => state.viewport);
+  const height = modelViewportVertical * viewport.height - 10;
+  return (
+    <mesh ref={ref} position={[0, -(1 - modelViewportVertical) * viewport.height + 15, 0]}>
       <meshBasicMaterial color={textColorDark} />
-      <planeBufferGeometry args={[horizontalLineLength * viewport.width - 10, 0.1]} />
+      <planeBufferGeometry args={[0.5, height]} />
     </mesh>
   );
 });
@@ -197,12 +271,13 @@ export function WaffleComplete() {
 }
 
 export function CurlyComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('curly');
+  const { groupRef, labelRef, visRef, modelRef, lineRef, splitRef } = usePotatoPositioning('curly');
   return (
     <group ref={groupRef}>
       <CurlyModel ref={modelRef} {...potatoProps} />
       <CurlyVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
+      <VerticalLine ref={splitRef} />
       <Text ref={labelRef} {...labelProps}>
         Curly fry
       </Text>
