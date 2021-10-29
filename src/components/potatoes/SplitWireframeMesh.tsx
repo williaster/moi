@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import addBarycentricCoordinates from './utils/addBarycentricCoords';
 
-const vertex = `
+const vertexShader = `
   // these should both be added by 
   attribute vec3 barycentric;
   attribute float even;
@@ -17,8 +17,21 @@ const vertex = `
   varying vec3 vNormal;
 
   uniform mat4 rotationMatrix;
+  uniform float splitPosition;
 
   void main () {
+    vRotatedPosition = rotationMatrix * vec4(position.xyz, 1.0);
+
+    // if (vRotatedPosition.x >= splitPosition) {
+    //   mat4 sPos = mat4(
+    //     vec4(0.9, 0.0, 0.0, 0.0), // scale x
+    //     vec4(0.0, 0.9, 0.0, 0.0), // scale y
+    //     vec4(0.0, 0.0, 0.9, 0.0), // scale z
+    //     vec4(0.0, 0.0, 0.0, 1.0)
+    //   );
+    //   vRotatedPosition = sPos * vRotatedPosition;
+    // }
+
     // @TODO try to scale the split side?
     // "mat4 sPos = mat4(vec4(scaleX,0.0,0.0,0.0),",
     // "vec4(0.0,scaleY,0.0,0.0),",
@@ -27,20 +40,17 @@ const vertex = `
     // vPosition =  tPos * rXPos * rZPos * rYPos * sPos;
     // gl_Position = projectionMatrix * modelViewMatrix * vPosition * vec4(position,1.0);
 
-    vRotatedPosition = rotationMatrix * vec4(position.xyz, 1.0);
     gl_Position = projectionMatrix * modelViewMatrix * vRotatedPosition;
     vBarycentric = barycentric;
-    vPosition = position.xyz;
     vEven = even;
     vUv = uv;
     vNormal = normal;
   }
 `;
-const fragment = `
+const fragmentShader = `
   varying vec3 vBarycentric;
   varying float vEven;
   varying vec2 vUv;
-  varying vec3 vPosition;
   varying vec4 vRotatedPosition;
   varying vec4 vProjectedPosition;
   varying vec3 vNormal;
@@ -70,7 +80,7 @@ const fragment = `
 
   // This function returns the fragment color for our styled wireframe effect
   // based on the barycentric coordinates for this fragment
-  vec4 getStyledWireframe (vec3 barycentric) {
+  vec4 getStyledWireframe (vec3 barycentric, vec3 fill, vec3 stroke, vec3 background, bool squeeze, float thickness) {
     // this will be our signed distance for the wireframe edge
     float d = min(min(barycentric.x, barycentric.y), barycentric.z);
 
@@ -107,17 +117,27 @@ const fragment = `
 }
 
   void main () {
-    float gapLower = splitPosition -0.05;
-    float gapUpper = splitPosition +0.05;
-    if (vRotatedPosition.x <= gapLower && vRotatedPosition.x >= gapUpper) {
+    float gapLower = splitPosition -0.08;
+    float gapUpper = splitPosition +0.08;
+    if (vRotatedPosition.x >= gapLower && vRotatedPosition.x <= gapUpper) {
       // leave gap
       gl_FragColor = vec4(fill, 0.0);
     } else if (vRotatedPosition.x >= splitPosition) {
       // solid with simple "shadow" based on normal
+      
       gl_FragColor = vec4(mix(fill, background * 0.8, -vNormal.y * 1.5), 1.0);
     } else {
       // wireframe
-      gl_FragColor = getStyledWireframe(vBarycentric);
+      // gl_FragColor = getStyledWireframe(vBarycentric, fill, stroke, background, squeeze, thickness);
+      vec3 color = mix(stroke, stroke * 0.8, -vNormal.y * 1.5);
+      gl_FragColor = getStyledWireframe(
+        vBarycentric, 
+        stroke,
+        background,
+        color,
+        false,
+        0.005
+      );
     }
 }    
 `;
@@ -158,11 +178,6 @@ function SplitWireframeMesh(
     value: fillType === 'split' ? 0.05 : fillType === 'filled' ? -3.5 : 3.5,
   });
   useFrame(() => {
-    // splitPosition.current.value = THREE.MathUtils.lerp(
-    //   splitPosition.current.value,
-    //   fillType === 'split' ? 0.05 : fillType === 'filled' ? -3.5 : 3.5,
-    //   0.1,
-    // );
     // rotate mesh along y-axis
     rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
   });
@@ -186,13 +201,13 @@ function SplitWireframeMesh(
           noiseB: { value: false },
           seeThrough: { value: false },
           insideAltColor: { value: false },
-          thickness: { value: 0.03 },
+          thickness: { value: 0.025 },
           squeeze: { value: true },
-          squeezeMin: { value: 0.1 },
-          squeezeMax: { value: 4.0 },
+          squeezeMin: { value: 0.4 },
+          squeezeMax: { value: 3.0 },
         }}
-        vertexShader={vertex}
-        fragmentShader={fragment}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
       />
     </mesh>
   );

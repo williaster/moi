@@ -13,10 +13,15 @@ type GLTFResult = GLTF & {
 };
 
 const url = getStaticUrl('/static/models/potatoes/fry.gltf');
+const rotation = new THREE.Euler(0, 0, -0.02 * Math.PI);
 
 function Fry(props: Omit<SplitWireframeProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  return <SplitWireframeMesh ref={ref} {...props} geometry={nodes.straightexport.geometry} />;
+  return (
+    <group rotation={rotation}>
+      <SplitWireframeMesh ref={ref} {...props} geometry={nodes.straightexport.geometry} />
+    </group>
+  );
 }
 
 export default forwardRef(Fry);

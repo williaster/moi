@@ -13,10 +13,15 @@ type GLTFResult = GLTF & {
   };
   materials: {};
 };
+const rotation = new THREE.Euler(0, 0, -0.02 * Math.PI);
 
 function Tot(props: Omit<SplitWireframeProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  return <SplitWireframeMesh {...props} ref={ref} geometry={nodes.totexport.geometry} />;
+  return (
+    <group rotation={rotation}>
+      <SplitWireframeMesh {...props} ref={ref} geometry={nodes.totexport.geometry} />
+    </group>
+  );
 }
 
 export default forwardRef(Tot);
