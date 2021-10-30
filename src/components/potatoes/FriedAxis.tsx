@@ -8,7 +8,7 @@ import { Text } from './Text';
 const axisHeight = 0.015;
 
 export default function FriedAxis() {
-  const { groupRef, axisRef, axisWidth } = useAxisPositioning();
+  const { groupRef, axisRef, axisWidth, label1 } = useAxisPositioning();
   const viewport = useThree(state => state.viewport);
   const triangleGeometry = useMemo(() => {
     const triangleShape = new THREE.Shape();
@@ -26,7 +26,7 @@ export default function FriedAxis() {
       </mesh>
       <group position={[0, 10, 0]}>
         <Text fontSize={5} anchorX="left" color={textColorDarker}>
-          Worse
+          {label1}
         </Text>
         <Text
           fontSize={5}

@@ -1,6 +1,8 @@
 import { useThree, useFrame } from '@react-three/fiber';
 import React, { useMemo, useRef, forwardRef } from 'react';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
+import * as colors from './colors';
 
 import addBarycentricCoordinates from './utils/addBarycentricCoords';
 
@@ -154,6 +156,22 @@ export interface SplitWireframeProps {
   materialRef?: React.RefObject<THREE.Material>;
 }
 
+const gradientColors = new Uint8Array(5);
+
+for (let c = 0; c <= gradientColors.length; c++) {
+  gradientColors[c] = (c / gradientColors.length) * 256;
+}
+
+const gradientMap = new THREE.DataTexture(
+  gradientColors,
+  gradientColors.length,
+  1,
+  THREE.LuminanceFormat,
+);
+gradientMap.minFilter = THREE.NearestFilter;
+gradientMap.magFilter = THREE.NearestFilter;
+gradientMap.generateMipmaps = false;
+
 function SplitWireframeMesh(
   {
     stroke,
@@ -179,7 +197,8 @@ function SplitWireframeMesh(
   });
   useFrame(() => {
     // rotate mesh along y-axis
-    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
+    // rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
+    ref.current.setRotationFromAxisAngle(new Vector3(0, 1, 0), Math.PI * clock.elapsedTime * 0.1);
   });
 
   return (
@@ -209,6 +228,7 @@ function SplitWireframeMesh(
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
       />
+      {/* <meshToonMaterial transparent color={colors.textColor} gradientMap={gradientMap} /> */}
     </mesh>
   );
 }

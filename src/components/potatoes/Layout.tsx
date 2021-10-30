@@ -2,6 +2,7 @@ import React, { forwardRef, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { scaleLinear } from '@visx/scale';
+import { EffectComposer, Outline } from '@react-three/postprocessing';
 
 import { ScrollControls, useScroll } from '@react-three/drei';
 import { Text } from './Text';
@@ -176,8 +177,10 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.model.positionX(scroll.offset) * viewport.width +
       keyframes.model.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    modelRef.current.material.uniforms.splitPosition.value =
-      keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
+    if (modelRef.current.material.uniforms) {
+      modelRef.current.material.uniforms.splitPosition.value =
+        keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
+    }
 
     if (shouldHighlight) {
       const modelScale =
@@ -219,8 +222,8 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset) * viewportMin);
     labelRef.current.position.x = keyframes.label.positionX(0) * viewport.width;
     labelRef.current.setRotationFromAxisAngle(
-      xAxisVec3,
-      keyframes.label.rotateX(scroll.offset) * Math.PI,
+      yAxisVec3,
+      keyframes.label.rotateX(scroll.offset) * -Math.PI,
     );
 
     // lines
@@ -299,16 +302,34 @@ export function WaffleComplete() {
 
 export function CurlyComplete() {
   const { groupRef, labelRef, visRef, modelRef, lineRef, splitRef } = usePotatoPositioning('curly');
+  const outlineRef = useRef();
+  useFrame(() => {
+    debugger;
+    outlineRef.current.edgeThickness = 10;
+  });
   return (
-    <group ref={groupRef}>
-      <CurlyModel ref={modelRef} {...potatoProps} />
-      <CurlyVis ref={visRef} {...visProps} />
-      <HorizontalLine ref={lineRef} />
-      {/* <VerticalLine ref={splitRef} /> */}
-      <Text ref={labelRef} {...labelProps}>
-        Curly fry
-      </Text>
-    </group>
+    <>
+      <group ref={groupRef}>
+        <CurlyModel ref={modelRef} {...potatoProps} />
+        <CurlyVis ref={visRef} {...visProps} />
+        <HorizontalLine ref={lineRef} />
+        {/* <VerticalLine ref={splitRef} /> */}
+        <Text ref={labelRef} {...labelProps}>
+          Curly fry
+        </Text>
+      </group>
+      <EffectComposer autoClear={false}>
+        <Outline
+          ref={outlineRef}
+          blur
+          edgeStrength={50} // the edge strength
+          pulseSpeed={0} // a pulse speed. A value of zero disables the pulse effect
+          visibleEdgeColor={textColorDarker} // the color of visible edges
+          selection={[modelRef]} // selection of objects that wiill be outlined
+          hiddenEdgeColor={0xff0000} // the color of hidden edges
+        />
+      </EffectComposer>
+    </>
   );
 }
 
