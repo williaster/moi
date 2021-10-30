@@ -1,51 +1,49 @@
 import { useThree, useFrame } from '@react-three/fiber';
 import React, { useMemo, useRef, forwardRef } from 'react';
 import * as THREE from 'three';
+import * as colors from './colors';
 
 const vertexShader = `
   uniform mat4 rotationMatrix;
-  uniform mat4 mvpMatrix;
-  uniform bool isEdge;
-  uniform vec3 stroke;
+  uniform bool outline;
 
-  varying vec4 vRotatedPosition;
   varying vec3 vNormal;
-  varying vec4 vColor;
-  varying bool vIsEdge;
 
   void main () {
+    // rotate the normal so the light appears is constant
+    vNormal = (rotationMatrix * vec4(normal, 1.0)).xyz;
     vec3 pos = position;
-    if (isEdge) {
-        pos += normal * 0.05;
+    if (outline) {
+        pos += normal * 0.15; // scale
     }
-    vRotatedPosition = rotationMatrix * vec4(pos.xyz, 1.0);
-    vNormal = normal;
-    vColor = vec4(stroke, 1.0);
-    vIsEdge = isEdge;
-
-    gl_Position = projectionMatrix * modelViewMatrix * vRotatedPosition;
+    vec4 rotatedPosition = rotationMatrix * vec4(pos.xyz, 1.0);
+    gl_Position = projectionMatrix * modelViewMatrix * rotatedPosition;
   }
 `;
 const fragmentShader = `
-  uniform vec4 edgeColor;
-  uniform mat4 invMatrix;
+  uniform mat4 rotationMatrix;
+  uniform vec3 materialColor;
+  uniform vec3 lightColor;
   uniform vec3 lightDirection;
-  uniform sampler2D texture;
+  uniform float numGradientSteps;
 
   varying vec3 vNormal;
-  varying vec4 vColor;
-  varying bool vIsEdge;
 
   void main() {
-    if (vIsEdge) {
-        gl_FragColor = edgeColor;
-    } else {
-        vec3  invLight = normalize(invMatrix * vec4(lightDirection, 0.0)).xyz;
-        float diffuse  = clamp(dot(vNormal, invLight), 0.0, 1.0);
-        vec4  smpColor = texture2D(texture, vec2(diffuse, 0.0));
-        gl_FragColor   = vColor * smpColor;
+    vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
+    vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
+
+    float diffuse = dot(vNormal, lightDirectionNormalized);
+
+    if (numGradientSteps > 0.0) {
+        float sign = diffuse < 0.0 ? -1.0 : 1.0;
+        diffuse = 
+          (floor((abs(diffuse) + 0.001) * numGradientSteps) / numGradientSteps) * sign + 
+          (1.0 / (numGradientSteps * 2.0)) + 
+          0.1;
     }
-}
+
+    gl_FragColor = vec4(materialColor * lightColor * diffuse, 1.0);
   }
 `;
 
@@ -57,22 +55,17 @@ export interface ToonOutlineProps {
   materialRef?: React.RefObject<THREE.Material>;
 }
 
+const lightDirection = new THREE.Vector3(0.7, 0.8, 1).normalize();
+const lightColor = new THREE.Color('pink').setScalar(3);
+const materialColor = new THREE.Color(colors.highlightColor);
+
 function ToonOutlineMesh(
   { stroke, fill, background, geometry, materialRef }: ToonOutlineProps,
   ref: React.ForwardedRef<THREE.Mesh>,
 ) {
-  const clock = useThree(state => state.clock);
   const rotationMatrix = useRef({ value: new THREE.Matrix4() });
-  const splitPosition = useRef({ value: 0 });
-  const outlineRef = useRef<THREE.Mesh>();
-  const didScale = useRef(false);
-  useFrame(() => {
-    // rotate mesh along y-axis
-    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
-    // if (!didScale.current) {
-    //   outlineRef.current.scale.setScalar(2.5);
-    //   didScale.current = true;
-    // }
+  useFrame(({ clock }) => {
+    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.15);
   });
 
   return (
@@ -84,17 +77,44 @@ function ToonOutlineMesh(
     //     <meshToonMaterial color="purple" side={THREE.FrontSide} />
     //   </mesh>
     // </group>
-    <mesh ref={ref} geometry={geometry}>
-      <shaderMaterial
-        key={Math.random()} // @todo remove, how to handle disposal?
-        ref={materialRef}
-        transparent
-        side={THREE.FrontSide}
-        uniforms={{}}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-      />
-    </mesh>
+    <group ref={ref}>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          key={Math.random()} // @todo remove, how to handle disposal?
+          ref={materialRef}
+          transparent
+          side={THREE.FrontSide}
+          uniforms={{
+            rotationMatrix: rotationMatrix.current,
+            lightDirection: { value: lightDirection },
+            lightColor: { value: lightColor },
+            materialColor: { value: new THREE.Color('#aaa') },
+            numGradientSteps: { value: 2 },
+            outline: { value: false },
+          }}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+        />
+      </mesh>
+      <mesh geometry={geometry}>
+        <shaderMaterial
+          key={Math.random()} // @todo remove, how to handle disposal?
+          ref={materialRef}
+          transparent
+          side={THREE.BackSide}
+          uniforms={{
+            rotationMatrix: rotationMatrix.current,
+            lightDirection: { value: lightDirection },
+            lightColor: { value: lightColor },
+            materialColor: { value: new THREE.Color(colors.textColorDarker) },
+            numGradientSteps: { value: 1 },
+            outline: { value: true },
+          }}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+        />
+      </mesh>
+    </group>
   );
 }
 

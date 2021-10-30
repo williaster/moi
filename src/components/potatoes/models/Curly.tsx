@@ -3,7 +3,7 @@ import React, { forwardRef, useMemo, useRef } from 'react';
 import { useGLTF, useScroll } from '@react-three/drei';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import getStaticUrl from '../../../utils/getStaticUrl';
-import SplitWireframeMesh, { SplitWireframeProps } from '../SplitWireframeMesh';
+import ToonOutlineMesh, { ToonOutlineProps } from '../ToonOutlineMesh';
 import { useFrame } from '@react-three/fiber';
 
 type GLTFResult = GLTF & {
@@ -15,9 +15,9 @@ type GLTFResult = GLTF & {
 
 const url = getStaticUrl('/static/models/potatoes/curly.gltf');
 
-function Curly(props: Omit<SplitWireframeProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
+function Curly(props: Omit<ToonOutlineProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  return <SplitWireframeMesh ref={ref} {...props} geometry={nodes.curly_fry_export.geometry} />;
+  return <ToonOutlineMesh ref={ref} {...props} geometry={nodes.curly_fry_export.geometry} />;
 }
 
 export default forwardRef(Curly);

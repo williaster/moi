@@ -4,7 +4,7 @@ import { useGLTF, useScroll } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import getStaticUrl from '../../../utils/getStaticUrl';
-import SplitWireframeMesh, { SplitWireframeProps } from '../SplitWireframeMesh';
+import ToonOutlineMesh, { ToonOutlineProps } from '../ToonOutlineMesh';
 
 const url = getStaticUrl('/static/models/potatoes/wedge.gltf');
 
@@ -15,9 +15,9 @@ type GLTFResult = GLTF & {
   materials: {};
 };
 
-function Wedge(props: Omit<SplitWireframeProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
+function Wedge(props: Omit<ToonOutlineProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  return <SplitWireframeMesh {...props} ref={ref} geometry={nodes.wedge_export.geometry} />;
+  return <ToonOutlineMesh {...props} ref={ref} geometry={nodes.wedge_export.geometry} />;
 }
 
 export default forwardRef(Wedge);

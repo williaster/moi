@@ -34,14 +34,6 @@ const vertexShader = `
     //   vRotatedPosition = sPos * vRotatedPosition;
     // }
 
-    // @TODO try to scale the split side?
-    // "mat4 sPos = mat4(vec4(scaleX,0.0,0.0,0.0),",
-    // "vec4(0.0,scaleY,0.0,0.0),",
-    // "vec4(0.0,0.0,scaleZ,0.0),",
-    // "vec4(0.0,0.0,0.0,1.0));",
-    // vPosition =  tPos * rXPos * rZPos * rYPos * sPos;
-    // gl_Position = projectionMatrix * modelViewMatrix * vPosition * vec4(position,1.0);
-
     gl_Position = projectionMatrix * modelViewMatrix * vRotatedPosition;
     vBarycentric = barycentric;
     vEven = even;

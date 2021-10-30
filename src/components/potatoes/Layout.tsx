@@ -53,7 +53,7 @@ const visProps = {
 const labelProps = {
   color: textColorDarker,
   fontSize: 2,
-  anchorX: 'left',
+  anchorX: 'right',
 } as const;
 
 const modelScalar =
@@ -85,7 +85,7 @@ const keyframes = {
   },
   label: {
     scale: getKeyframes([0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015]),
-    positionX: getKeyframes([0.05, -0.2, -0.2, -0.2, 0.1, 0.05, 0.05]), // relative to viewport.width
+    positionX: getKeyframes([0.19, -0.2, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
     // positionXPx: getKeyframes([40, -400, -400, -400, 40, 40, 40]), // relative to viewport.width
     rotateX: getKeyframes([0, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
   },
@@ -177,7 +177,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.model.positionX(scroll.offset) * viewport.width +
       keyframes.model.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    if (modelRef.current?.material?.uniforms) {
+    if (modelRef.current.material?.uniforms?.splitPosition) {
       modelRef.current.material.uniforms.splitPosition.value =
         keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
     }
@@ -222,7 +222,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset) * viewportMin);
     labelRef.current.position.x = keyframes.label.positionX(0) * viewport.width;
     labelRef.current.setRotationFromAxisAngle(
-      yAxisVec3,
+      xAxisVec3,
       keyframes.label.rotateX(scroll.offset) * -Math.PI,
     );
 
@@ -320,7 +320,7 @@ export function CurlyComplete() {
       </group>
       {/* <EffectComposer autoClear={false}>
         <Outline
-          ref={outlineRef}
+          // ref={outlineRef}
           blur
           edgeStrength={50} // the edge strength
           pulseSpeed={0} // a pulse speed. A value of zero disables the pulse effect
