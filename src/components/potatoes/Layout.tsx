@@ -2,9 +2,8 @@ import React, { forwardRef, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { scaleLinear } from '@visx/scale';
-import { EffectComposer, Outline } from '@react-three/postprocessing';
 
-import { ScrollControls, useScroll } from '@react-three/drei';
+import { useScroll } from '@react-three/drei';
 import { Text } from './Text';
 import { CurlyVis, FryVis, PotatoVis, RidgedVis, TotVis, WaffleVis, WedgeVis } from './PotatoVis';
 import RidgedModel from './models/Ridged';
@@ -29,7 +28,7 @@ const numPotatoes = 7;
 const titleViewportVertical = 0.2;
 const axisViewportVertical = 0.05;
 const modelViewportVertical = 1 - (titleViewportVertical + axisViewportVertical);
-const axisWidth = 0.6;
+const axisWidth = 0.55;
 
 // min/max values of fried ratio
 const potatoFriedRatioExtent = Object.keys(potatoData).reduce(
@@ -64,7 +63,7 @@ const splitMaterialScalar = 4;
 
 const keyframes = {
   model: {
-    positionX: getKeyframes([0.25, 0.5, 0.5, 0.3, 0.3, 0.25, 0.25]), // relative to viewport.width
+    positionX: getKeyframes([0.3, 0.5, 0.5, 0.3, 0.3, 0.3, 0.26]), // relative to viewport.width
     positionXRatio: getKeyframes([1, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
     positionYHighlight: getKeyframes([0, 0.5, 0.5, 0, 0, 0, 0]), // offset from initial y
     scale: getKeyframes([1, 0, 0, 0, 0.8, 0.8, 0.8]),
@@ -74,19 +73,18 @@ const keyframes = {
   vis: {
     rotateY: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
     rotateYHighlight: getKeyframes([-0.5, -0.5, -0.5, 0, 0, 0, 0]), // relative to Math.PI
-    positionX: getKeyframes([0.7, 0.7, 0.7, 0.7, 0.7, 0.4, 0.4]), // relative to viewport.width
+    positionX: getKeyframes([0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.41]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
-    scale: getKeyframes([0, 0, 0, 0.002, 0.002, 0.002, 0.002]),
-    scaleHighlight: getKeyframes([0, 0, 0.0035, 0.0035, 0.002, 0.002, 0.002]),
+    scale: getKeyframes([0, 0, 0, 0, 0.0015, 0.0015, 0.0015]),
+    scaleHighlight: getKeyframes([0, 0, 0, 0.0035, 0.002, 0.002, 0.002]),
   },
   line: {
     scaleX: getKeyframes([1, 0, 0, 0, 0, 1, 1]),
-    positionX: getKeyframes([0.25, 0.225, 0.225, 0.225, 0.25, 0.4, 0.4]), // relative to viewport.width
+    positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.015, 0.015, 0.015, 0.015, 0.015, 0.015, 0.015]),
+    scale: getKeyframes([0.014, 0.014, 0.014, 0.014, 0.014, 0.014, 0.014]),
     positionX: getKeyframes([0.19, -0.2, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
-    // positionXPx: getKeyframes([40, -400, -400, -400, 40, 40, 40]), // relative to viewport.width
     rotateX: getKeyframes([0, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
   },
   splitLine: {
@@ -108,6 +106,9 @@ const order: (keyof typeof potatoData)[] = [
 const yAxisVec3 = new Vector3(0, 1, 0);
 const xAxisVec3 = new Vector3(1, 0, 0);
 
+const axisRotation = getKeyframes([0, 1, 1, 1, 1, 0, 0]);
+const axisPositionY = getKeyframes([1.05, 1, 1, 1, 1.15, 1.15, 1.15]); // times height * title space
+
 export function useAxisPositioning() {
   // refs which are modified by this hook
   const groupRef = useRef<THREE.Group>();
@@ -119,11 +120,14 @@ export function useAxisPositioning() {
   useFrame(() => {
     groupRef.current.position.y =
       0.5 * viewport.height - // 50% makes top coord = 0 for easier calculation for other refs
-      titleViewportVertical * viewport.height; // offset text at top;
+      axisPositionY(scroll.offset) * titleViewportVertical * viewport.height; // offset text at top;
 
     groupRef.current.position.x =
       -0.5 * viewport.width + // set to 0
       keyframes.line.positionX(scroll.offset) * viewport.width;
+
+    // groupRef.current.scale.y = axisOpacity(scroll.offset);
+    groupRef.current.rotation.x = 0.5 * Math.PI * axisRotation(scroll.offset);
   });
 
   return { axisRef, groupRef, axisWidth };
@@ -206,16 +210,16 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       visRef.current.position.y = (modelScale - baseModelOffset) * position;
       visRef.current.scale.setScalar(keyframes.vis.scaleHighlight(scroll.offset) * viewportMin);
 
-      visRef.current.setRotationFromAxisAngle(
-        yAxisVec3,
-        keyframes.vis.rotateYHighlight(scroll.offset) * Math.PI,
-      );
+      // visRef.current.setRotationFromAxisAngle(
+      //   yAxisVec3,
+      //   keyframes.vis.rotateYHighlight(scroll.offset) * Math.PI,
+      // );
     } else {
       visRef.current.scale.setScalar(keyframes.vis.scale(scroll.offset) * viewportMin);
-      visRef.current.setRotationFromAxisAngle(
-        yAxisVec3,
-        keyframes.vis.rotateY(scroll.offset) * Math.PI,
-      );
+      // visRef.current.setRotationFromAxisAngle(
+      //   yAxisVec3,
+      //   keyframes.vis.rotateY(scroll.offset) * Math.PI,
+      // );
     }
 
     // label
@@ -301,34 +305,17 @@ export function WaffleComplete() {
 }
 
 export function CurlyComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef, splitRef } = usePotatoPositioning('curly');
-  // const outlineRef = useRef();
-  // useFrame(() => {
-  //   debugger;
-  //   outlineRef.current.edgeThickness = 10;
-  // });
+  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('curly');
   return (
     <>
       <group ref={groupRef}>
         <CurlyModel ref={modelRef} {...potatoProps} />
         <CurlyVis ref={visRef} {...visProps} />
         <HorizontalLine ref={lineRef} />
-        {/* <VerticalLine ref={splitRef} /> */}
         <Text ref={labelRef} {...labelProps}>
           Curly fry
         </Text>
       </group>
-      {/* <EffectComposer autoClear={false}>
-        <Outline
-          // ref={outlineRef}
-          blur
-          edgeStrength={50} // the edge strength
-          pulseSpeed={0} // a pulse speed. A value of zero disables the pulse effect
-          visibleEdgeColor={textColorDarker} // the color of visible edges
-          selection={[modelRef]} // selection of objects that wiill be outlined
-          hiddenEdgeColor={0xff0000} // the color of hidden edges
-        />
-      </EffectComposer> */}
     </>
   );
 }

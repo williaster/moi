@@ -1,14 +1,15 @@
 import { useThree } from '@react-three/fiber';
 import React, { forwardRef, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { highlightColor, textColorDarker } from './colors';
+import { highlightColor, highlightColorDark, textColorDarker } from './colors';
 import { useAxisPositioning } from './Layout';
 import { Text } from './Text';
 
 const axisHeight = 0.015;
+const fontSize = 0.03;
 
 export default function FriedAxis() {
-  const { groupRef, axisRef, axisWidth, label1 } = useAxisPositioning();
+  const { groupRef, axisRef, axisWidth } = useAxisPositioning();
   const viewport = useThree(state => state.viewport);
   const triangleGeometry = useMemo(() => {
     const triangleShape = new THREE.Shape();
@@ -24,17 +25,23 @@ export default function FriedAxis() {
       <mesh ref={axisRef} geometry={triangleGeometry}>
         <meshBasicMaterial color={highlightColor} />
       </mesh>
-      <group position={[0, 10, 0]}>
-        <Text fontSize={5} anchorX="left" color={textColorDarker}>
-          {label1}
+      <group position={[0, 6, 0]}>
+        <Text
+          anchorY="bottom"
+          color={highlightColorDark}
+          fontSize={fontSize * viewport.width}
+          anchorX="left"
+        >
+          Less fried
         </Text>
         <Text
-          fontSize={5}
+          color={highlightColorDark}
+          fontSize={fontSize * viewport.width}
+          anchorY="bottom"
           anchorX="right"
           position={[viewport.width * axisWidth, 0, 0]}
-          color={textColorDarker}
         >
-          Better
+          More fried
         </Text>
       </group>
     </group>
