@@ -26,8 +26,6 @@ function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
     const isLastPage = page === lastPage;
     const isEaseOut = isFirstPage || (currPage > page + 0.5 && !isLastPage);
     const sign = isEaseOut ? -1 : 1;
-    // if (page === 2 && Math.random() > 0.99)
-    //   console.log({ offset: scroll.offset, currPage, isEaseOut });
 
     const transitionStart = (page - 1) / numPages;
 
@@ -63,13 +61,14 @@ function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
 }
 
 const headerStyle = {
-  fontSize: '2em',
+  fontSize: '3.5vh',
   fontWeight: 700,
   color: textColorDark,
   position: 'absolute',
-  top: 38,
-  left: 32,
+  top: '0.75em',
+  left: '0.75em',
   maxWidth: '80vw',
+  lineHeight: '1em',
 } as const;
 
 const textStyle = {
@@ -87,6 +86,7 @@ const friedStyle = emphasisStyle;
 const unfriedStyle = { ...emphasisStyle, color: textColor };
 const ratioStyle = { ...emphasisStyle, color: highlightColor };
 const friedColorStyle = { color: textColorDark };
+const monospaceStyle = { fontFamily: 'monospace', letterSpacing: -0.5 };
 
 // don't break scrolling
 const htmlStyle = { pointerEvents: 'none' } as const;
@@ -159,7 +159,7 @@ export default function Title() {
             We can go one step further and compute the true measure of potato quality:
             <br />
             <br />
-            <span style={{ fontFamily: 'monospace' }}>
+            <span style={monospaceStyle}>
               <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
               <span style={unfriedStyle}>unfried</span>
             </span>
@@ -169,18 +169,14 @@ export default function Title() {
           Quality: the fried <span style={ratioStyle}>ratio</span>
           <p style={textStyle}>
             Plotting this ratio along the x-axis shows that potatoes are not all created equal, your
-            favorite forms are more fried.
+            favorite forms are more fried.&nbsp;&nbsp;
+            <span style={monospaceStyle}>
+              <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
+              <span style={unfriedStyle}>unfried</span>
+            </span>
           </p>
         </div>
       </div>
-
-      {/* <h1 ref={three} style={{ position: 'absolute', left: 32 }}>
-        3rd page
-      </h1>
-      <h1 style={{ position: 'absolute', left: 32 }}>4th page</h1>
-      <h1 style={{ position: 'absolute', left: 32 }}>5th page</h1>
-      <h1 style={{ position: 'absolute', left: 32 }}>6th page</h1>
-      <h1 style={{ position: 'absolute', left: 32 }}>7th page</h1> */}
     </Html>
   );
 }

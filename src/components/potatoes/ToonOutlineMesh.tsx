@@ -76,14 +76,25 @@ function ToonOutlineMesh(
   });
 
   return (
-    <group ref={ref}>
-      <mesh ref={outlineRef} geometry={geometry} scale={new THREE.Vector3(1.05, 1.05, 1.05)}>
-        <meshBasicMaterial color="green" side={THREE.BackSide} />
-      </mesh>
-      <mesh geometry={geometry}>
-        <meshToonMaterial color="purple" side={THREE.FrontSide} />
-      </mesh>
-    </group>
+    // <group ref={ref}>
+    //   <mesh ref={outlineRef} geometry={geometry} scale={new THREE.Vector3(1.05, 1.05, 1.05)}>
+    //     <meshBasicMaterial color="green" side={THREE.BackSide} />
+    //   </mesh>
+    //   <mesh geometry={geometry}>
+    //     <meshToonMaterial color="purple" side={THREE.FrontSide} />
+    //   </mesh>
+    // </group>
+    <mesh ref={ref} geometry={geometry}>
+      <shaderMaterial
+        key={Math.random()} // @todo remove, how to handle disposal?
+        ref={materialRef}
+        transparent
+        side={THREE.FrontSide}
+        uniforms={{}}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </mesh>
   );
 }
 

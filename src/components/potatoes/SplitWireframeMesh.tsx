@@ -197,8 +197,8 @@ function SplitWireframeMesh(
   });
   useFrame(() => {
     // rotate mesh along y-axis
-    // rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
-    ref.current.setRotationFromAxisAngle(new Vector3(0, 1, 0), Math.PI * clock.elapsedTime * 0.1);
+    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.1);
+    // ref.current.setRotationFromAxisAngle(new Vector3(0, 1, 0), Math.PI * clock.elapsedTime * 0.1);
   });
 
   return (

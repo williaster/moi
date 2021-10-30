@@ -177,7 +177,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.model.positionX(scroll.offset) * viewport.width +
       keyframes.model.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    if (modelRef.current.material.uniforms) {
+    if (modelRef.current?.material?.uniforms) {
       modelRef.current.material.uniforms.splitPosition.value =
         keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
     }
@@ -302,11 +302,11 @@ export function WaffleComplete() {
 
 export function CurlyComplete() {
   const { groupRef, labelRef, visRef, modelRef, lineRef, splitRef } = usePotatoPositioning('curly');
-  const outlineRef = useRef();
-  useFrame(() => {
-    debugger;
-    outlineRef.current.edgeThickness = 10;
-  });
+  // const outlineRef = useRef();
+  // useFrame(() => {
+  //   debugger;
+  //   outlineRef.current.edgeThickness = 10;
+  // });
   return (
     <>
       <group ref={groupRef}>
@@ -318,7 +318,7 @@ export function CurlyComplete() {
           Curly fry
         </Text>
       </group>
-      <EffectComposer autoClear={false}>
+      {/* <EffectComposer autoClear={false}>
         <Outline
           ref={outlineRef}
           blur
@@ -328,7 +328,7 @@ export function CurlyComplete() {
           selection={[modelRef]} // selection of objects that wiill be outlined
           hiddenEdgeColor={0xff0000} // the color of hidden edges
         />
-      </EffectComposer>
+      </EffectComposer> */}
     </>
   );
 }

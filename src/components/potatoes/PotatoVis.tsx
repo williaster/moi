@@ -17,28 +17,37 @@ const volumeScale = scaleLinear({
   range: [1, 50],
 });
 
-type VisProps = { fill: string; stroke: string; datum: Datum; gap?: number; segments?: number };
+type VisProps = {
+  fill: string;
+  stroke: string;
+  datum: Datum;
+  gap?: number;
+  segments?: number;
+  ringRef?: React.RefObject<THREE.RingBufferGeometry>;
+};
 type SomeVisProps = Pick<VisProps, 'stroke' | 'fill'>;
 
-export const Vis = forwardRef(({ fill, stroke, datum, gap = 1, segments = 50 }: VisProps, ref) => {
-  const v = volume(datum);
-  const a = area(datum);
-  const volumeRadius = volumeScale(v);
-  const areaRadius = Math.sqrt((a + Math.PI * volumeRadius * volumeRadius) / Math.PI);
+export const Vis = forwardRef(
+  ({ fill, stroke, datum, gap = 1, segments = 50, ringRef }: VisProps, ref) => {
+    const v = volume(datum);
+    const a = area(datum);
+    const volumeRadius = volumeScale(v);
+    const areaRadius = Math.sqrt((a + Math.PI * volumeRadius * volumeRadius) / Math.PI);
 
-  return (
-    <group ref={ref}>
-      <mesh>
-        <ringBufferGeometry args={[0, volumeRadius, segments, Math.floor(segments * 0.1)]} />
-        <meshBasicMaterial color={fill} />
-      </mesh>
-      <mesh>
-        <ringBufferGeometry args={[volumeRadius + gap, areaRadius, segments, 1]} />
-        <meshBasicMaterial color={stroke} />
-      </mesh>
-    </group>
-  );
-});
+    return (
+      <group ref={ref}>
+        <mesh>
+          <ringBufferGeometry args={[0, volumeRadius, segments, Math.floor(segments * 0.1)]} />
+          <meshBasicMaterial color={fill} />
+        </mesh>
+        <mesh>
+          <ringBufferGeometry ref={ringRef} args={[volumeRadius + gap, areaRadius, segments, 1]} />
+          <meshBasicMaterial color={stroke} />
+        </mesh>
+      </group>
+    );
+  },
+);
 
 export const PotatoVis = forwardRef((props: SomeVisProps, ref) => (
   <Vis {...props} ref={ref} datum={potatoData.potato} />
