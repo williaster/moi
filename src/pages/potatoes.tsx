@@ -18,6 +18,7 @@ import Background from '../components/potatoes/Background';
 import FriedAxis from '../components/potatoes/FriedAxis';
 import { backgroundColor, textColor } from '../components/potatoes/colors';
 import Title from '../components/potatoes/Title';
+import { cssFontRules, FontUriLinks } from '../components/potatoes/font';
 
 const PotatoesPage = () => (
   <>
@@ -38,11 +39,12 @@ const PotatoesPage = () => (
         <Loader />
       </div>
     </Page>
+    <FontUriLinks />
     <style global jsx>{`
       .main {
+        ${cssFontRules}
         height: 100%;
         width: 100%;
-        font-size: 0.8rem;
         background: ${backgroundColor};
         color: ${textColor};
         overflow: hidden;

@@ -68,7 +68,8 @@ const keyframes = {
     positionYHighlight: getKeyframes([0, 0.5, 0.5, 0, 0, 0, 0]), // offset from initial y
     scale: getKeyframes([1, 0, 0, 0, 0.8, 0.8, 0.8]),
     scaleHighlight: getKeyframes([1, 2.5, 2.5, 2.5, 0.8, 0.8, 0.8]),
-    splitMaterial: getKeyframes([1, -1, 0, 0, 0, 0, 0]),
+    splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1]),
+    outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
   },
   vis: {
     rotateY: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
@@ -143,7 +144,10 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
   const visRef = useRef<THREE.Group>();
   const labelRef = useRef<THREE.Mesh>();
   const lineRef = useRef<THREE.Mesh>();
-  const splitRef = useRef<THREE.Mesh>();
+  const uniformsRef = useRef<{
+    splitPosition: { value: number };
+    outlineThickness: { value: number };
+  }>();
 
   const viewport = useThree(state => state.viewport);
   const scroll = useScroll();
@@ -181,9 +185,10 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.model.positionX(scroll.offset) * viewport.width +
       keyframes.model.positionXRatio(scroll.offset) * ratioScale(potatoData[potatoType].ratio);
 
-    if (modelRef.current.material?.uniforms?.splitPosition) {
-      modelRef.current.material.uniforms.splitPosition.value =
+    if (uniformsRef.current) {
+      uniformsRef.current.splitPosition.value =
         keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar;
+      uniformsRef.current.outlineThickness.value = keyframes.model.outlineThickness(scroll.offset);
     }
 
     if (shouldHighlight) {
@@ -209,17 +214,8 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
         keyframes.model.scaleHighlight(scroll.offset) * modelScalar * viewport.height;
       visRef.current.position.y = (modelScale - baseModelOffset) * position;
       visRef.current.scale.setScalar(keyframes.vis.scaleHighlight(scroll.offset) * viewportMin);
-
-      // visRef.current.setRotationFromAxisAngle(
-      //   yAxisVec3,
-      //   keyframes.vis.rotateYHighlight(scroll.offset) * Math.PI,
-      // );
     } else {
       visRef.current.scale.setScalar(keyframes.vis.scale(scroll.offset) * viewportMin);
-      // visRef.current.setRotationFromAxisAngle(
-      //   yAxisVec3,
-      //   keyframes.vis.rotateY(scroll.offset) * Math.PI,
-      // );
     }
 
     // label
@@ -232,19 +228,10 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
     // lines
     lineRef.current.position.x = keyframes.line.positionX(scroll.offset) * viewport.width;
-
     lineRef.current.scale.y = keyframes.line.scaleX(scroll.offset) ** 2;
-
-    if (splitRef.current) {
-      splitRef.current.position.x =
-        modelRef.current.position.x +
-        keyframes.model.splitMaterial(scroll.offset) * splitMaterialScalar * 10;
-
-      splitRef.current.scale.x = keyframes.splitLine.scaleX(scroll.offset);
-    }
   });
 
-  return { groupRef, labelRef, visRef, modelRef, lineRef, splitRef };
+  return { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef };
 }
 
 const HorizontalLine = forwardRef((_, ref) => {
@@ -277,10 +264,12 @@ const VerticalLine = forwardRef((_, ref) => {
 });
 
 export function RidgedComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('ridged');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'ridged',
+  );
   return (
     <group ref={groupRef}>
-      <RidgedModel ref={modelRef} {...potatoProps} />
+      <RidgedModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <RidgedVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>
@@ -291,10 +280,12 @@ export function RidgedComplete() {
 }
 
 export function WaffleComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('waffle');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'waffle',
+  );
   return (
     <group ref={groupRef}>
-      <WaffleModel ref={modelRef} {...potatoProps} />
+      <WaffleModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <WaffleVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>
@@ -305,11 +296,13 @@ export function WaffleComplete() {
 }
 
 export function CurlyComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('curly');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'curly',
+  );
   return (
     <>
       <group ref={groupRef}>
-        <CurlyModel ref={modelRef} {...potatoProps} />
+        <CurlyModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
         <CurlyVis ref={visRef} {...visProps} />
         <HorizontalLine ref={lineRef} />
         <Text ref={labelRef} {...labelProps}>
@@ -321,10 +314,12 @@ export function CurlyComplete() {
 }
 
 export function FryComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('fry');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'fry',
+  );
   return (
     <group ref={groupRef}>
-      <FryModel ref={modelRef} {...potatoProps} />
+      <FryModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <FryVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>
@@ -335,10 +330,12 @@ export function FryComplete() {
 }
 
 export function TotComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('tot');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'tot',
+  );
   return (
     <group ref={groupRef}>
-      <TotModel ref={modelRef} {...potatoProps} />
+      <TotModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <TotVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>
@@ -349,10 +346,12 @@ export function TotComplete() {
 }
 
 export function WedgeComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('wedge');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'wedge',
+  );
   return (
     <group ref={groupRef}>
-      <WedgeModel ref={modelRef} {...potatoProps} />
+      <WedgeModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <WedgeVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>
@@ -363,10 +362,12 @@ export function WedgeComplete() {
 }
 
 export function PotatoComplete() {
-  const { groupRef, labelRef, visRef, modelRef, lineRef } = usePotatoPositioning('potato');
+  const { groupRef, labelRef, visRef, modelRef, uniformsRef, lineRef } = usePotatoPositioning(
+    'potato',
+  );
   return (
     <group ref={groupRef}>
-      <PotatoModel ref={modelRef} {...potatoProps} />
+      <PotatoModel ref={modelRef} uniformsRef={uniformsRef} {...potatoProps} />
       <PotatoVis ref={visRef} {...visProps} />
       <HorizontalLine ref={lineRef} />
       <Text ref={labelRef} {...labelProps}>

@@ -85,6 +85,7 @@ const emphasisStyle = {
 const friedStyle = emphasisStyle;
 const unfriedStyle = { ...emphasisStyle, color: textColor };
 const ratioStyle = { ...emphasisStyle, color: highlightColor };
+const ratioColorStyle = { color: highlightColor };
 const friedColorStyle = { color: textColorDark };
 const monospaceStyle = { fontFamily: 'monospace', letterSpacing: -0.5 };
 
@@ -154,7 +155,7 @@ export default function Title() {
           </p>
         </div>
         <div ref={six} style={headerStyle}>
-          Quality: the fried <span style={ratioStyle}>ratio</span>
+          Quality: the <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
             We can go one step further and compute the true measure of potato quality:
             <br />
@@ -166,10 +167,11 @@ export default function Title() {
           </p>
         </div>
         <div ref={seven} style={headerStyle}>
-          Quality: the fried <span style={ratioStyle}>ratio</span>
+          Quality: the <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
-            Plotting this ratio along the x-axis shows that potatoes are not all created equal, your
-            favorite forms are more fried.&nbsp;&nbsp;
+            Plotting this <span style={ratioColorStyle}>ratio</span> along the{' '}
+            <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created
+            equal, your favorite forms are more fried.&nbsp;&nbsp;
             <span style={monospaceStyle}>
               <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
               <span style={unfriedStyle}>unfried</span>
