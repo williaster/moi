@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 import { useProgress } from '@react-three/drei';
 import * as colors from './colors';
-import { useThree } from '@react-three/fiber';
 
 const formatLoadedPercent = (percent?: number) =>
   `Loading${typeof percent === 'number' ? ` ${percent.toFixed(0)}` : ''}%`;
@@ -56,15 +55,15 @@ const styles = {
     color: colors.textColorDark,
   },
   inner: {
-    width: 100,
-    height: 3,
-    background: colors.textColorDarker,
+    width: 200,
+    height: 4,
+    background: colors.textColorDark,
     textAlign: 'center',
   },
   bar: {
-    height: 3,
+    height: '100%',
     width: '100%',
-    background: colors.textColorDark,
+    background: colors.highlightColor,
     transition: 'transform 200ms',
     transformOrigin: 'left center',
   },
@@ -72,8 +71,8 @@ const styles = {
     display: 'inline-block',
     position: 'relative',
     fontVariantNumeric: 'tabular-nums',
-    marginTop: '0.8em',
-    fontSize: '0.7em',
+    marginTop: '0.7em',
+    fontSize: '1.25em',
     whiteSpace: 'nowrap',
   },
   title: {
@@ -81,9 +80,9 @@ const styles = {
     left: '50%',
     top: '40%',
     transform: 'translateX(-50%)',
-    fontSize: '5vh',
+    fontSize: '7vh',
     lineHeight: 1,
-    fontWeight: 700,
+    fontWeight: 'bold',
     width: 'fit-content',
   },
 } as const;

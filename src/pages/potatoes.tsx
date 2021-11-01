@@ -19,6 +19,7 @@ import FriedAxis from '../components/potatoes/FriedAxis';
 import { backgroundColor, textColor } from '../components/potatoes/colors';
 import Title from '../components/potatoes/Title';
 import { cssFontRules, FontUriLinks } from '../components/potatoes/font';
+import Labels from '../components/potatoes/Labels';
 
 const PotatoesPage = () => (
   <>
@@ -75,6 +76,7 @@ function Scene() {
     <ScrollControls damping={5} pages={7}>
       <Title />
       <FriedAxis />
+      <Labels />
       <RidgedComplete />
       <WaffleComplete />
       <CurlyComplete />
@@ -82,13 +84,6 @@ function Scene() {
       <TotComplete />
       <WedgeComplete />
       <PotatoComplete />
-
-      <ambientLight />
-      <directionalLight
-        position={[-10, 3, 10]}
-        rotation={[Math.PI * 0.25, Math.PI, Math.PI * 0]}
-        args={[backgroundColor, 1]}
-      />
     </ScrollControls>
   );
 }

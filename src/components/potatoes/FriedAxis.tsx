@@ -1,12 +1,14 @@
 import { useThree } from '@react-three/fiber';
-import React, { forwardRef, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import * as THREE from 'three';
-import { highlightColor, highlightColorDark, textColorDarker } from './colors';
+import { highlightColor, highlightColorDark } from './colors';
 import { useAxisPositioning } from './Layout';
 import { Text } from './Text';
 
 const axisHeight = 0.015;
 const fontSize = 0.021;
+const color = highlightColor;
+const fontColor = highlightColorDark;
 
 export default function FriedAxis() {
   const { groupRef, axisRef, axisWidth } = useAxisPositioning();
@@ -23,14 +25,14 @@ export default function FriedAxis() {
   return (
     <group ref={groupRef}>
       <mesh ref={axisRef} geometry={triangleGeometry}>
-        <meshBasicMaterial color={highlightColor} />
+        <meshBasicMaterial color={color} />
       </mesh>
       <group position={[0, 10, 0]}>
-        <Text anchorY="bottom" color={highlightColorDark} fontSize={scaledFontSize} anchorX="left">
+        <Text anchorY="bottom" color={fontColor} fontSize={scaledFontSize} anchorX="left">
           Less fried
         </Text>
         <Text
-          color={highlightColorDark}
+          color={fontColor}
           fontSize={scaledFontSize}
           anchorY="bottom"
           anchorX="right"

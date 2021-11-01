@@ -16,11 +16,13 @@ const url = getStaticUrl('/static/models/potatoes/fry.gltf');
 
 function Fry(props: Omit<ToonOutlineProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-
   return (
-    <group rotation-z={0.005 * -Math.PI}>
-      <ToonOutlineMesh ref={ref} {...props} geometry={nodes.straightexport.geometry} />
-    </group>
+    <ToonOutlineMesh
+      ref={ref}
+      position-y={-1}
+      {...props}
+      geometry={nodes.straightexport.geometry}
+    />
   );
 }
 

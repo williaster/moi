@@ -68,7 +68,7 @@ const fillColorNoHue = { value: new THREE.Color('#999') };
 const fillColorHue = { value: new THREE.Color(colors.highlightColorLight) };
 
 function ToonOutlineMesh(
-  { geometry, uniformsRef }: ToonOutlineProps,
+  { geometry, uniformsRef, ...props }: ToonOutlineProps,
   ref: React.ForwardedRef<THREE.Mesh>,
 ) {
   const outlineThickness = useRef({ value: 0 });
@@ -91,7 +91,7 @@ function ToonOutlineMesh(
 
   return (
     <group ref={ref}>
-      <mesh geometry={geometry}>
+      <mesh geometry={geometry} {...props}>
         <shaderMaterial
           key={Math.random()} // @todo remove, how to handle disposal?
           transparent
@@ -151,7 +151,7 @@ function ToonOutlineMesh(
           `}
         />
       </mesh>
-      <mesh geometry={geometry}>
+      <mesh geometry={geometry} {...props}>
         {/** Shader which renders a rotating outline */}
         <shaderMaterial
           key={Math.random()} // @TODO remove
