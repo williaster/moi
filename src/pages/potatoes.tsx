@@ -77,7 +77,7 @@ const PotatoesPage = () => (
 
 function Scene() {
   return (
-    <ScrollControls damping={5} pages={7}>
+    <ScrollControls damping={3} pages={7}>
       <Title />
       <FriedAxis />
       <Labels />

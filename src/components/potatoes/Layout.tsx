@@ -162,7 +162,8 @@ export function useLabelPositioning() {
       -0.5 * viewport.width + // set to 0
       labelKeyFrames.x.friedUnfried(scroll.offset) * viewport.width;
     friedUnfriedRef.current.position.y =
-      0.5 * viewport.height - titleViewportVertical * 0.8 * viewport.height; // offset text at top: ;
+      0.5 * viewport.height - titleViewportVertical * 0.9 * viewport.height; // offset text at top
+
     friedUnfriedRef.current.scale.setScalar(labelKeyFrames.scale.friedUnfried(scroll.offset));
   });
 

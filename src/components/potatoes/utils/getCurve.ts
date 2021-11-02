@@ -6,7 +6,7 @@ const easeInOut = (t: number, inOrOut?: 'in' | 'out') => {
 // returns a function which interpolates a given [0,1] value across 7 specified step values
 export default function getStepCurve(
   steps: [number, number, number, number, number, number, number],
-  ease?: 'in' | 'out',
+  ease?: 'in' | 'out' = 'in',
 ) {
   // t represents [0-1], where 0=step 0, and 1=step 6
   return (t: number) => {
