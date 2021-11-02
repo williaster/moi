@@ -50,6 +50,10 @@ const PotatoesPage = () => (
         color: ${textColor};
         overflow: hidden;
       }
+      p {
+        margin-top: 0.6em;
+        margin-bottom: 0.5em;
+      }
       .page {
         padding: 0;
       }

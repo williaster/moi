@@ -6,7 +6,7 @@ import { useAxisPositioning } from './Layout';
 import { Text } from './Text';
 
 const axisHeight = 0.015;
-const fontSize = 0.021;
+const fontSize = 0.022;
 const color = highlightColor;
 const fontColor = highlightColorDark;
 
@@ -21,13 +21,13 @@ export default function FriedAxis() {
     triangleShape.lineTo(0, 0);
     return new THREE.ShapeGeometry(triangleShape);
   }, [viewport.width, viewport.height]);
-  const scaledFontSize = fontSize * Math.min(viewport.height, viewport.width);
+  const scaledFontSize = fontSize * Math.min(viewport.width * 2, viewport.height);
   return (
     <group ref={groupRef}>
       <mesh ref={axisRef} geometry={triangleGeometry}>
         <meshBasicMaterial color={color} />
       </mesh>
-      <group position={[0, 10, 0]}>
+      <group position={[0, 5, 0]}>
         <Text anchorY="bottom" color={fontColor} fontSize={scaledFontSize} anchorX="left">
           Less fried
         </Text>

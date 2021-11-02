@@ -61,20 +61,20 @@ function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
 }
 
 const headerStyle = {
-  fontSize: '3.5vh',
+  fontSize: '2em',
   fontWeight: 700,
   color: textColorDark,
   position: 'absolute',
-  top: '0.75em',
-  left: '0.75em',
+  top: '0.6em',
+  left: '0.6em',
   maxWidth: '80vw',
   lineHeight: '1em',
 } as const;
 
 const textStyle = {
-  fontSize: '0.55em',
+  fontSize: '0.5em',
   color: textColor,
-  lineHeight: '1.2em',
+  lineHeight: '1.25em',
 };
 
 const emphasisStyle = {
@@ -125,13 +125,7 @@ export default function Title() {
           Fried vs unfried
           <p style={textStyle}>
             A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
-            they can possibly be. To quantify this we modeled and compared
-            <br />
-            <br />
-            Potato <span style={friedColorStyle}>surface area</span> (
-            <span style={friedStyle}>fried</span>) vs
-            <br />
-            Potato volume (<span style={unfriedStyle}>unfried</span>)
+            they can possibly be. To quantify this, potatoes were modeled in 3D to measure:
           </p>
         </div>
         <div ref={four} style={headerStyle}>
@@ -139,11 +133,7 @@ export default function Title() {
           <p style={textStyle}>
             To accurately capture <span style={friedStyle}>fried</span> and{' '}
             <span style={unfriedStyle}>unfried</span> portions we visualize them with the following
-            representation. <br />
-            <br /> <span style={friedStyle}>Blue</span> represents surface area (
-            <span style={friedColorStyle}>fried</span>) and
-            <br />
-            <span style={unfriedStyle}>Grey</span> represents volume (unfried).
+            representation.
           </p>
         </div>
         <div ref={five} style={headerStyle}>
@@ -155,7 +145,7 @@ export default function Title() {
           </p>
         </div>
         <div ref={six} style={headerStyle}>
-          Quality: the <span style={ratioStyle}>fried ratio</span>
+          Quality: <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
             We can go one step further and compute the true measure of potato quality:
             <br />
@@ -167,7 +157,7 @@ export default function Title() {
           </p>
         </div>
         <div ref={seven} style={headerStyle}>
-          Quality: the <span style={ratioStyle}>fried ratio</span>
+          Quality: <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
             Plotting this <span style={ratioColorStyle}>ratio</span> along the{' '}
             <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created

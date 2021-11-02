@@ -12,6 +12,7 @@ export default function Labels() {
   const viewport = useThree(state => state.viewport);
 
   const scaledFontSize = fontSize * Math.min(viewport.height, viewport.width);
+  const scaledFontSizeSmall = scaledFontSize * 0.8;
 
   return (
     <>
@@ -31,19 +32,37 @@ export default function Labels() {
       >
         Worse
       </Text>
-      {/* <group ref={friedUnfriedRef}>
+      <group ref={friedUnfriedRef}>
         <Text color={colors.textColorDarker} fontSize={scaledFontSize} anchorX="right">
           Fried
         </Text>
         <Text
-          position-y={scaledFontSize * 1.1}
+          position-x={0.2}
+          color={colors.textColorDarker}
+          fontSize={scaledFontSizeSmall}
+          anchorX="left"
+        >
+          (surface area)
+        </Text>
+
+        <Text
+          position-y={-scaledFontSize * 1.1}
           color={colors.textColorDark}
           fontSize={scaledFontSize}
           anchorX="right"
         >
           Unfried
         </Text>
-      </group> */}
+        <Text
+          position-x={0.2}
+          position-y={-scaledFontSize * 1.1}
+          color={colors.textColorDark}
+          fontSize={scaledFontSizeSmall}
+          anchorX="left"
+        >
+          (volume)
+        </Text>
+      </group>
     </>
   );
 }

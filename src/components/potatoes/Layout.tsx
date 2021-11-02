@@ -25,7 +25,7 @@ import getKeyframes from './utils/getCurve';
 import { Vector3 } from 'three';
 
 const numPotatoes = 7;
-const titleViewportVertical = 0.2;
+const titleViewportVertical = 0.22;
 const axisViewportVertical = 0.05;
 const modelViewportVertical = 1 - (titleViewportVertical + axisViewportVertical);
 const axisWidth = 0.55;
@@ -91,9 +91,9 @@ const keyframes = {
     positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.0075, 0.014, 0.014, 0.014, 0.014, 0.014, 0.014]),
-    positionX: getKeyframes([-0.05, 0, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
-    positionY: getKeyframes([-0.05, 0, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
+    scale: getKeyframes([0.01, 0, 0, 0.014, 0.014, 0.014, 0.014]),
+    positionX: getKeyframes([-0.05, 0.5, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
+    positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
   },
 };
@@ -111,12 +111,21 @@ const order: (keyof typeof potatoData)[] = [
 
 // @TODO new file
 const labelKeyFrames = {
-  betterX: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-  betterY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-  worseX: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-  worseY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-  friedUnfriedX: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-  friedUnfriedY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
+  scale: {
+    better: getKeyframes([0, 1, 0, 0, 0, 0, 0]),
+    worse: getKeyframes([0, 1, 0, 0, 0, 0, 0]),
+    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0]),
+  },
+  x: {
+    better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
+    worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
+    friedUnfried: getKeyframes([0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7]),
+  },
+  y: {
+    better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
+    worse: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
+    friedUnfried: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
+  },
 };
 export function useLabelPositioning() {
   // refs which are modified by this hook
@@ -128,13 +137,33 @@ export function useLabelPositioning() {
   const scroll = useScroll();
 
   useFrame(() => {
+    // better
+    betterRef.current.scale.setScalar(labelKeyFrames.scale.better(scroll.offset));
+    betterRef.current.position.x =
+      -0.5 * viewport.width + // set to 0
+      labelKeyFrames.x.better(scroll.offset) * viewport.width;
+
     betterRef.current.position.y =
       0.5 * viewport.height - (1 - modelViewportVertical) * viewport.height; // offset text at top
+
+    // worse
+    worseRef.current.scale.setScalar(labelKeyFrames.scale.worse(scroll.offset));
+    worseRef.current.position.x =
+      -0.5 * viewport.width + // set to 0
+      labelKeyFrames.x.worse(scroll.offset) * viewport.width;
 
     worseRef.current.position.y =
       0.5 * viewport.height -
       (1 - modelViewportVertical) * viewport.height -
-      0.37 * viewport.height; // offset text at top
+      0.365 * viewport.height; // offset text at top
+
+    // fried unfried
+    friedUnfriedRef.current.position.x =
+      -0.5 * viewport.width + // set to 0
+      labelKeyFrames.x.friedUnfried(scroll.offset) * viewport.width;
+    friedUnfriedRef.current.position.y =
+      0.5 * viewport.height - titleViewportVertical * 0.8 * viewport.height; // offset text at top: ;
+    friedUnfriedRef.current.scale.setScalar(labelKeyFrames.scale.friedUnfried(scroll.offset));
   });
 
   return { betterRef, worseRef, friedUnfriedRef };
@@ -311,8 +340,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     // label
     labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset) * viewportMin);
     labelRef.current.position.x = keyframes.label.positionX(scroll.offset) * viewport.width;
-    labelRef.current.position.y = keyframes.label.positionY(scroll.offset) * viewport.height;
-    labelRef.current.position.z = 25;
+    labelRef.current.position.z = 2 * position;
     // labelRef.current.setRotationFromAxisAngle(
     //   xAxisVec3,
     //   keyframes.label.rotateX(scroll.offset) * -Math.PI,
