@@ -19,7 +19,7 @@ import getKeyframes from './utils/getCurve';
 import { Vector3 } from 'three';
 
 const numPotatoes = 7;
-const titleViewportVertical = 0.22;
+const titleViewportVertical = 0.24;
 const axisViewportVertical = 0.05;
 const modelViewportVertical = 1 - (titleViewportVertical + axisViewportVertical);
 const axisWidth = 0.55;
@@ -57,7 +57,7 @@ const splitMaterialScalar = 4;
 
 const keyframes = {
   group: {
-    positionYRows: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
+    positionYRows: getKeyframes([0, 1.065, 1.065, 1.065, 1.065, 1.065, 1.065]),
     positionYRatio: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
     positionXZero: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
     positionXZRotation: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
