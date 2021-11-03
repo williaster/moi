@@ -14,13 +14,7 @@ import TotModel from './models/Tot';
 import WaffleModel from './models/Waffle';
 import FryModel from './models/Fry';
 import potatoData from './potatoData';
-import {
-  backgroundColorDark,
-  textColorDark,
-  textColorDarker,
-  highlightColor,
-  textColor,
-} from './colors';
+import { backgroundColorDark, textColorDark, textColorDarker, highlightColor } from './colors';
 import getKeyframes from './utils/getCurve';
 import { Vector3 } from 'three';
 
@@ -79,12 +73,12 @@ const keyframes = {
     outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
   },
   vis: {
-    rotateY: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0], 'in'), // relative to Math.PI
-    rotateYHighlight: getKeyframes([-0.5, -0.5, -0.5, 0, 0, 0, 0], 'in'), // relative to Math.PI
+    rotateY: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
+    rotateYHighlight: getKeyframes([-0.5, -0.5, -0.5, 0, 0, 0, 0]), // relative to Math.PI
     positionX: getKeyframes([0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.41]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
-    scale: getKeyframes([0, 0, 0, 0, 0.0015, 0.0015, 0.0015], 'in'),
-    scaleHighlight: getKeyframes([0, 0, 0, 0.0035, 0.002, 0.002, 0.002], 'in'),
+    scale: getKeyframes([0, 0, 0, 0, 0.0015, 0.0015, 0.0015]),
+    scaleHighlight: getKeyframes([0, 0, 0, 0.0035, 0.0015, 0.0015, 0.0015]),
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1]),
@@ -119,12 +113,12 @@ const labelKeyFrames = {
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7]),
+    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.68, 0.68, 0.68]),
   },
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-    worse: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
+    worse: getKeyframes([0.5, 0.36, 0.36, 0, 0, 0, 0]),
+    friedUnfried: getKeyframes([-0.06, -0.06, -0.06, -0.06, -0.06, -0.05, -0.05]),
   },
 };
 export function useLabelPositioning() {
@@ -144,7 +138,9 @@ export function useLabelPositioning() {
       labelKeyFrames.x.better(scroll.offset) * viewport.width;
 
     betterRef.current.position.y =
-      0.5 * viewport.height - (1 - modelViewportVertical) * viewport.height; // offset text at top
+      0.5 * viewport.height -
+      (1 - modelViewportVertical) * viewport.height + // offset text at top
+      labelKeyFrames.y.better(scroll.offset) * viewport.height;
 
     // worse
     worseRef.current.scale.setScalar(labelKeyFrames.scale.worse(scroll.offset));
@@ -155,14 +151,16 @@ export function useLabelPositioning() {
     worseRef.current.position.y =
       0.5 * viewport.height -
       (1 - modelViewportVertical) * viewport.height -
-      0.365 * viewport.height; // offset text at top
+      labelKeyFrames.y.worse(scroll.offset) * viewport.height;
 
     // fried unfried
     friedUnfriedRef.current.position.x =
       -0.5 * viewport.width + // set to 0
       labelKeyFrames.x.friedUnfried(scroll.offset) * viewport.width;
     friedUnfriedRef.current.position.y =
-      0.5 * viewport.height - titleViewportVertical * 0.9 * viewport.height; // offset text at top
+      0.5 * viewport.height -
+      (1 - modelViewportVertical) * viewport.height -
+      labelKeyFrames.y.friedUnfried(scroll.offset) * viewport.height; // offset text at top
 
     friedUnfriedRef.current.scale.setScalar(labelKeyFrames.scale.friedUnfried(scroll.offset));
   });
@@ -223,7 +221,6 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       scaleLinear({
         domain: potatoFriedRatioExtent,
         range: [0, viewport.width * axisWidth],
-        nice: true,
       }),
     [viewport.getCurrentViewport().width],
   );
@@ -233,8 +230,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     () =>
       scaleLog({
         domain: potatoFriedRatioExtent,
-        range: [viewport.height * 0.95, -viewport.height * 0.3],
-        nice: true,
+        range: [viewport.height * 0.6, 0],
       }),
     [viewport.getCurrentViewport().height],
   );

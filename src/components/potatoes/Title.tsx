@@ -6,7 +6,7 @@ import { textColorDark, textColor, highlightColor } from './colors';
 import { useFrame, useThree } from '@react-three/fiber';
 
 const easeInOut = (t: number, inOrOut: 'in' | 'out') => {
-  return inOrOut === 'in' ? 1 - (1 - t) * (1 - t) : 1 - Math.pow(1 - t, 10);
+  return inOrOut === 'in' ? 1 - (1 - t) * (1 - t) : 1 - Math.pow(1 - t, 5);
 };
 
 const numPages = 7;
@@ -108,7 +108,9 @@ export default function Title() {
           Potato ranks 🥔
           <p style={textStyle}>
             3D modeling of various potato forms enabled objective ranking by a quantitative
-            heuristic: <span style={emphasisStyle}>the fried ratio</span>. Scroll for more.
+            heuristic: <span style={emphasisStyle}>the fried ratio</span>. <br />
+            <br />
+            Scroll for more ⬇️
           </p>
         </div>
 
@@ -125,31 +127,31 @@ export default function Title() {
           Fried vs unfried
           <p style={textStyle}>
             A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
-            they can possibly be. To quantify this, potatoes were modeled in 3D to measure:
+            they can possibly be. To quantify this, potatoes were modeled in 3D to measure fried and
+            unfried portions:
           </p>
         </div>
         <div ref={four} style={headerStyle}>
           Visualizing fried vs unfried
           <p style={textStyle}>
-            To accurately capture <span style={friedStyle}>fried</span> and{' '}
-            <span style={unfriedStyle}>unfried</span> portions we visualize them with the following
-            representation.
+            Using 3D model measurements, <span style={friedStyle}>fried</span> and{' '}
+            <span style={unfriedStyle}>unfried</span> portions were accurately visualized with the
+            following nested circle representation:
           </p>
         </div>
         <div ref={five} style={headerStyle}>
           Visualizing all potatoes
           <p style={textStyle}>
             Comparing <span style={friedStyle}>fried</span> vs{' '}
-            <span style={unfriedStyle}>unfried</span> portions across potato forms shows they are
-            not all created equal.
+            <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
+            are not all created equal.
           </p>
         </div>
         <div ref={six} style={headerStyle}>
           Quality: <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
-            We can go one step further and compute the true measure of potato quality:
-            <br />
-            <br />
+            To make this more visually compelling, we can go one step further and compute the true
+            measure of potato quality:{' '}
             <span style={monospaceStyle}>
               <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
               <span style={unfriedStyle}>unfried</span>
@@ -161,11 +163,8 @@ export default function Title() {
           <p style={textStyle}>
             Plotting this <span style={ratioColorStyle}>ratio</span> along the{' '}
             <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created
-            equal, your favorite forms are more fried.&nbsp;&nbsp;
-            <span style={monospaceStyle}>
-              <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
-              <span style={unfriedStyle}>unfried</span>
-            </span>
+            equal. It turns out that your favorite potatoes are more{' '}
+            <span style={friedColorStyle}>fried</span>.
           </p>
         </div>
       </div>
