@@ -25,7 +25,8 @@ const PotatoesPage = () => (
   <>
     <Page
       title="Potato ranks 🥔"
-      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/potatoes-site-preview.gif"
+      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-potatoes.png"
+      description="Quantitative ranking of different potato forms"
       centerContent={false}
       showNav={false}
     >
