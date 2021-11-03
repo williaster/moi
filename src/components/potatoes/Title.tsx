@@ -135,8 +135,7 @@ export default function Title() {
           Visualizing fried vs unfried
           <p style={textStyle}>
             Using 3D model measurements, <span style={friedStyle}>fried</span> and{' '}
-            <span style={unfriedStyle}>unfried</span> portions were accurately visualized with the
-            following nested circle representation:
+            <span style={unfriedStyle}>unfried</span> portions were visualized as nested circles:
           </p>
         </div>
         <div ref={five} style={headerStyle}>

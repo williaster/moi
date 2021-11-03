@@ -23,7 +23,12 @@ import Labels from '../components/potatoes/Labels';
 
 const PotatoesPage = () => (
   <>
-    <Page centerContent={false} showNav={false}>
+    <Page
+      title="Potato ranks 🥔"
+      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/potatoes-site-preview.gif"
+      centerContent={false}
+      showNav={false}
+    >
       <Background />
       <div className="canvas">
         <Canvas
@@ -35,7 +40,9 @@ const PotatoesPage = () => (
           <React.Suspense fallback={null}>
             <Scene />
           </React.Suspense>
-          <Stats className="stats" />
+          {typeof window !== 'undefined' && window.location.search.includes('stats') && (
+            <Stats className="stats" />
+          )}
         </Canvas>
         <Loader />
       </div>

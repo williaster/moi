@@ -10,7 +10,10 @@ if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
   ReactGA.pageview(window.location.pathname);
 }
 
-const Meta = ({ title = 'chris williams' }) => (
+const Meta = ({
+  title = 'chris williams',
+  previewImgUrl = 'https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview.png',
+}) => (
   <div>
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,15 +22,9 @@ const Meta = ({ title = 'chris williams' }) => (
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700"
       ></link>
-      <meta
-        property="og:image"
-        content="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview.png"
-      />
+      <meta property="og:image" content={previewImgUrl} />
       <meta property="og:image:type" content="image/png" />
-      <meta
-        property="og:image:secure_url"
-        content="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview.png"
-      />
+      <meta property="og:image:secure_url" content={previewImgUrl} />
       <meta
         property="og:image:alt"
         content="a collection of expressive, low-level visualization primitives for React"
@@ -39,10 +36,7 @@ const Meta = ({ title = 'chris williams' }) => (
       <meta name="twitter:creator" content="@williaster" />
       <meta name="twitter:title" content="chris williams" />
       <meta name="twitter:description" content="a portfolio website for chris williams" />
-      <meta
-        name="twitter:image"
-        content="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview.png"
-      />
+      <meta name="twitter:image" content={previewImgUrl} />
       <meta name="twitter:image:alt" content="chris williams logo is a collection of circles" />
       <title>{title}</title>
       <link rel="shortcut icon" type="image/png" href={getStaticUrl('/static/favicon.png')} />

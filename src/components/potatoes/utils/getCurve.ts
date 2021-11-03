@@ -1,7 +1,5 @@
-const easeInOut = (t: number, inOrOut?: 'in' | 'out') => {
-  // if (!inOrOut) return t;
-  return t ** 4;
-  // return inOrOut === 'in' ? 1 - (1 - t) * (1 - t) : 1 - Math.pow(1 - t, 5);
+const easeInOut = (t: number) => {
+  return t ** 3;
 };
 
 // returns a function which interpolates a given [0,1] value across 7 specified step values

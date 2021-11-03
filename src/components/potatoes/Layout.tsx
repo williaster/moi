@@ -85,8 +85,8 @@ const keyframes = {
     positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.01, 0, 0, 0.014, 0.014, 0.014, 0.014]),
-    positionX: getKeyframes([-0.05, 0.5, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
+    scale: getKeyframes([0.013, 0, 0, 0.014, 0.014, 0.014, 0.014]),
+    positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
     positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
   },
@@ -250,14 +250,13 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
     // group
     const groupRotationPosition =
-      Math.PI * clock.elapsedTime * 0.18 + (1 / numPotatoes) * position * 8;
+      Math.PI * clock.elapsedTime * 0.18 + (1 / numPotatoes) * position * 10;
 
     const xPosition =
       keyframes.group.positionXZRotation(scroll.offset) *
       viewport.width *
       0.2 *
       (position / numPotatoes + 0.5) *
-      // (1 / (position + 1) + 0.5) *
       Math.sin(groupRotationPosition);
 
     const zPosition =
@@ -284,7 +283,7 @@ function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.group.positionXZero(scroll.offset) * (-0.5 * viewport.width) + // set to 0
       xPosition;
 
-    groupRef.current.position.z = zPosition;
+    groupRef.current.position.z = zPosition + 5;
 
     groupRef.current.position.y =
       0.5 * viewport.height - // 50% makes top coord = 0 for easier calculation for other refs
