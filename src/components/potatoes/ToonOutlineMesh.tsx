@@ -3,53 +3,9 @@ import React, { useMemo, useRef, forwardRef, useCallback, useEffect } from 'reac
 import * as THREE from 'three';
 import * as colors from './colors';
 
-// refs
+// implementation refs
 // https://www.geofx.com/graphics/nehe-three-js/lessons33-40/lesson37/lesson37.html
 // https://wgld.org/d/webgl/w048.html
-const vertexShader = `
-  uniform mat4 rotationMatrix;
-  uniform bool outline;
-
-  varying vec3 vNormal;
-
-  void main () {
-    // rotate the normal so the light appears is constant
-    vNormal = (rotationMatrix * vec4(normal, 1.0)).xyz;
-    vec3 pos = position;
-    if (outline) {
-        return;
-        pos += normal * 0.25; // scale
-    }
-    vec4 rotatedPosition = rotationMatrix * vec4(pos.xyz, 1.0);
-    gl_Position = projectionMatrix * modelViewMatrix * rotatedPosition;
-  }
-`;
-const fragmentShader = `
-  uniform mat4 rotationMatrix;
-  uniform vec3 materialColor;
-  uniform vec3 lightColor;
-  uniform vec3 lightDirection;
-  uniform float numGradientSteps;
-
-  varying vec3 vNormal;
-
-  void main() {
-    vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
-    vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
-
-    float diffuse = dot(vNormal, lightDirectionNormalized);
-
-    if (numGradientSteps > 0.0) {
-        float sign = diffuse < 0.0 ? -1.0 : 1.0;
-        diffuse = 
-          (floor((abs(diffuse) + 0.001) * numGradientSteps) / numGradientSteps) * sign + 
-          (1.0 / (numGradientSteps * 2.0)) + 
-          0.1;
-    }
-
-    gl_FragColor = vec4(materialColor * lightColor * diffuse, 1.0);
-  }
-`;
 
 export interface ToonOutlineProps {
   geometry: THREE.BufferGeometry;

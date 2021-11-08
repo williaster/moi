@@ -5,6 +5,9 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import getStaticUrl from '../../../utils/getStaticUrl';
 import ToonOutlineMesh, { ToonOutlineProps } from '../ToonOutlineMesh';
 import { useFrame } from '@react-three/fiber';
+import { Vis } from '../PotatoVis';
+import potatoData from '../potatoData';
+import * as colors from '../colors';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -17,7 +20,16 @@ const url = getStaticUrl('/static/models/potatoes/curly.gltf');
 
 function Curly(props: Omit<ToonOutlineProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
   const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
-  return <ToonOutlineMesh ref={ref} {...props} geometry={nodes.curly_fry_export.geometry} />;
+  return (
+    <Vis
+      ref={ref}
+      fill={colors.backgroundColorDark}
+      stroke={colors.textColorDark}
+      datum={potatoData.curly}
+      geometry={nodes.curly_fry_export.geometry}
+    />
+  );
+  // return <ToonOutlineMesh ref={ref} {...props} geometry={nodes.curly_fry_export.geometry} />;
 }
 
 export default forwardRef(Curly);
