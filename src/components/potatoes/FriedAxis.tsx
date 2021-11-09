@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import * as THREE from 'three';
 import { highlightColor, highlightColorDark } from './colors';
 import { useAxisPositioning } from './Layout';
-import { Text } from './Text';
+import Text from './Text';
 
 const axisHeight = 0.015;
 const fontSize = 0.022;

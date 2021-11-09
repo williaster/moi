@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import * as THREE from 'three';
 import * as colors from './colors';
 import { useLabelPositioning } from './Layout';
-import { Text } from './Text';
+import Text from './Text';
 
 const fontSize = 0.05;
 
