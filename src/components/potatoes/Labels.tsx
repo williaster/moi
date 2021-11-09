@@ -37,7 +37,7 @@ export default function Labels() {
           Fried
         </Text>
         <Text
-          position-x={0.2}
+          position-x={3}
           color={colors.textColorDarker}
           fontSize={scaledFontSizeSmall}
           anchorX="left"
@@ -54,7 +54,7 @@ export default function Labels() {
           Unfried
         </Text>
         <Text
-          position-x={0.2}
+          position-x={3}
           position-y={-scaledFontSize * 1.1}
           color={colors.textColorDark}
           fontSize={scaledFontSizeSmall}

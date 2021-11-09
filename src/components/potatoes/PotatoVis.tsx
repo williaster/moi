@@ -79,7 +79,7 @@ export const Vis = forwardRef(
       // create a geometry copy so we can make it non-indexed
       let geoCopy = new THREE.BufferGeometry();
       geoCopy.copy(geometry);
-      geoCopy = geoCopy.toNonIndexed();
+      geoCopy = geoCopy.toNonIndexed().scale(12, 12, 12);
 
       // initialize rings
       const innerRingGeometry = new THREE.RingBufferGeometry(

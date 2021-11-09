@@ -2,13 +2,10 @@ import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { scaleLinear, scaleLog } from '@visx/scale';
-
 import { useScroll } from '@react-three/drei';
 
 import potatoData from './potatoData';
-import { backgroundColorDark, textColorDark, textColorDarker, highlightColor } from './colors';
-import getKeyframes from './utils/getCurve';
-import { Vector3 } from 'three';
+import getKeyframes from './utils/getKeyframes';
 
 const numPotatoes = 7;
 const titleViewportVertical = 0.22;
@@ -39,33 +36,42 @@ const keyframes = {
     positionXZero: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
     positionXZRotation: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
     scaleBaseline: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
-    scaleSplashpage: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
+    scaleSplashpage: getKeyframes([1, [0, 'easeOutQuad'], 0, 0, 0, 0, 0]),
   },
   model: {
-    positionX: getKeyframes([0, 0.5, 0.5, 0.5, 0.3, 0.3, 0.26]), // relative to viewport.width
-    positionXHighlight: getKeyframes([0, 0.5, 0.5, 0.3, 0.3, 0.3, 0.26]), // relative to viewport.width
+    positionX: getKeyframes([0, 0.5, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.26]), // relative to viewport.width
+    positionXHighlight: getKeyframes([0, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.3, 0.26]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
-    scale: getKeyframes([1.7, 0, 0, 0.5, 0.8, 0.8, 0.8]),
+    scale: getKeyframes([1.7, 0, 0, 0, [0.8, 'easeOutQuint'], 0.8, 0.8]),
     scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, 0.8, 0.8, 0.8]),
     splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1]),
     outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
   },
   vis: {
-    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, 0.7, 0.7, 0.41]), // relative to viewport.width
-    positionXHighlight: getKeyframes([0.5, 0.5, 0.5, 0.7, 0.7, 0.7, 0.41]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
-    scale: getKeyframes([0, 0, 0, 0.01, 0.0015, 0.0015, 0.0015]),
-    scaleHighlight: getKeyframes([0, 0, 0.0325, 0.003, 0.0015, 0.0015, 0.0015]),
-    morph: getKeyframes([0, 0, 0, 0, 1, 1, 1]),
-    morphHighlight: getKeyframes([0, 0, 0, 1, 1, 1, 1]),
+    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [0.7, 'easeInCubic'], 0.7, 0.41]), // relative to viewport.width
+    scale: getKeyframes([0, 0, 0, 0.00095, [0.0015, 'easeInCubic'], 0.0015, 0.0015]),
+    morph: getKeyframes([0, 0, 0, 0, [1, 'easeInCubic'], 1, 1]),
+
+    positionXHighlight: getKeyframes([0.5, 0.5, 0.5, [0.7, 'easeInOutQuad'], 0.7, 0.7, 0.41]), // relative to viewport.width
+    scaleHighlight: getKeyframes([
+      0,
+      0,
+      0.003,
+      [0.004, 'easeInQuint'],
+      [0.0015, 'easeInOutQuad'],
+      0.0015,
+      0.0015,
+    ]),
+    morphHighlight: getKeyframes([0, 0, 0, [1, 'linear'], 1, 1, 1]),
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1]),
     positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.013, 0, 0, 0.014, 0.014, 0.014, 0.014]),
-    positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, 0.19, 0.19, 0.19]), // relative to viewport.width
+    scale: getKeyframes([0.019, 0, 0, 0.014, 0.014, 0.014, 0.014]),
+    positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, [0.19, 'easeInCubic'], 0.19, 0.19]), // relative to viewport.width
     positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
   },
@@ -85,19 +91,19 @@ const order: (keyof typeof potatoData)[] = [
 // @TODO new file
 const labelKeyFrames = {
   scale: {
-    better: getKeyframes([0, 1, 0, 0, 0, 0, 0]),
-    worse: getKeyframes([0, 1, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0]),
+    better: getKeyframes([0, 1, 0, 0, 0, 0, 0], 'easeInOutCubic'),
+    worse: getKeyframes([0, 1, 0, 0, 0, 0, 0], 'easeInOutCubic'),
+    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0], 'easeInOutCubic'),
   },
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.68, 0.68, 0.68]),
+    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.68, 0.68, 0.68], 'easeInCubic'),
   },
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-    worse: getKeyframes([0.5, 0.36, 0.36, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([-0.06, -0.06, -0.06, -0.07, -0.07, -0.07, -0.07]),
+    worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0]),
+    friedUnfried: getKeyframes([-0.06, -0.06, -0.06, -0.07, -0.07, -0.07, -0.07], 'easeInCubic'),
   },
 };
 export function useLabelPositioning() {
@@ -147,7 +153,7 @@ export function useLabelPositioning() {
   return { betterRef, worseRef, friedUnfriedRef };
 }
 
-const axisRotation = getKeyframes([1, 1, 1, 1, 1, 0, 0]);
+const axisRotation = getKeyframes([1, 1, 1, 1, 1, 0, 0], 'easeInOutCubic');
 const axisPositionY = getKeyframes([1, 1, 1, 1, 1.1, 1.1, 1.1]); // times height * title space
 
 // @TODO new file
