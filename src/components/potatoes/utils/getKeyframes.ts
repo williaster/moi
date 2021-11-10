@@ -33,24 +33,46 @@ const Easing = {
 };
 
 type EaseKind = keyof typeof Easing;
-type Step = number | [number, EaseKind];
+type Step = number | number[] | [number | number[], EaseKind];
 
 // returns a function which interpolates a given [0,1] value across 7 specified step values
 export default function getKeyframes(
   steps: [Step, Step, Step, Step, Step, Step, Step],
   defaultEase: EaseKind = 'linear',
+  blah?: boolean,
 ) {
+  const stepCount = steps.length;
   // t represents [0-1], where 0=step 0, and 1=step 6
   return (t: number) => {
-    const stepFloat = t * 6;
+    const stepFloat = t * (stepCount - 1);
+    let withinStep: number = stepFloat % 1;
+
     const step = Math.floor(stepFloat);
     const step0 = steps[step];
     const step1 = steps[step + 1];
 
-    const step0Number = typeof step0 === 'number' ? step0 : step0[0];
-    const step1Number = typeof step1 === 'number' ? step1 : step1[0];
-    const easeFunc: EaseKind = typeof step1 === 'number' ? defaultEase : step1[1];
-    const withinStep = stepFloat % 1;
+    let step0Number: number = (typeof step0 === 'number'
+      ? step0
+      : typeof step0[0] === 'number'
+      ? step0[0]
+      : step0[0][step0[0].length - 1]) as number;
+
+    let step1Number: number;
+    if (typeof step1 === 'number') step1Number = step1;
+    else if (typeof step1[0] === 'number') step1Number = step1[0];
+    else {
+      const subSteps: number[] = [step0Number, ...step1[0]];
+      const subStepsCount = subSteps.length;
+      const subStepFloat = withinStep * (subStepsCount - 1);
+      const subStep = Math.floor(subStepFloat);
+      const withinSubStep = subStepFloat % 1;
+
+      step0Number = subSteps[subStep];
+      step1Number = subSteps[subStep + 1];
+      withinStep = withinSubStep;
+    }
+
+    const easeFunc = typeof step1 === 'number' ? defaultEase : (step1[1] as EaseKind);
     const easedWithinStep = Easing[easeFunc](withinStep);
     const result = step0Number + (step1Number - step0Number) * easedWithinStep;
 

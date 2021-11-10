@@ -51,7 +51,7 @@ const keyframes = {
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
     positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [0.7, 'easeInCubic'], 0.7, 0.41]), // relative to viewport.width
     scale: getKeyframes([0, 0, 0, 0.00095, [0.0015, 'easeInCubic'], 0.0015, 0.0015]),
-    morph: getKeyframes([0, 0, 0, 0, [1, 'easeInCubic'], 1, 1]),
+    morph: getKeyframes([0, 0, 0, 0, [[0.2, 1], 'easeInCubic'], 1, 1]),
 
     positionXHighlight: getKeyframes([0.5, 0.5, 0.5, [0.7, 'easeInOutQuad'], 0.7, 0.7, 0.41]), // relative to viewport.width
     scaleHighlight: getKeyframes([
@@ -63,7 +63,7 @@ const keyframes = {
       0.0015,
       0.0015,
     ]),
-    morphHighlight: getKeyframes([0, 0, 0, [1, 'linear'], 1, 1, 1]),
+    morphHighlight: getKeyframes([0, 0, 0, [[0.2, 1], 'easeInOutQuad'], 1, 1, 1], undefined, true),
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1]),
