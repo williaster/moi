@@ -1,21 +1,11 @@
-import * as THREE from 'three';
 import React from 'react';
-import { useGLTF } from '@react-three/drei';
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import getStaticUrl from '../../../utils/getStaticUrl';
 import ToonOutlineMesh from '../ToonOutlineMesh';
 import { Vis as PotatoVis } from '../PotatoVis';
 import potatoData from '../potatoData';
 import { usePotatoPositioning } from '../Layout';
 import HorizontalAxisLine from '../HorizontalAxisLine';
 import Text from '../Text';
-
-type GLTFResult = GLTF & {
-  nodes: {
-    potato001: THREE.Mesh;
-  };
-  materials: {};
-};
+import { usePotatoModel } from '../useModel';
 
 type PotatoProps = {
   stroke: string;
@@ -24,11 +14,8 @@ type PotatoProps = {
   labelColor: string;
 };
 
-const modelUrl = getStaticUrl('/static/models/potatoes/potato.gltf');
-
 function Potato({ stroke, fill }: PotatoProps) {
-  const { nodes } = (useGLTF(modelUrl) as unknown) as GLTFResult;
-
+  const potatoGeometry = usePotatoModel();
   const {
     groupRef,
     labelRef,
@@ -40,15 +27,11 @@ function Potato({ stroke, fill }: PotatoProps) {
   } = usePotatoPositioning('potato');
   return (
     <group ref={groupRef}>
-      <ToonOutlineMesh
-        ref={modelRef}
-        uniformsRef={uniformsRef}
-        geometry={nodes.potato001.geometry}
-      />
+      <ToonOutlineMesh ref={modelRef} uniformsRef={uniformsRef} geometry={potatoGeometry} />
       <PotatoVis
         ref={visRef}
         morphRef={visMorphRef}
-        geometry={nodes.potato001.geometry}
+        geometry={potatoGeometry}
         stroke={stroke}
         fill={fill}
         datum={potatoData.potato}
@@ -62,5 +45,3 @@ function Potato({ stroke, fill }: PotatoProps) {
 }
 
 export default Potato;
-
-useGLTF.preload(modelUrl);

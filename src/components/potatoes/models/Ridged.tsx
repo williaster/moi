@@ -1,21 +1,11 @@
-import * as THREE from 'three';
 import React from 'react';
-import { useGLTF } from '@react-three/drei';
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import getStaticUrl from '../../../utils/getStaticUrl';
 import ToonOutlineMesh from '../ToonOutlineMesh';
 import { Vis as PotatoVis } from '../PotatoVis';
 import potatoData from '../potatoData';
 import { usePotatoPositioning } from '../Layout';
 import HorizontalAxisLine from '../HorizontalAxisLine';
 import Text from '../Text';
-
-type GLTFResult = GLTF & {
-  nodes: {
-    ridged_export: THREE.Mesh;
-  };
-  materials: {};
-};
+import { useRidgedModel } from '../useModel';
 
 type RidgedProps = {
   stroke: string;
@@ -24,10 +14,8 @@ type RidgedProps = {
   labelColor: string;
 };
 
-const modelUrl = getStaticUrl('/static/models/potatoes/ridged.gltf');
-
 function Ridged({ stroke, fill }: RidgedProps) {
-  const { nodes } = (useGLTF(modelUrl) as unknown) as GLTFResult;
+  const ridgedGeometry = useRidgedModel();
 
   const {
     groupRef,
@@ -40,15 +28,11 @@ function Ridged({ stroke, fill }: RidgedProps) {
   } = usePotatoPositioning('ridged');
   return (
     <group ref={groupRef}>
-      <ToonOutlineMesh
-        ref={modelRef}
-        uniformsRef={uniformsRef}
-        geometry={nodes.ridged_export.geometry}
-      />
+      <ToonOutlineMesh ref={modelRef} uniformsRef={uniformsRef} geometry={ridgedGeometry} />
       <PotatoVis
         ref={visRef}
         morphRef={visMorphRef}
-        geometry={nodes.ridged_export.geometry}
+        geometry={ridgedGeometry}
         stroke={stroke}
         fill={fill}
         datum={potatoData.curly}
@@ -62,5 +46,3 @@ function Ridged({ stroke, fill }: RidgedProps) {
 }
 
 export default Ridged;
-
-useGLTF.preload(modelUrl);

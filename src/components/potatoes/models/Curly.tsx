@@ -1,21 +1,12 @@
 import * as THREE from 'three';
 import React from 'react';
-import { useGLTF } from '@react-three/drei';
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import getStaticUrl from '../../../utils/getStaticUrl';
 import ToonOutlineMesh from '../ToonOutlineMesh';
 import { Vis as PotatoVis } from '../PotatoVis';
 import potatoData from '../potatoData';
 import { usePotatoPositioning } from '../Layout';
 import HorizontalAxisLine from '../HorizontalAxisLine';
 import Text from '../Text';
-
-type GLTFResult = GLTF & {
-  nodes: {
-    curly_fry_export: THREE.Mesh;
-  };
-  materials: {};
-};
+import { useCurlyModel } from '../useModel';
 
 type CurlyProps = {
   stroke: string;
@@ -24,11 +15,8 @@ type CurlyProps = {
   labelColor: string;
 };
 
-const modelUrl = getStaticUrl('/static/models/potatoes/curly.gltf');
-
 function Curly({ stroke, fill }: CurlyProps) {
-  const { nodes } = (useGLTF(modelUrl) as unknown) as GLTFResult;
-
+  const curlyGeometry = useCurlyModel();
   const {
     groupRef,
     labelRef,
@@ -40,15 +28,11 @@ function Curly({ stroke, fill }: CurlyProps) {
   } = usePotatoPositioning('curly');
   return (
     <group ref={groupRef}>
-      <ToonOutlineMesh
-        ref={modelRef}
-        uniformsRef={uniformsRef}
-        geometry={nodes.curly_fry_export.geometry}
-      />
+      <ToonOutlineMesh ref={modelRef} uniformsRef={uniformsRef} geometry={curlyGeometry} />
       <PotatoVis
         ref={visRef}
         morphRef={visMorphRef}
-        geometry={nodes.curly_fry_export.geometry}
+        geometry={curlyGeometry}
         stroke={stroke}
         fill={fill}
         datum={potatoData.curly}
@@ -62,5 +46,3 @@ function Curly({ stroke, fill }: CurlyProps) {
 }
 
 export default Curly;
-
-useGLTF.preload(modelUrl);

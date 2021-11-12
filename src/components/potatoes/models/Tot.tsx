@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import React from 'react';
 import ToonOutlineMesh from '../ToonOutlineMesh';
 import { Vis as PotatoVis } from '../PotatoVis';
@@ -6,6 +5,7 @@ import potatoData from '../potatoData';
 import { usePotatoPositioning } from '../Layout';
 import HorizontalAxisLine from '../HorizontalAxisLine';
 import Text from '../Text';
+import { useTotModel } from '../useModel';
 
 type TotProps = {
   stroke: string;
@@ -14,12 +14,8 @@ type TotProps = {
   labelColor: string;
 };
 
-const geometry = new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false).rotateZ(
-  0.15 * Math.PI,
-);
-
-// while there is a model, might as well just use a cylinder...
 function Tot({ stroke, fill }: TotProps) {
+  const totGeometry = useTotModel();
   const {
     groupRef,
     labelRef,
@@ -31,18 +27,11 @@ function Tot({ stroke, fill }: TotProps) {
   } = usePotatoPositioning('tot');
   return (
     <group ref={groupRef}>
-      <ToonOutlineMesh
-        ref={modelRef}
-        uniformsRef={uniformsRef}
-        // rotation-x={Math.PI * 0.05}
-        // rotation-y={Math.PI * 0.05}
-        // rotation-z={Math.PI * 0.05}
-        geometry={geometry}
-      />
+      <ToonOutlineMesh ref={modelRef} uniformsRef={uniformsRef} geometry={totGeometry} />
       <PotatoVis
         ref={visRef}
         morphRef={visMorphRef}
-        geometry={geometry}
+        geometry={totGeometry}
         stroke={stroke}
         fill={fill}
         datum={potatoData.tot}

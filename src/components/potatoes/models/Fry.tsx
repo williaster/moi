@@ -1,21 +1,11 @@
-import * as THREE from 'three';
 import React from 'react';
-import { useGLTF } from '@react-three/drei';
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
-import getStaticUrl from '../../../utils/getStaticUrl';
 import ToonOutlineMesh from '../ToonOutlineMesh';
 import { Vis as PotatoVis } from '../PotatoVis';
 import potatoData from '../potatoData';
 import { usePotatoPositioning } from '../Layout';
 import HorizontalAxisLine from '../HorizontalAxisLine';
 import Text from '../Text';
-
-type GLTFResult = GLTF & {
-  nodes: {
-    straightexport: THREE.Mesh;
-  };
-  materials: {};
-};
+import { useFryModel } from '../useModel';
 
 type FryProps = {
   stroke: string;
@@ -24,11 +14,8 @@ type FryProps = {
   labelColor: string;
 };
 
-const modelUrl = getStaticUrl('/static/models/potatoes/fry.gltf');
-
 function Fry({ stroke, fill }: FryProps) {
-  const { nodes } = (useGLTF(modelUrl) as unknown) as GLTFResult;
-
+  const fryGeometry = useFryModel();
   const {
     groupRef,
     labelRef,
@@ -40,15 +27,11 @@ function Fry({ stroke, fill }: FryProps) {
   } = usePotatoPositioning('fry');
   return (
     <group ref={groupRef}>
-      <ToonOutlineMesh
-        ref={modelRef}
-        uniformsRef={uniformsRef}
-        geometry={nodes.straightexport.geometry}
-      />
+      <ToonOutlineMesh ref={modelRef} uniformsRef={uniformsRef} geometry={fryGeometry} />
       <PotatoVis
         ref={visRef}
         morphRef={visMorphRef}
-        geometry={nodes.straightexport.geometry}
+        geometry={fryGeometry}
         stroke={stroke}
         fill={fill}
         datum={potatoData.fry}
@@ -62,5 +45,3 @@ function Fry({ stroke, fill }: FryProps) {
 }
 
 export default Fry;
-
-useGLTF.preload(modelUrl);
