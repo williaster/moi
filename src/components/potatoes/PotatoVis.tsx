@@ -46,9 +46,13 @@ const ringFragmentShader = `
   uniform float morph;
   uniform vec3 color;
 
+  float easeOpacity(float t) {
+    return 1.0 - --t * t * t * t;
+  }
+
   void main() {
-    if (morph < 0.01) discard;
-    gl_FragColor = vec4(color, morph + 0.5);
+    if (morph < 0.001) discard;
+    gl_FragColor = vec4(color, easeOpacity(morph));
   }
 `;
 

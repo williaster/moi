@@ -72,7 +72,7 @@ const styles = {
     position: 'relative',
     fontVariantNumeric: 'tabular-nums',
     marginTop: '0.3em',
-    fontSize: '1em',
+    fontSize: '1.5vh',
     whiteSpace: 'nowrap',
   },
   title: {

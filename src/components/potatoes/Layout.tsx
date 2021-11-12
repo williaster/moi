@@ -42,7 +42,7 @@ const keyframes = {
     positionX: getKeyframes([0, 0.5, 0.5, 0.5, [[0.5, 0.3], 'easeInCubic'], 0.3, 0.26]), // relative to viewport.width
     positionXHighlight: getKeyframes([0, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.3, 0.26]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
-    scale: getKeyframes([1.7, 0, 0, 0, [[0, 1.3, 0.8], 'easeOutCubic'], 0.8, 0.8]),
+    scale: getKeyframes([1.7, 0, 0, 0, [[0, 1.3, 1.3, 0.8], 'easeOutCubic'], 0.8, 0.8]),
     scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, [[0.8, 0.8], 'linear'], 0.8, 0.8]),
     splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1]),
     outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
@@ -65,8 +65,8 @@ const keyframes = {
     scaleHighlight: getKeyframes([
       0,
       0,
-      0.003,
-      [[0.004, 0.004], 'easeInQuint'],
+      0.004,
+      [0.004, 'easeInQuint'],
       [[0.0015, 0.0015], 'easeInOutQuad'],
       0.0015,
       0.0015,
@@ -78,7 +78,7 @@ const keyframes = {
     positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.019, 0, 0, 0.014, 0.014, 0.014, 0.014]),
+    scale: getKeyframes([0.024, 0, 0, 0.024, 0.024, 0.024, 0.024]),
     positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, [0.19, 'easeInCubic'], 0.19, 0.19]), // relative to viewport.width
     positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
@@ -106,13 +106,16 @@ const labelKeyFrames = {
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.68, 0.68, 0.68], 'easeInCubic'),
+    friedUnfried: getKeyframes(
+      [0.47, 0.47, 0.47, 0.47, [[0.47, 0.68], 'linear'], 0.68, 0.68],
+      'easeInCubic',
+    ),
   },
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0]),
     friedUnfried: getKeyframes(
-      [-0.055, -0.055, -0.055, -0.055, -0.07, -0.07, -0.07],
+      [-0.03, -0.03, -0.03, -0.03, [[-0.07], 'easeOutCubic'], -0.07, -0.07],
       'easeInCubic',
     ),
   },
@@ -127,6 +130,8 @@ export function useLabelPositioning() {
   const scroll = useScroll();
 
   useFrame(() => {
+    const viewportMin = Math.min(viewport.width, viewport.height * 0.8);
+
     // better
     betterRef.current.scale.setScalar(labelKeyFrames.scale.better(scroll.offset));
     betterRef.current.position.x =
@@ -156,7 +161,7 @@ export function useLabelPositioning() {
     friedUnfriedRef.current.position.y =
       0.5 * viewport.height -
       (1 - modelViewportVertical) * viewport.height -
-      labelKeyFrames.y.friedUnfried(scroll.offset) * viewport.height; // offset text at top
+      labelKeyFrames.y.friedUnfried(scroll.offset) * viewport.height * 1.1; // offset text at top
 
     friedUnfriedRef.current.scale.setScalar(labelKeyFrames.scale.friedUnfried(scroll.offset));
   });
@@ -226,7 +231,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     () =>
       scaleLog({
         domain: potatoFriedRatioExtent,
-        range: [viewport.height * 0.6, 0],
+        range: [viewport.height * 0.65, 0],
       }),
     [viewport.getCurrentViewport().height],
   );
@@ -316,7 +321,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     }
 
     // vis
-    visRef.current.position.z = -25; // @TODO would distort vis with a perspective camera
+    visRef.current.position.z = 25; // @TODO would distort vis with a perspective camera
     visRef.current.position.x =
       keyframes.vis[shouldHighlight ? 'positionXHighlight' : 'positionX'](scroll.offset) *
         viewport.width +
@@ -341,10 +346,6 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset) * viewportMin);
     labelRef.current.position.x = keyframes.label.positionX(scroll.offset) * viewport.width;
     labelRef.current.position.z = 2 * position;
-    // labelRef.current.setRotationFromAxisAngle(
-    //   xAxisVec3,
-    //   keyframes.label.rotateX(scroll.offset) * -Math.PI,
-    // );
 
     // lines
     lineRef.current.position.x = keyframes.line.positionX(scroll.offset) * viewport.width;

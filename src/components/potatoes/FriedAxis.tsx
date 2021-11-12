@@ -27,7 +27,7 @@ export default function FriedAxis() {
       <mesh ref={axisRef} geometry={triangleGeometry}>
         <meshBasicMaterial color={color} />
       </mesh>
-      <group position={[0, 5, 0]}>
+      <group position={[0, viewport.height * 0.03, 0]}>
         <Text anchorY="bottom" color={fontColor} fontSize={scaledFontSize} anchorX="left">
           Less fried
         </Text>

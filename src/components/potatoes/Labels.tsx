@@ -13,6 +13,7 @@ export default function Labels() {
 
   const scaledFontSize = fontSize * Math.min(viewport.height, viewport.width);
   const scaledFontSizeSmall = scaledFontSize * 0.8;
+  const scaledFontSizeSmaller = scaledFontSizeSmall * 0.8;
 
   return (
     <>
@@ -33,31 +34,31 @@ export default function Labels() {
         Worse
       </Text>
       <group ref={friedUnfriedRef}>
-        <Text color={colors.textColorDarker} fontSize={scaledFontSize} anchorX="right">
+        <Text color={colors.textColorDarker} fontSize={scaledFontSizeSmall} anchorX="right">
           Fried
         </Text>
         <Text
           position-x={3}
           color={colors.textColorDarker}
-          fontSize={scaledFontSizeSmall}
+          fontSize={scaledFontSizeSmaller}
           anchorX="left"
         >
           (surface area)
         </Text>
 
         <Text
-          position-y={-scaledFontSize * 1.1}
+          position-y={-scaledFontSizeSmaller * 1.1}
           color={colors.textColorDark}
-          fontSize={scaledFontSize}
+          fontSize={scaledFontSizeSmall}
           anchorX="right"
         >
           Unfried
         </Text>
         <Text
           position-x={3}
-          position-y={-scaledFontSize * 1.1}
+          position-y={-scaledFontSizeSmaller * 1.1}
           color={colors.textColorDark}
-          fontSize={scaledFontSizeSmall}
+          fontSize={scaledFontSizeSmaller}
           anchorX="left"
         >
           (volume)

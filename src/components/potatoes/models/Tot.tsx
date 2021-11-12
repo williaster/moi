@@ -14,7 +14,9 @@ type TotProps = {
   labelColor: string;
 };
 
-const geometry = new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false);
+const geometry = new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false).rotateZ(
+  0.15 * Math.PI,
+);
 
 // while there is a model, might as well just use a cylinder...
 function Tot({ stroke, fill }: TotProps) {
@@ -32,9 +34,9 @@ function Tot({ stroke, fill }: TotProps) {
       <ToonOutlineMesh
         ref={modelRef}
         uniformsRef={uniformsRef}
-        rotation-x={Math.PI * 0.05}
-        rotation-y={Math.PI * 0.05}
-        rotation-z={Math.PI * 0.05}
+        // rotation-x={Math.PI * 0.05}
+        // rotation-y={Math.PI * 0.05}
+        // rotation-z={Math.PI * 0.05}
         geometry={geometry}
       />
       <PotatoVis
