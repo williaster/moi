@@ -36,30 +36,38 @@ const keyframes = {
     positionXZero: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
     positionXZRotation: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
     scaleBaseline: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
-    scaleSplashpage: getKeyframes([1, [0, 'easeOutQuad'], 0, 0, 0, 0, 0]),
+    scaleSplashpage: getKeyframes([1.3, [0, 'easeOutQuad'], 0, 0, 0, 0, 0]),
   },
   model: {
-    positionX: getKeyframes([0, 0.5, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.26]), // relative to viewport.width
+    positionX: getKeyframes([0, 0.5, 0.5, 0.5, [[0.5, 0.3], 'easeInCubic'], 0.3, 0.26]), // relative to viewport.width
     positionXHighlight: getKeyframes([0, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.3, 0.26]), // relative to viewport.width
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
-    scale: getKeyframes([1.7, 0, 0, 0, [0.8, 'easeOutQuint'], 0.8, 0.8]),
-    scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, 0.8, 0.8, 0.8]),
+    scale: getKeyframes([1.7, 0, 0, 0, [[0, 1.3, 0.8], 'easeOutCubic'], 0.8, 0.8]),
+    scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, [[0.8, 0.8], 'linear'], 0.8, 0.8]),
     splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1]),
     outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
   },
   vis: {
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
-    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [0.7, 'easeInCubic'], 0.7, 0.41]), // relative to viewport.width
-    scale: getKeyframes([0, 0, 0, 0.00095, [0.0015, 'easeInCubic'], 0.0015, 0.0015]),
-    morph: getKeyframes([0, 0, 0, 0, [[0.2, 1], 'easeInCubic'], 1, 1]),
+    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [[0.5, 0.7], 'easeInCubic'], 0.7, 0.41]), // relative to viewport.width
+    scale: getKeyframes([
+      0,
+      0,
+      0,
+      0.00095,
+      [[0.00095, 0.0025, 0.0015], 'easeInCubic'],
+      0.0015,
+      0.0015,
+    ]),
+    morph: getKeyframes([0, 0, 0, 0, [[0, 0.2, 1], 'easeInCubic'], 1, 1]),
 
     positionXHighlight: getKeyframes([0.5, 0.5, 0.5, [0.7, 'easeInOutQuad'], 0.7, 0.7, 0.41]), // relative to viewport.width
     scaleHighlight: getKeyframes([
       0,
       0,
       0.003,
-      [0.004, 'easeInQuint'],
-      [0.0015, 'easeInOutQuad'],
+      [[0.004, 0.004], 'easeInQuint'],
+      [[0.0015, 0.0015], 'easeInOutQuad'],
       0.0015,
       0.0015,
     ]),
@@ -103,7 +111,10 @@ const labelKeyFrames = {
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([-0.06, -0.06, -0.06, -0.07, -0.07, -0.07, -0.07], 'easeInCubic'),
+    friedUnfried: getKeyframes(
+      [-0.055, -0.055, -0.055, -0.055, -0.07, -0.07, -0.07],
+      'easeInCubic',
+    ),
   },
 };
 export function useLabelPositioning() {
@@ -153,7 +164,7 @@ export function useLabelPositioning() {
   return { betterRef, worseRef, friedUnfriedRef };
 }
 
-const axisRotation = getKeyframes([1, 1, 1, 1, 1, 0, 0], 'easeInOutCubic');
+const axisRotation = getKeyframes([1, 1, 1, 1, 1, [[1, 0], 'easeInOutCubic'], 0], 'easeInOutCubic');
 const axisPositionY = getKeyframes([1, 1, 1, 1, 1.1, 1.1, 1.1]); // times height * title space
 
 // @TODO new file

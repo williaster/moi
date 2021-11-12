@@ -1,9 +1,14 @@
 import * as THREE from 'three';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { useGLTF } from '@react-three/drei';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import getStaticUrl from '../../../utils/getStaticUrl';
-import ToonOutlineMesh, { ToonOutlineProps } from '../ToonOutlineMesh';
+import ToonOutlineMesh from '../ToonOutlineMesh';
+import { Vis as PotatoVis } from '../PotatoVis';
+import potatoData from '../potatoData';
+import { usePotatoPositioning } from '../Layout';
+import HorizontalAxisLine from '../HorizontalAxisLine';
+import Text from '../Text';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -12,20 +17,50 @@ type GLTFResult = GLTF & {
   materials: {};
 };
 
-const url = getStaticUrl('/static/models/potatoes/fry.gltf');
+type FryProps = {
+  stroke: string;
+  fill: string;
+  fontSize: number;
+  labelColor: string;
+};
 
-function Fry(props: Omit<ToonOutlineProps, 'geometry'>, ref: React.ForwardedRef<THREE.Mesh>) {
-  const { nodes } = (useGLTF(url) as unknown) as GLTFResult;
+const modelUrl = getStaticUrl('/static/models/potatoes/fry.gltf');
+
+function Fry({ stroke, fill }: FryProps) {
+  const { nodes } = (useGLTF(modelUrl) as unknown) as GLTFResult;
+
+  const {
+    groupRef,
+    labelRef,
+    visRef,
+    visMorphRef,
+    modelRef,
+    uniformsRef,
+    lineRef,
+  } = usePotatoPositioning('fry');
   return (
-    <ToonOutlineMesh
-      ref={ref}
-      position-y={-1}
-      {...props}
-      geometry={nodes.straightexport.geometry}
-    />
+    <group ref={groupRef}>
+      <ToonOutlineMesh
+        ref={modelRef}
+        uniformsRef={uniformsRef}
+        geometry={nodes.straightexport.geometry}
+      />
+      <PotatoVis
+        ref={visRef}
+        morphRef={visMorphRef}
+        geometry={nodes.straightexport.geometry}
+        stroke={stroke}
+        fill={fill}
+        datum={potatoData.fry}
+      />
+      <HorizontalAxisLine ref={lineRef} />
+      <Text ref={labelRef} anchorX="right">
+        Fry
+      </Text>
+    </group>
   );
 }
 
-export default forwardRef(Fry);
+export default Fry;
 
-useGLTF.preload(url);
+useGLTF.preload(modelUrl);

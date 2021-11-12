@@ -107,8 +107,8 @@ export default function Title() {
         <div ref={one} style={headerStyle}>
           Potato ranks 🥔
           <p style={textStyle}>
-            3D modeling of various potato forms enabled objective ranking by a quantitative
-            heuristic: <span style={emphasisStyle}>the fried ratio</span>. <br />
+            3D modeling of various potato forms enabled ranking by a quantitative metric: <br />
+            <span style={emphasisStyle}>the fried ratio</span>. <br />
             <br />
             Scroll for more ⬇️
           </p>
@@ -117,14 +117,14 @@ export default function Title() {
         <div ref={two} style={headerStyle}>
           Intuition
           <p style={textStyle}>
-            Intuitively you know that eating a curly fry is way better than a straight up potato.
+            Intuitively you probably like curly fries more than a straight up potato.
             <br />
             <br />
             <span style={emphasisStyle}>But why tho?</span>
           </p>
         </div>
         <div ref={three} style={headerStyle}>
-          Fried vs unfried
+          Fried potential
           <p style={textStyle}>
             A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
             they can possibly be. To quantify this, potatoes were modeled in 3D to measure fried and
@@ -147,23 +147,22 @@ export default function Title() {
           </p>
         </div>
         <div ref={six} style={headerStyle}>
-          Quality: <span style={ratioStyle}>fried ratio</span>
+          The <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
-            To make this more visually compelling, we can go one step further and compute the true
-            measure of potato quality:{' '}
+            To make this <span style={friedStyle}>fried</span>-ness more obvious across potatoes, we
+            can compute the <br />
             <span style={monospaceStyle}>
-              <span style={ratioStyle}>ratio</span> = <span style={friedStyle}>fried</span> /{' '}
-              <span style={unfriedStyle}>unfried</span>
+              <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span> /{' '}
+              <span style={unfriedStyle}>unfried</span>)
             </span>
           </p>
         </div>
         <div ref={seven} style={headerStyle}>
-          Quality: <span style={ratioStyle}>fried ratio</span>
+          The <span style={ratioStyle}>fried ratio</span>
           <p style={textStyle}>
-            Plotting this <span style={ratioColorStyle}>ratio</span> along the{' '}
+            Plotting this <span style={ratioColorStyle}>fried ratio</span> along the{' '}
             <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created
-            equal. It turns out that your favorite potatoes are more{' '}
-            <span style={friedColorStyle}>fried</span>.
+            equal. What's your favorite <span style={ratioStyle}>fried</span> level?
           </p>
         </div>
       </div>

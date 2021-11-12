@@ -10,15 +10,15 @@ import FriedAxis from '../components/potatoes/FriedAxis';
 import { backgroundColor, textColor } from '../components/potatoes/colors';
 import Title from '../components/potatoes/Title';
 import { cssFontRules, FontUriLinks } from '../components/potatoes/font';
-import Labels from '../components/potatoes/Labels';
-import Curly from '../components/potatoes/Curly';
-import Potato from '../components/potatoes/Potato';
 import * as colors from '../components/potatoes/colors';
-import Ridged from '../components/potatoes/Ridged';
-import Waffle from '../components/potatoes/Waffle';
-import Fry from '../components/potatoes/Fry';
-import Tot from '../components/potatoes/Tot';
-import Wedge from '../components/potatoes/Wedge';
+import Labels from '../components/potatoes/Labels';
+import Curly from '../components/potatoes/models/Curly';
+import Potato from '../components/potatoes/models/Potato';
+import Ridged from '../components/potatoes/models/Ridged';
+import Waffle from '../components/potatoes/models/Waffle';
+import Fry from '../components/potatoes/models/Fry';
+import Tot from '../components/potatoes/models/Tot';
+import Wedge from '../components/potatoes/models/Wedge';
 
 const PotatoesPage = () => (
   <>
