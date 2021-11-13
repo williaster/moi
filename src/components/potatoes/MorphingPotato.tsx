@@ -1,60 +1,248 @@
 import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 import * as model from './useModel';
+import * as colors from './colors';
+import getKeyframes from './utils/getKeyframes';
 
 const coordsPerVertex = 3;
 const verticesPerFace = 3;
+const normalsPerVertex = 3;
 const coordsPerFace = coordsPerVertex * verticesPerFace;
+const color = { value: new THREE.Color(colors.highlightColorLight) };
+const lightDirection = new THREE.Vector3(0.7, 1, 1).normalize();
+const lightColor = new THREE.Color('white').setScalar(1);
 
 function MorphingPotato() {
   const ridged = model.useRidgedModel();
   const waffle = model.useWaffleModel();
   const curly = model.useCurlyModel();
   const fry = model.useFryModel();
+  const tot = model.useTotModel();
   const wedge = model.useWedgeModel();
   const potato = model.usePotatoModel();
 
   // can this be async?
   const morphGeo = useMemo(() => {
-    console.time('morph geo');
+    console.time('create morphGeometry');
 
     const morphGeometry = new THREE.BufferGeometry();
 
     const nonIndexed = [
-      ridged.toNonIndexed(),
-      waffle.toNonIndexed(),
+      ridged.toNonIndexed().scale(2, 2, 2),
+      waffle.toNonIndexed().scale(2, 2, 2),
       curly.toNonIndexed(),
       fry.toNonIndexed(),
+      tot.toNonIndexed().scale(2, 2, 2),
       wedge.toNonIndexed(),
       potato.toNonIndexed(),
     ];
 
-    const maxVertexCount = Math.max(...nonIndexed.map(geo => geo.attributes.position.count));
-    const morphTargets = nonIndexed.map(() => new Float32Array(maxVertexCount * verticesPerFace));
+    const geoVertexCounts = nonIndexed.map(geo => geo.attributes.position.count);
+    const maxVertexCount = Math.max(...geoVertexCounts);
+    const morphPositions = nonIndexed.map(() => new Float32Array(maxVertexCount * verticesPerFace));
+    const morphNormals = nonIndexed.map(() => new Float32Array(maxVertexCount * normalsPerVertex));
 
-    for (let geoIdx = 0; geoIdx < nonIndexed.length; geoIdx += 1) {
+    for (let morphIndex = 0; morphIndex < nonIndexed.length; morphIndex += 1) {
       // morph target of a given geo
-      const geo = nonIndexed[geoIdx];
-      const morphTarget = morphTargets[geoIdx];
+      const geo = nonIndexed[morphIndex];
+      const morphPosition = morphPositions[morphIndex];
+      const morphNormal = morphNormals[morphIndex];
+      const geoVertexCount = geoVertexCounts[morphIndex];
 
-      for (let faceIdx = 0; faceIdx < maxVertexCount * verticesPerFace; faceIdx += coordsPerFace) {
+      // const paddingStep = Math.floor(maxVertexCount / geoVertexCount);
+      const paddingStep = 1;
+      const extraVertices = maxVertexCount - geoVertexCount;
+      const extraVerticesPerSide = Math.floor(extraVertices / 2);
+      // if we
+      const indexPaddingSnapToFace = extraVerticesPerSide - (extraVerticesPerSide % coordsPerFace);
+
+      // for (let faceIdx = 0; faceIdx < maxVertexCount * verticesPerFace; faceIdx += coordsPerFace) {
+      for (
+        let faceIdx = 0;
+        faceIdx < geoVertexCount * verticesPerFace; // step through each face in _this_ geo
+        faceIdx += coordsPerFace
+      ) {
+        // step through each coord in the face
         for (let coordIdx = 0; coordIdx < coordsPerFace; coordIdx += 1) {
-          morphTarget[faceIdx + coordIdx] = geo.attributes.position.array[faceIdx + coordIdx] || 0;
+          morphPosition[faceIdx * paddingStep + coordIdx + indexPaddingSnapToFace] =
+            geo.attributes.position.array[faceIdx + coordIdx] || 0;
+
+          morphNormal[faceIdx * paddingStep + coordIdx + indexPaddingSnapToFace] =
+            geo.attributes.normal.array[faceIdx + coordIdx] || 0;
         }
       }
 
       morphGeometry.setAttribute(
-        `morph_${geoIdx}`,
-        new THREE.BufferAttribute(morphTarget, coordsPerVertex),
+        morphIndex === 0 ? 'position' : `position_${morphIndex}`,
+        new THREE.BufferAttribute(morphPosition, coordsPerVertex),
+      );
+
+      morphGeometry.setAttribute(
+        `normal_${morphIndex}`,
+        new THREE.BufferAttribute(morphNormal, normalsPerVertex),
       );
 
       geo.dispose();
     }
 
-    console.timeEnd('morph geo');
+    console.timeEnd('create morphGeometry');
 
     return morphGeometry;
   }, []);
+
+  const rotationMatrix = useRef({ value: new THREE.Matrix4() });
+  const morph = useRef({ value: 0 });
+  const morphDelta = useRef(0.005);
+
+  useFrame(({ clock }) => {
+    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.05);
+    morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
+    if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
+
+    const currStepFloat = morph.current.value * (7 - 1.0);
+    const withinStep = currStepFloat % 1.0;
+    const currStepInt = Math.floor(currStepFloat);
+
+    // if (morph.current.value > 0.95) console.log({ currStepFloat, withinStep, currStepInt });
+  });
+
+  return (
+    <group>
+      <mesh geometry={morphGeo} scale={[15, 15, 15]}>
+        <shaderMaterial
+          key={Math.random()} // @todo remove, how to handle disposal?
+          side={THREE.DoubleSide}
+          uniforms={{
+            morph: morph.current,
+            rotationMatrix: rotationMatrix.current,
+            color,
+            // toon shading
+            lightDirection: { value: lightDirection },
+            lightColor: { value: lightColor },
+          }}
+          vertexShader={`
+            float morphSteps = 7.0;
+
+            uniform float morph;
+            uniform mat4 rotationMatrix;
+            
+            // attribute vec3 position;
+            attribute vec3 position_1;
+            attribute vec3 position_2;
+            attribute vec3 position_3;
+            attribute vec3 position_4;
+            attribute vec3 position_5;
+            attribute vec3 position_6;
+
+            attribute vec3 normal_0;
+            attribute vec3 normal_1;
+            attribute vec3 normal_2;
+            attribute vec3 normal_3;
+            attribute vec3 normal_4;
+            attribute vec3 normal_5;
+            attribute vec3 normal_6;
+
+            varying vec3 vNormal;
+
+            float ease(float t) {
+              return (t < 0.5 ? 16.0 * t * t * t * t * t : 1.0 + 16.0 * --t * t * t * t * t);
+              // return t < 0.5 ? 4.0 * t * t * t : (t - 1.0) * (2.0 * t - 2.0) * (2.0 * t - 2.0) + 1.0;
+            }
+          
+            void main () {
+              float currStepFloat = morph * (morphSteps - 1.0);
+              float withinStep = mod(currStepFloat, 1.0);
+              float currStepInt = floor(currStepFloat);
+              
+              vec3 positionStart;
+              vec3 positionEnd;
+              vec3 normalStart;
+              vec3 normalEnd;
+
+              if (currStepInt < 1.0) {
+                positionStart = position;
+                normalStart = normal_0;
+
+                positionEnd = position_1;
+                normalEnd = normal_1;
+              } else if (currStepInt < 2.0) {
+                positionStart = position_1;
+                normalStart = normal_1;
+
+                positionEnd = position_2;
+                normalEnd = normal_2;
+              } else if (currStepInt < 3.0) {
+                positionStart = position_2;
+                normalStart = normal_2;
+
+                positionEnd = position_3;
+                normalEnd = normal_3;
+              } else if (currStepInt < 4.0) {
+                positionStart = position_3;
+                normalStart = normal_3;
+
+                positionEnd = position_4;
+                normalEnd = normal_4;
+              } else if (currStepInt < 5.0) {
+                positionStart = position_4;
+                normalStart = normal_4;
+
+                positionEnd = position_5;
+                normalEnd = normal_5;
+              } else {
+                positionStart = position_5;
+                normalStart = normal_5;
+
+                positionEnd = position_6;
+                normalEnd = normal_6;
+
+                if (currStepInt == 6.0) withinStep = 1.0; 
+              }
+
+              float easedMorph = ease(withinStep);
+              vec3 morphedPosition = mix(positionStart, positionEnd, easedMorph);
+              vec4 rotatedPosition = rotationMatrix * vec4(morphedPosition, 1.0);
+              gl_Position = projectionMatrix * modelViewMatrix * rotatedPosition;
+
+              // rotate the normal so the light appears is constant
+              vec3 morphedNormal = mix(normalStart, normalEnd, easedMorph);
+              vec4 rotatedNormal = rotationMatrix * vec4(morphedNormal, 1.0);
+              vNormal = rotatedNormal.xyz;
+            }
+          `}
+          fragmentShader={`
+            float numGradientSteps = 3.0;
+            
+            uniform float morph;
+            uniform vec3 color;
+            uniform vec3 lightColor;
+            uniform vec3 lightDirection;
+
+            varying vec3 vNormal;
+          
+            void main() {
+              // toon shading
+              vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
+              vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
+              float diffuse = dot(vNormal, lightDirectionNormalized);
+          
+              if (numGradientSteps > 0.0) {
+                  float sign = diffuse < 0.0 ? 0.0 : 1.0;
+                  diffuse = 
+                    (floor((abs(diffuse) + 0.001) * numGradientSteps) / numGradientSteps) * sign + 
+                    (1.0 / (numGradientSteps * 2.0)) + 
+                    0.7;
+              }
+
+              vec3 toonColor = color * lightColor * diffuse;
+              gl_FragColor = vec4(toonColor, 1.0);
+            }
+          `}
+        />
+      </mesh>
+    </group>
+  );
 }
 
 export default MorphingPotato;
