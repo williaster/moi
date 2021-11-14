@@ -49,7 +49,9 @@ export function useFryModel() {
     };
   };
 
-  return result.nodes.straightexport.geometry;
+  const geometry = useMemo(() => result.nodes.straightexport.geometry.translate(0, -0.5, 0), []);
+
+  return geometry;
 }
 
 export function useTotModel() {
@@ -59,7 +61,7 @@ export function useTotModel() {
       new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false)
         .rotateX(0.025 * Math.PI)
         .rotateZ(0.1 * Math.PI)
-        .translate(0, -1, 0),
+        .translate(0, -0.5, 0),
     [],
   );
 

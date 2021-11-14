@@ -73,7 +73,7 @@ const keyframes = {
       0.0015,
       0,
     ]),
-    morphHighlight: getKeyframes([0, 0, 0, [[0.2, 1], 'easeInOutQuad'], 1, 1, 1, 0]),
+    morphHighlight: getKeyframes([0, 0, 0, [[0.2, 1], 'linear'], 1, 1, 1, 0]),
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1, 1]),
@@ -103,21 +103,18 @@ const labelKeyFrames = {
   scale: {
     better: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
     worse: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
-    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0, 0], 'easeInOutCubic'),
+    friedUnfried: getKeyframes([0, 0, 1, 1, 0, 0, 0, 0], 'easeInOutCubic'),
   },
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes(
-      [0.47, 0.47, 0.47, 0.47, [[0.47, 0.68], 'linear'], 0.68, 0.68, 0.68],
-      'easeInCubic',
-    ),
+    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.47, 0.47, 0.47, 0.47]),
   },
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
     friedUnfried: getKeyframes(
-      [-0.03, -0.03, -0.03, -0.03, [[-0.07], 'easeOutCubic'], -0.07, -0.07, -0.07],
+      [-0.03, -0.03, -0.03, -0.03, [[-0.09], 'easeOutCubic'], -0.07, -0.07, -0.07],
       'easeInCubic',
     ),
   },

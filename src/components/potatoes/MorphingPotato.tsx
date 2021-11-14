@@ -27,7 +27,7 @@ const MorphingPotatoPrivate = forwardRef(
     const rotationMatrix = useRef({ value: new THREE.Matrix4() });
     const opacity = useRef({ value: 0 });
     const morph = useRef({ value: 0 });
-    const morphDelta = useRef(0.005);
+    const morphDelta = useRef(0.002);
 
     useEffect(() => {
       if (opacityRef) {
@@ -44,7 +44,7 @@ const MorphingPotatoPrivate = forwardRef(
         ridged.toNonIndexed().scale(1.5, 1.5, 1.5),
         waffle.toNonIndexed().scale(1.5, 1.5, 1.5),
         curly.toNonIndexed(),
-        fry.toNonIndexed(),
+        fry.toNonIndexed().translate(-1, 1.75, 0),
         tot.toNonIndexed().scale(1.5, 1.5, 1.5),
         wedge.toNonIndexed(),
         potato.toNonIndexed(),
@@ -110,8 +110,9 @@ const MorphingPotatoPrivate = forwardRef(
 
     useFrame(({ clock }) => {
       rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.15);
+      if (morph.current.value >= 1) morph.current.value = 0;
       morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
-      if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
+      // if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
     });
 
     return (
@@ -129,7 +130,7 @@ const MorphingPotatoPrivate = forwardRef(
             lightColor,
           }}
           vertexShader={`
-            float morphSteps = 7.0;
+            float morphSteps = 8.0;
 
             uniform float morph;
             uniform mat4 rotationMatrix;
@@ -198,14 +199,20 @@ const MorphingPotatoPrivate = forwardRef(
 
                 positionEnd = position_5;
                 normalEnd = normal_5;
-              } else {
+              } else if (currStepInt < 6.0) {
                 positionStart = position_5;
                 normalStart = normal_5;
 
                 positionEnd = position_6;
                 normalEnd = normal_6;
+              } else {
+                positionStart = position_6;
+                normalStart = normal_6;
 
-                if (currStepInt == 6.0) withinStep = 1.0; 
+                positionEnd = position;
+                normalEnd = normal_0;
+
+                if (currStepInt == 7.0) withinStep = 1.0; 
               }
 
               float easedMorph = ease(withinStep);

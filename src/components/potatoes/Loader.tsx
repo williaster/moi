@@ -78,7 +78,7 @@ const styles = {
   title: {
     position: 'absolute',
     left: '50%',
-    top: '40%',
+    top: '43%',
     transform: 'translateX(-50%)',
     fontSize: '4.5vh',
     lineHeight: '1em',

@@ -68,7 +68,7 @@ const headerStyle = {
   top: '0.6em',
   left: '0.6em',
   maxWidth: '80vw',
-  lineHeight: '1em',
+  lineHeight: '1.1em',
 } as const;
 
 const textStyle = {
@@ -109,8 +109,10 @@ export default function Title() {
           <div ref={one} style={headerStyle}>
             Potato ranks 🥔
             <p style={textStyle}>
-              3D modeling of various potato forms enabled ranking by a quantitative metric: <br />
-              <span style={emphasisStyle}>the fried ratio</span>. <br />
+              <span style={emphasisStyle}>3D modeling</span> of various potato forms enabled
+              quantitative analysis to understand{' '}
+              <span style={emphasisStyle}>why some potatoes are better than others</span>.
+              <br />
               <br />
               Scroll for more ⬇️
             </p>
@@ -141,7 +143,7 @@ export default function Title() {
             </p>
           </div>
           <div ref={five} style={headerStyle}>
-            Visualizing all potatoes
+            All potatoes
             <p style={textStyle}>
               Comparing <span style={friedStyle}>fried</span> vs{' '}
               <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
@@ -152,7 +154,7 @@ export default function Title() {
             The <span style={ratioStyle}>fried ratio</span>
             <p style={textStyle}>
               To make this <span style={friedStyle}>fried</span>-ness more obvious across potatoes,
-              we can compute the <br />
+              we can compute the{' '}
               <span style={monospaceStyle}>
                 <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span>{' '}
                 / <span style={unfriedStyle}>unfried</span>)
