@@ -131,8 +131,9 @@ export default function Title() {
             Fried potential
             <p style={textStyle}>
               A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
-              they can possibly be. To quantify this, potatoes were modeled in 3D to measure fried
-              and unfried portions:
+              they can possibly be. To quantify this, potatoes were modeled in 3D to measure{' '}
+              <span style={friedStyle}>fried</span>
+              and <span style={unfriedStyle}>unfried</span> portions:
             </p>
           </div>
           <div ref={four} style={headerStyle}>

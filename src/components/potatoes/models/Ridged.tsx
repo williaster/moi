@@ -35,7 +35,7 @@ function Ridged({ stroke, fill }: RidgedProps) {
         geometry={ridgedGeometry}
         stroke={stroke}
         fill={fill}
-        datum={potatoData.curly}
+        datum={potatoData.ridged}
       />
       <HorizontalAxisLine ref={lineRef} />
       <Text ref={labelRef} anchorX="right">
