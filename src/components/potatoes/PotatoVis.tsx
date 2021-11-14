@@ -46,13 +46,13 @@ const ringFragmentShader = `
   uniform float morph;
   uniform vec3 color;
 
-  float easeOpacity(float t) {
+  float ease(float t) {
     return 1.0 - --t * t * t * t;
   }
 
   void main() {
     if (morph < 0.001) discard;
-    gl_FragColor = vec4(color, easeOpacity(morph));
+    gl_FragColor = vec4(color, ease(morph));
   }
 `;
 
@@ -81,9 +81,7 @@ export const Vis = forwardRef(
       if (!geometry) return {};
 
       // create a geometry copy so we can make it non-indexed
-      let geoCopy = new THREE.BufferGeometry();
-      geoCopy.copy(geometry);
-      geoCopy = geoCopy.toNonIndexed().scale(12, 12, 12);
+      const geoCopy = geometry.toNonIndexed().scale(12, 12, 12);
 
       // initialize rings
       const innerRingGeometry = new THREE.RingBufferGeometry(

@@ -19,6 +19,7 @@ import Waffle from '../components/potatoes/models/Waffle';
 import Fry from '../components/potatoes/models/Fry';
 import Tot from '../components/potatoes/models/Tot';
 import Wedge from '../components/potatoes/models/Wedge';
+import MorphingPotato from '../components/potatoes/MorphingPotato';
 
 const PotatoesPage = () => (
   <>
@@ -91,7 +92,7 @@ const potatoProps = {
 
 function Scene() {
   return (
-    <ScrollControls damping={3} pages={7}>
+    <ScrollControls damping={3} pages={8}>
       <Title />
       <FriedAxis />
       <Labels />
@@ -102,6 +103,7 @@ function Scene() {
       <Tot {...potatoProps} />
       <Wedge {...potatoProps} />
       <Potato {...potatoProps} />
+      <MorphingPotato />
     </ScrollControls>
   );
 }

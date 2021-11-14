@@ -1,21 +1,21 @@
 import React, { useRef } from 'react';
-import * as THREE from 'three';
-import { Html, Scroll, useScroll } from '@react-three/drei';
+import { Html, useScroll } from '@react-three/drei';
 
 import { textColorDark, textColor, highlightColor } from './colors';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
+import Copy from '../Copy';
 
 const easeInOut = (t: number, inOrOut: 'in' | 'out') => {
   return inOrOut === 'in' ? 1 - (1 - t) * (1 - t) : 1 - Math.pow(1 - t, 5);
 };
 
-const numPages = 7;
+const numPages = 8;
 const singlePageSize = 1 / numPages;
 const easeMargin = singlePageSize * 0.1; // margin
 const firstPage = 1;
 const lastPage = numPages;
 
-function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
+function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8) {
   // refs which are modified by this hook
   const containerRef = useRef<HTMLDivElement>();
 
@@ -100,72 +100,85 @@ export default function Title() {
   const five = useTitlePositioning(5);
   const six = useTitlePositioning(6);
   const seven = useTitlePositioning(7);
+  const eight = useTitlePositioning(8);
 
   return (
-    <Html fullscreen style={htmlStyle}>
-      <div style={{ lineHeight: '1em', fontSize: '2vh' }}>
-        <div ref={one} style={headerStyle}>
+    <>
+      <Html fullscreen style={htmlStyle}>
+        <div style={{ lineHeight: '1em', fontSize: '2vh' }}>
+          <div ref={one} style={headerStyle}>
+            Potato ranks 🥔
+            <p style={textStyle}>
+              3D modeling of various potato forms enabled ranking by a quantitative metric: <br />
+              <span style={emphasisStyle}>the fried ratio</span>. <br />
+              <br />
+              Scroll for more ⬇️
+            </p>
+          </div>
+
+          <div ref={two} style={headerStyle}>
+            Intuition
+            <p style={textStyle}>
+              Intuitively you probably like curly fries more than a straight up potato.
+              <br />
+              <br />
+              <span style={emphasisStyle}>But why tho?</span>
+            </p>
+          </div>
+          <div ref={three} style={headerStyle}>
+            Fried potential
+            <p style={textStyle}>
+              A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
+              they can possibly be. To quantify this, potatoes were modeled in 3D to measure fried
+              and unfried portions:
+            </p>
+          </div>
+          <div ref={four} style={headerStyle}>
+            Visualizing fried vs unfried
+            <p style={textStyle}>
+              Using 3D model measurements, <span style={friedStyle}>fried</span> and{' '}
+              <span style={unfriedStyle}>unfried</span> portions were visualized as nested circles:
+            </p>
+          </div>
+          <div ref={five} style={headerStyle}>
+            Visualizing all potatoes
+            <p style={textStyle}>
+              Comparing <span style={friedStyle}>fried</span> vs{' '}
+              <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
+              are not all created equal.
+            </p>
+          </div>
+          <div ref={six} style={headerStyle}>
+            The <span style={ratioStyle}>fried ratio</span>
+            <p style={textStyle}>
+              To make this <span style={friedStyle}>fried</span>-ness more obvious across potatoes,
+              we can compute the <br />
+              <span style={monospaceStyle}>
+                <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span>{' '}
+                / <span style={unfriedStyle}>unfried</span>)
+              </span>
+            </p>
+          </div>
+          <div ref={seven} style={headerStyle}>
+            The <span style={ratioStyle}>fried ratio</span>
+            <p style={textStyle}>
+              Plotting this <span style={ratioColorStyle}>fried ratio</span> along the{' '}
+              <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created
+              equal. What's your favorite <span style={ratioStyle}>fried</span> level?
+            </p>
+          </div>
+        </div>
+      </Html>
+
+      <Html center={false} transform={false}>
+        <div ref={eight} style={{ ...headerStyle, top: '-2em', width: '50vw', height: '100vh' }}>
           Potato ranks 🥔
           <p style={textStyle}>
-            3D modeling of various potato forms enabled ranking by a quantitative metric: <br />
-            <span style={emphasisStyle}>the fried ratio</span>. <br />
-            <br />
-            Scroll for more ⬇️
+            Know anyone else who likes potatoes? <br />
+            Copy <Copy text="test" /> to share link.
           </p>
         </div>
-
-        <div ref={two} style={headerStyle}>
-          Intuition
-          <p style={textStyle}>
-            Intuitively you probably like curly fries more than a straight up potato.
-            <br />
-            <br />
-            <span style={emphasisStyle}>But why tho?</span>
-          </p>
-        </div>
-        <div ref={three} style={headerStyle}>
-          Fried potential
-          <p style={textStyle}>
-            A key difference between potato forms is <span style={emphasisStyle}>how fried</span>{' '}
-            they can possibly be. To quantify this, potatoes were modeled in 3D to measure fried and
-            unfried portions:
-          </p>
-        </div>
-        <div ref={four} style={headerStyle}>
-          Visualizing fried vs unfried
-          <p style={textStyle}>
-            Using 3D model measurements, <span style={friedStyle}>fried</span> and{' '}
-            <span style={unfriedStyle}>unfried</span> portions were visualized as nested circles:
-          </p>
-        </div>
-        <div ref={five} style={headerStyle}>
-          Visualizing all potatoes
-          <p style={textStyle}>
-            Comparing <span style={friedStyle}>fried</span> vs{' '}
-            <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
-            are not all created equal.
-          </p>
-        </div>
-        <div ref={six} style={headerStyle}>
-          The <span style={ratioStyle}>fried ratio</span>
-          <p style={textStyle}>
-            To make this <span style={friedStyle}>fried</span>-ness more obvious across potatoes, we
-            can compute the <br />
-            <span style={monospaceStyle}>
-              <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span> /{' '}
-              <span style={unfriedStyle}>unfried</span>)
-            </span>
-          </p>
-        </div>
-        <div ref={seven} style={headerStyle}>
-          The <span style={ratioStyle}>fried ratio</span>
-          <p style={textStyle}>
-            Plotting this <span style={ratioColorStyle}>fried ratio</span> along the{' '}
-            <span style={ratioColorStyle}>x-axis</span> shows that potatoes are not all created
-            equal. What's your favorite <span style={ratioStyle}>fried</span> level?
-          </p>
-        </div>
-      </div>
-    </Html>
+      </Html>
+    </>
   );
 }

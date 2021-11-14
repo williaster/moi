@@ -31,25 +31,25 @@ const splitMaterialScalar = 4;
 
 const keyframes = {
   group: {
-    positionYRows: getKeyframes([0, 1.065, 1.065, 1.065, 1.065, 1.065, 1.065]),
-    positionYRatio: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
-    positionXZero: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
-    positionXZRotation: getKeyframes([1, 0, 0, 0, 0, 0, 0]),
-    scaleBaseline: getKeyframes([0, 1, 1, 1, 1, 1, 1]),
-    scaleSplashpage: getKeyframes([1.3, [0, 'easeOutQuad'], 0, 0, 0, 0, 0]),
+    positionYRows: getKeyframes([0, 1.065, 1.065, 1.065, 1.065, 1.065, 1.065, 1.065]),
+    positionYRatio: getKeyframes([1, 0, 0, 0, 0, 0, 0, 0]),
+    positionXZero: getKeyframes([0, 1, 1, 1, 1, 1, 1, 0]),
+    positionXZRotation: getKeyframes([1, 0, 0, 0, 0, 0, 0, 1]),
+    scaleBaseline: getKeyframes([0, 1, 1, 1, 1, 1, 1, 0]),
+    scaleSplashpage: getKeyframes([1.3, [0, 'easeOutQuad'], 0, 0, 0, 0, 0, 0]),
   },
   model: {
-    positionX: getKeyframes([0, 0.5, 0.5, 0.5, [[0.5, 0.3], 'easeInCubic'], 0.3, 0.26]), // relative to viewport.width
-    positionXHighlight: getKeyframes([0, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.3, 0.26]), // relative to viewport.width
-    positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
-    scale: getKeyframes([1.7, 0, 0, 0, [[0, 1.3, 1.3, 0.8], 'easeOutCubic'], 0.8, 0.8]),
-    scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, [[0.8, 0.8], 'linear'], 0.8, 0.8]),
-    splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1]),
-    outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28]),
+    positionX: getKeyframes([0, 0.5, 0.5, 0.5, [[0.5, 0.3], 'easeInCubic'], 0.3, 0.26, 0.5]), // relative to viewport.width
+    positionXHighlight: getKeyframes([0, 0.5, 0.5, [0.3, 'easeInCubic'], 0.3, 0.3, 0.26, 0.5]), // relative to viewport.width
+    positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
+    scale: getKeyframes([1.7, 0, 0, 0, [[0, 1.3, 1.3, 0.8], 'easeOutCubic'], 0.8, 0.8, 0]),
+    scaleHighlight: getKeyframes([1.7, 2.5, 2.5, 2.5, [[0.8, 0.8], 'linear'], 0.8, 0.8, 0]),
+    splitMaterial: getKeyframes([1, 1, -1, -1, -1, -1, -1, -1]),
+    outlineThickness: getKeyframes([0.025, 0.025, 0.28, 0.28, 0.28, 0.28, 0.28, 0]),
   },
   vis: {
-    positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1]), // relative to ratio scale
-    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [[0.5, 0.7], 'easeInCubic'], 0.7, 0.41]), // relative to viewport.width
+    positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 1, 1]), // relative to ratio scale
+    positionX: getKeyframes([0.5, 0.5, 0.5, 0.5, [[0.5, 0.7], 'easeInCubic'], 0.7, 0.41, 0.5]), // relative to viewport.width
     scale: getKeyframes([
       0,
       0,
@@ -58,10 +58,11 @@ const keyframes = {
       [[0.00095, 0.0025, 0.0015], 'easeInCubic'],
       0.0015,
       0.0015,
+      0,
     ]),
-    morph: getKeyframes([0, 0, 0, 0, [[0, 0.2, 1], 'easeInCubic'], 1, 1]),
+    morph: getKeyframes([0, 0, 0, 0, [[0, 0.2, 1], 'easeInCubic'], 1, 1, 0]),
 
-    positionXHighlight: getKeyframes([0.5, 0.5, 0.5, [0.7, 'easeInOutQuad'], 0.7, 0.7, 0.41]), // relative to viewport.width
+    positionXHighlight: getKeyframes([0.5, 0.5, 0.5, [0.7, 'easeInOutQuad'], 0.7, 0.7, 0.41, 0.5]), // relative to viewport.width
     scaleHighlight: getKeyframes([
       0,
       0,
@@ -70,18 +71,19 @@ const keyframes = {
       [[0.0015, 0.0015], 'easeInOutQuad'],
       0.0015,
       0.0015,
+      0,
     ]),
-    morphHighlight: getKeyframes([0, 0, 0, [[0.2, 1], 'easeInOutQuad'], 1, 1, 1], undefined, true),
+    morphHighlight: getKeyframes([0, 0, 0, [[0.2, 1], 'easeInOutQuad'], 1, 1, 1, 0]),
   },
   line: {
-    scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1]),
-    positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
+    scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1, 1]),
+    positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
   },
   label: {
-    scale: getKeyframes([0.024, 0, 0, 0.024, 0.024, 0.024, 0.024]),
-    positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, [0.19, 'easeInCubic'], 0.19, 0.19]), // relative to viewport.width
-    positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-    rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0]), // relative to Math.PI
+    scale: getKeyframes([0.024, 0, 0, 0.024, 0.024, 0.024, 0.024, 0]),
+    positionX: getKeyframes([-0.075, 0.5, -0.2, -0.2, [0.19, 'easeInCubic'], 0.19, 0.19, 0.19]), // relative to viewport.width
+    positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
+    rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0, 0]), // relative to Math.PI
   },
 };
 
@@ -99,23 +101,23 @@ const order: (keyof typeof potatoData)[] = [
 // @TODO new file
 const labelKeyFrames = {
   scale: {
-    better: getKeyframes([0, 1, 0, 0, 0, 0, 0], 'easeInOutCubic'),
-    worse: getKeyframes([0, 1, 0, 0, 0, 0, 0], 'easeInOutCubic'),
-    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0], 'easeInOutCubic'),
+    better: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
+    worse: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
+    friedUnfried: getKeyframes([0, 0, 1, 1, 0.6, 0, 0, 0], 'easeInOutCubic'),
   },
   x: {
-    better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
-    worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0]),
+    better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
+    worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
     friedUnfried: getKeyframes(
-      [0.47, 0.47, 0.47, 0.47, [[0.47, 0.68], 'linear'], 0.68, 0.68],
+      [0.47, 0.47, 0.47, 0.47, [[0.47, 0.68], 'linear'], 0.68, 0.68, 0.68],
       'easeInCubic',
     ),
   },
   y: {
-    better: getKeyframes([0, 0, 0, 0, 0, 0, 0]),
-    worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0]),
+    better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
+    worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
     friedUnfried: getKeyframes(
-      [-0.03, -0.03, -0.03, -0.03, [[-0.07], 'easeOutCubic'], -0.07, -0.07],
+      [-0.03, -0.03, -0.03, -0.03, [[-0.07], 'easeOutCubic'], -0.07, -0.07, -0.07],
       'easeInCubic',
     ),
   },
@@ -130,8 +132,6 @@ export function useLabelPositioning() {
   const scroll = useScroll();
 
   useFrame(() => {
-    const viewportMin = Math.min(viewport.width, viewport.height * 0.8);
-
     // better
     betterRef.current.scale.setScalar(labelKeyFrames.scale.better(scroll.offset));
     betterRef.current.position.x =
@@ -169,8 +169,11 @@ export function useLabelPositioning() {
   return { betterRef, worseRef, friedUnfriedRef };
 }
 
-const axisRotation = getKeyframes([1, 1, 1, 1, 1, [[1, 0], 'easeInOutCubic'], 0], 'easeInOutCubic');
-const axisPositionY = getKeyframes([1, 1, 1, 1, 1.1, 1.1, 1.1]); // times height * title space
+const axisRotation = getKeyframes(
+  [1, 1, 1, 1, 1, [[1, 0], 'easeInOutCubic'], 0, 1],
+  'easeInOutCubic',
+);
+const axisPositionY = getKeyframes([1, 1, 1, 1, 1.1, 1.1, 1.1, 1.1]); // times height * title space
 
 // @TODO new file
 export function useAxisPositioning() {
@@ -238,7 +241,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
   const baseModelOffset = useMemo(
     () =>
-      keyframes.model[shouldHighlight ? 'scaleHighlight' : 'scale'](1 - 0.01) *
+      keyframes.model[shouldHighlight ? 'scaleHighlight' : 'scale'](7 / 8 - 0.01) *
       modelScalar *
       viewport.height,
     [viewport.height, shouldHighlight],

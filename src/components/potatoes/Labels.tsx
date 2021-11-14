@@ -1,6 +1,5 @@
 import { useThree } from '@react-three/fiber';
-import React, { useMemo } from 'react';
-import * as THREE from 'three';
+import React from 'react';
 import * as colors from './colors';
 import { useLabelPositioning } from './Layout';
 import Text from './Text';

@@ -1,4 +1,5 @@
-import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
+import React, { forwardRef, useMemo, useRef, useEffect } from 'react';
+import { useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import * as model from './useModel';
@@ -10,106 +11,111 @@ const verticesPerFace = 3;
 const normalsPerVertex = 3;
 const coordsPerFace = coordsPerVertex * verticesPerFace;
 const color = { value: new THREE.Color(colors.highlightColorLight) };
-const lightDirection = new THREE.Vector3(0.7, 1, 1).normalize();
-const lightColor = new THREE.Color('white').setScalar(1);
+const lightDirection = { value: new THREE.Vector3(0.7, 1, 1).normalize() };
+const lightColor = { value: new THREE.Color('white').setScalar(1) };
 
-function MorphingPotato() {
-  const ridged = model.useRidgedModel();
-  const waffle = model.useWaffleModel();
-  const curly = model.useCurlyModel();
-  const fry = model.useFryModel();
-  const tot = model.useTotModel();
-  const wedge = model.useWedgeModel();
-  const potato = model.usePotatoModel();
+const MorphingPotatoPrivate = forwardRef(
+  ({ opacityRef }: { opacityRef: React.MutableRefObject<{ value: number }> }, ref) => {
+    const ridged = model.useRidgedModel();
+    const waffle = model.useWaffleModel();
+    const curly = model.useCurlyModel();
+    const fry = model.useFryModel();
+    const tot = model.useTotModel();
+    const wedge = model.useWedgeModel();
+    const potato = model.usePotatoModel();
 
-  // can this be async?
-  const morphGeo = useMemo(() => {
-    console.time('create morphGeometry');
+    const rotationMatrix = useRef({ value: new THREE.Matrix4() });
+    const opacity = useRef({ value: 0 });
+    const morph = useRef({ value: 0 });
+    const morphDelta = useRef(0.005);
 
-    const morphGeometry = new THREE.BufferGeometry();
+    useEffect(() => {
+      if (opacityRef) {
+        opacityRef.current = opacity.current;
+      }
+    }, [opacityRef]);
 
-    const nonIndexed = [
-      ridged.toNonIndexed().scale(2, 2, 2),
-      waffle.toNonIndexed().scale(2, 2, 2),
-      curly.toNonIndexed(),
-      fry.toNonIndexed(),
-      tot.toNonIndexed().scale(2, 2, 2),
-      wedge.toNonIndexed(),
-      potato.toNonIndexed(),
-    ];
+    // can this be async?
+    const morphGeo = useMemo(() => {
+      const morphGeometry = new THREE.BufferGeometry();
 
-    const geoVertexCounts = nonIndexed.map(geo => geo.attributes.position.count);
-    const maxVertexCount = Math.max(...geoVertexCounts);
-    const morphPositions = nonIndexed.map(() => new Float32Array(maxVertexCount * verticesPerFace));
-    const morphNormals = nonIndexed.map(() => new Float32Array(maxVertexCount * normalsPerVertex));
+      // to morph between geometries we nave to match faces which requires un-indexing
+      const nonIndexed = [
+        ridged.toNonIndexed().scale(1.5, 1.5, 1.5),
+        waffle.toNonIndexed().scale(1.5, 1.5, 1.5),
+        curly.toNonIndexed(),
+        fry.toNonIndexed(),
+        tot.toNonIndexed().scale(1.5, 1.5, 1.5),
+        wedge.toNonIndexed(),
+        potato.toNonIndexed(),
+      ];
 
-    for (let morphIndex = 0; morphIndex < nonIndexed.length; morphIndex += 1) {
-      // morph target of a given geo
-      const geo = nonIndexed[morphIndex];
-      const morphPosition = morphPositions[morphIndex];
-      const morphNormal = morphNormals[morphIndex];
-      const geoVertexCount = geoVertexCounts[morphIndex];
+      const geoVertexCounts = nonIndexed.map(geo => geo.attributes.position.count);
+      const maxVertexCount = Math.max(...geoVertexCounts);
+      const morphPositions = nonIndexed.map(
+        () => new Float32Array(maxVertexCount * verticesPerFace),
+      );
+      const morphNormals = nonIndexed.map(
+        () => new Float32Array(maxVertexCount * normalsPerVertex),
+      );
 
-      // const paddingStep = Math.floor(maxVertexCount / geoVertexCount);
-      const paddingStep = 1;
-      const extraVertices = maxVertexCount - geoVertexCount;
-      const extraVerticesPerSide = Math.floor(extraVertices / 2);
-      // if we
-      const indexPaddingSnapToFace = extraVerticesPerSide - (extraVerticesPerSide % coordsPerFace);
+      // pull the position + normal from a geometry and add as custom attributes on
+      // the single morphing geometry
+      for (let morphIndex = 0; morphIndex < nonIndexed.length; morphIndex += 1) {
+        const geo = nonIndexed[morphIndex];
+        const morphPosition = morphPositions[morphIndex];
+        const morphNormal = morphNormals[morphIndex];
+        const geoVertexCount = geoVertexCounts[morphIndex];
 
-      // for (let faceIdx = 0; faceIdx < maxVertexCount * verticesPerFace; faceIdx += coordsPerFace) {
-      for (
-        let faceIdx = 0;
-        faceIdx < geoVertexCount * verticesPerFace; // step through each face in _this_ geo
-        faceIdx += coordsPerFace
-      ) {
-        // step through each coord in the face
-        for (let coordIdx = 0; coordIdx < coordsPerFace; coordIdx += 1) {
-          morphPosition[faceIdx * paddingStep + coordIdx + indexPaddingSnapToFace] =
-            geo.attributes.position.array[faceIdx + coordIdx] || 0;
+        // different geometries have different vertex counts which can
+        // make morphing faces appear to come from one part of the geometry
+        // by padding the start and end, we can map to the middle of a geometry
+        // (assigning randomly isn't consistent across geometries so doesn't look good)
+        const extraVertices = maxVertexCount - geoVertexCount;
+        const extraVerticesPerSide = Math.floor(extraVertices / 2);
+        const indexPaddingSnapToFace =
+          extraVerticesPerSide - (extraVerticesPerSide % coordsPerFace);
 
-          morphNormal[faceIdx * paddingStep + coordIdx + indexPaddingSnapToFace] =
-            geo.attributes.normal.array[faceIdx + coordIdx] || 0;
+        for (
+          let faceIdx = 0;
+          faceIdx < geoVertexCount * verticesPerFace; // step through each face in _this_ geo
+          faceIdx += coordsPerFace
+        ) {
+          // step through each coord in the face
+          for (let coordIdx = 0; coordIdx < coordsPerFace; coordIdx += 1) {
+            morphPosition[faceIdx + coordIdx + indexPaddingSnapToFace] =
+              geo.attributes.position.array[faceIdx + coordIdx] || 0;
+
+            morphNormal[faceIdx + coordIdx + indexPaddingSnapToFace] =
+              geo.attributes.normal.array[faceIdx + coordIdx] || 0;
+          }
         }
+
+        morphGeometry.setAttribute(
+          // need at least one attribute called 'position' else nothing is rendered
+          morphIndex === 0 ? 'position' : `position_${morphIndex}`,
+          new THREE.BufferAttribute(morphPosition, coordsPerVertex),
+        );
+
+        morphGeometry.setAttribute(
+          `normal_${morphIndex}`,
+          new THREE.BufferAttribute(morphNormal, normalsPerVertex),
+        );
+
+        geo.dispose();
       }
 
-      morphGeometry.setAttribute(
-        morphIndex === 0 ? 'position' : `position_${morphIndex}`,
-        new THREE.BufferAttribute(morphPosition, coordsPerVertex),
-      );
+      return morphGeometry;
+    }, []);
 
-      morphGeometry.setAttribute(
-        `normal_${morphIndex}`,
-        new THREE.BufferAttribute(morphNormal, normalsPerVertex),
-      );
+    useFrame(({ clock }) => {
+      rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.05);
+      morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
+      if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
+    });
 
-      geo.dispose();
-    }
-
-    console.timeEnd('create morphGeometry');
-
-    return morphGeometry;
-  }, []);
-
-  const rotationMatrix = useRef({ value: new THREE.Matrix4() });
-  const morph = useRef({ value: 0 });
-  const morphDelta = useRef(0.005);
-
-  useFrame(({ clock }) => {
-    rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.05);
-    morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
-    if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
-
-    const currStepFloat = morph.current.value * (7 - 1.0);
-    const withinStep = currStepFloat % 1.0;
-    const currStepInt = Math.floor(currStepFloat);
-
-    // if (morph.current.value > 0.95) console.log({ currStepFloat, withinStep, currStepInt });
-  });
-
-  return (
-    <group>
-      <mesh geometry={morphGeo} scale={[15, 15, 15]}>
+    return (
+      <mesh ref={ref} geometry={morphGeo}>
         <shaderMaterial
           key={Math.random()} // @todo remove, how to handle disposal?
           side={THREE.DoubleSide}
@@ -117,9 +123,10 @@ function MorphingPotato() {
             morph: morph.current,
             rotationMatrix: rotationMatrix.current,
             color,
+            opacity: opacity.current,
             // toon shading
-            lightDirection: { value: lightDirection },
-            lightColor: { value: lightColor },
+            lightDirection,
+            lightColor,
           }}
           vertexShader={`
             float morphSteps = 7.0;
@@ -160,6 +167,7 @@ function MorphingPotato() {
               vec3 normalStart;
               vec3 normalEnd;
 
+              // this is ugly, could a struct be used
               if (currStepInt < 1.0) {
                 positionStart = position;
                 normalStart = normal_0;
@@ -216,12 +224,15 @@ function MorphingPotato() {
             
             uniform float morph;
             uniform vec3 color;
+            uniform float opacity;
             uniform vec3 lightColor;
             uniform vec3 lightDirection;
 
             varying vec3 vNormal;
           
             void main() {
+              if (opacity == 0.0) discard;
+
               // toon shading
               vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
               vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
@@ -241,8 +252,29 @@ function MorphingPotato() {
           `}
         />
       </mesh>
-    </group>
-  );
+    );
+  },
+);
+
+const keyframes = {
+  scale: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0.05], 'easeOutCubic'),
+  opacity: getKeyframes([0, 0, 0, 0, 0, 0, 0, 1], 'easeOutCubic'),
+};
+
+function MorphingPotato() {
+  const ref = useRef<THREE.Mesh>();
+  const opacityRef = useRef<{ value: number }>();
+  const scroll = useScroll();
+
+  useFrame(({ viewport }) => {
+    ref.current.scale.setScalar(
+      keyframes.scale(scroll.offset) * Math.min(viewport.width, viewport.height),
+    );
+    ref.current.position.x = -0.25 * viewport.width;
+    opacityRef.current.value = keyframes.opacity(scroll.offset);
+  });
+
+  return <MorphingPotatoPrivate ref={ref} opacityRef={opacityRef} />;
 }
 
 export default MorphingPotato;

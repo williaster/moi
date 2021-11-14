@@ -35,14 +35,13 @@ const Easing = {
 type EaseKind = keyof typeof Easing;
 type Step = number | number[] | [number | number[], EaseKind];
 
-// returns a function which interpolates a given [0,1] value across 7 specified step values
+// returns a function which interpolates a given [0,1] value across 8 specified step values
 export default function getKeyframes(
-  steps: [Step, Step, Step, Step, Step, Step, Step],
+  steps: [Step, Step, Step, Step, Step, Step, Step, Step],
   defaultEase: EaseKind = 'linear',
-  blah?: boolean,
 ) {
-  const stepCount = steps.length;
-  // t represents [0-1], where 0=step 0, and 1=step 6
+  const stepCount = 8;
+  // t represents [0-1], where 0=step #0, and 1=step #`stepCount`
   return (t: number) => {
     const stepFloat = t * (stepCount - 1);
     let withinStep: number = stepFloat % 1;

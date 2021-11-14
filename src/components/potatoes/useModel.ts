@@ -56,7 +56,9 @@ export function useTotModel() {
   const totGeometry = useMemo(
     () =>
       // while there is a model (used for measurements), might as well just use a cylinder...
-      new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false).rotateZ(0.1 * Math.PI),
+      new THREE.CylinderBufferGeometry(1.5, 1.5, 3.5, 20, 1, false)
+        .rotateX(0.025 * Math.PI)
+        .rotateZ(0.1 * Math.PI),
     [],
   );
 

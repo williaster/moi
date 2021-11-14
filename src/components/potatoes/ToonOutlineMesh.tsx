@@ -181,24 +181,23 @@ function ToonOutlineMesh(
             }
           
             void main() {
-              // toon shading
-              vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
-              vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
-              float diffuse = dot(vNormal, lightDirectionNormalized);
-          
-              if (numGradientSteps > 0.0) {
-                  float sign = diffuse < 0.0 ? 0.0 : 1.0;
-                  diffuse = 
-                    (floor((abs(diffuse) + 0.001) * numGradientSteps) / numGradientSteps) * sign + 
-                    (1.0 / (numGradientSteps * 2.0)) + 
-                    0.7;
-              }
-
-              vec3 color = vRotatedPosition.x >= splitPosition ? aboveSplitColor : belowSplitColor;
-              vec3 toonColor = color * lightColor * diffuse;
-
               if (vRotatedPosition.x <= splitPosition) {
-                // solid
+                // solid toon shading
+                vec4 lightDirectionV4 = viewMatrix * vec4(lightDirection, 0.0);
+                vec3 lightDirectionNormalized = normalize(lightDirectionV4.xyz);
+                float diffuse = dot(vNormal, lightDirectionNormalized);
+            
+                if (numGradientSteps > 0.0) {
+                    float sign = diffuse < 0.0 ? 0.0 : 1.0;
+                    diffuse = 
+                      (floor((abs(diffuse) + 0.001) * numGradientSteps) / numGradientSteps) * sign + 
+                      (1.0 / (numGradientSteps * 2.0)) + 
+                      0.7;
+                }
+
+                vec3 color = vRotatedPosition.x >= splitPosition ? aboveSplitColor : belowSplitColor;
+                vec3 toonColor = color * lightColor * diffuse;
+                  
                 gl_FragColor = vec4(toonColor, 1.0);
               } else {
                 // wireframe
