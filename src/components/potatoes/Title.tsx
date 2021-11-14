@@ -171,11 +171,21 @@ export default function Title() {
       </Html>
 
       <Html center={false} transform={false}>
-        <div ref={eight} style={{ ...headerStyle, top: '-2em', width: '50vw', height: '100vh' }}>
+        <div
+          ref={eight}
+          style={{
+            ...headerStyle,
+            fontSize: '6vmin',
+            left: '-1em',
+            top: '-2em',
+            width: '70vw',
+            height: '10vh',
+          }}
+        >
           Potato ranks 🥔
-          <p style={textStyle}>
-            Know anyone else who likes potatoes? <br />
-            Copy <Copy text="test" /> to share link.
+          <p style={{ ...textStyle, lineHeight: '1.5em' }}>
+            Know others who likes potatoes? <br />
+            Copy <Copy text="https://www.chris-williams.me/potatoes" /> to share link.
           </p>
         </div>
       </Html>

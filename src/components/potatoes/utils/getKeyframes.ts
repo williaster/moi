@@ -47,14 +47,13 @@ export default function getKeyframes(
     let withinStep: number = stepFloat % 1;
 
     const step = Math.floor(stepFloat);
-    const step0 = steps[step];
-    const step1 = steps[step + 1];
+    const step0 = steps[step] ?? steps[step - 1];
+    const step1 = steps[step + 1] ?? steps[step];
 
-    let step0Number: number = (typeof step0 === 'number'
-      ? step0
-      : typeof step0[0] === 'number'
-      ? step0[0]
-      : step0[0][step0[0].length - 1]) as number;
+    let step0Number: number;
+    if (typeof step0 === 'number') step0Number = step0;
+    else if (typeof step0[0] === 'number') step0Number = step0[0];
+    else step0Number = step0[0][step0[0].length - 1];
 
     let step1Number: number;
     if (typeof step1 === 'number') step1Number = step1;

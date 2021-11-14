@@ -109,7 +109,7 @@ const MorphingPotatoPrivate = forwardRef(
     }, []);
 
     useFrame(({ clock }) => {
-      rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.05);
+      rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.15);
       morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
       if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
     });
