@@ -264,8 +264,8 @@ const MorphingPotatoPrivate = forwardRef(
 );
 
 const keyframes = {
-  scale: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0.05], 'easeOutCubic'),
-  opacity: getKeyframes([0, 0, 0, 0, 0, 0, 0, 1], 'easeOutCubic'),
+  scale: getKeyframes([0, 0, 0, 0, 0, 0, 0, { steps: [0, 0.05], ease: 'easeInOutCubic' }]),
+  opacity: getKeyframes([0, 0, 0, 0, 0, 0, 0, { steps: [0, 1], ease: 'easeInOutCubic' }]),
 };
 
 function MorphingPotato() {

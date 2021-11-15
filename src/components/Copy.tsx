@@ -25,7 +25,7 @@ export default function Copy({ text }: CopyProps) {
   };
   return (
     <button
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: 'pointer', width: '3.5vw', height: '3.5vw' }}
       onPointerDown={handleClick}
       onPointerLeave={onPointerLeave}
     >

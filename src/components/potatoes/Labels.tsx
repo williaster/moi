@@ -16,14 +16,19 @@ export default function Labels() {
 
   return (
     <>
-      <Text
-        ref={betterRef}
-        color={colors.textColorDarker}
-        fontSize={scaledFontSize}
-        anchorX="center"
-      >
-        Better
-      </Text>
+      <group ref={betterRef}>
+        <Text color={colors.textColorDarker} fontSize={scaledFontSize} anchorX="right">
+          Better
+        </Text>
+        <Text
+          position-x={3}
+          color={colors.textColorDarker}
+          fontSize={scaledFontSizeSmaller * 0.8}
+          anchorX="left"
+        >
+          ( in my opinion )
+        </Text>
+      </group>
       <Text
         ref={worseRef}
         color={colors.textColorDarker}
