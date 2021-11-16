@@ -111,7 +111,7 @@ const keyframes = {
       0.5,
       0.5,
       0.5,
-      { step: 0.7, ease: 'easeInOutQuad' },
+      { steps: [0.5, 0.7], ease: 'easeInCubic' },
       0.7,
       0.7,
       0.41,
@@ -127,7 +127,7 @@ const keyframes = {
       0.0015,
       0,
     ]),
-    morphHighlight: getKeyframes([0, 0, 0, { step: 1, ease: 'easeInOutCubic' }, 1, 1, 1, 0]),
+    morphHighlight: getKeyframes([0, 0, 0, { steps: [0, 1], ease: 'easeInCubic' }, 1, 1, 1, 0]),
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1, 1]),
@@ -166,7 +166,10 @@ const labelKeyFrames = {
   scale: {
     better: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
     worse: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
-    friedUnfried: getKeyframes([0, 0, 1, 1, 0, 0, 0, 0], 'easeInOutCubic'),
+    friedUnfried: getKeyframes(
+      [0, 0, 1, 1, { step: 0, ease: 'easeInOutQuint' }, 0, 0, 0],
+      'easeInOutCubic',
+    ),
   },
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
@@ -176,10 +179,7 @@ const labelKeyFrames = {
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes(
-      [-0.03, -0.03, -0.03, -0.03, { step: -0.09, ease: 'easeOutCubic' }, -0.07, -0.07, -0.07],
-      'easeInCubic',
-    ),
+    friedUnfried: getKeyframes([-0.03, -0.03, -0.03, -0.03, 0, -0.07, -0.07, -0.07], 'easeInCubic'),
   },
 };
 export function useLabelPositioning() {
@@ -294,9 +294,9 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     () =>
       scaleLog({
         domain: potatoFriedRatioExtent,
-        range: [viewport.height * 0.65, 0],
+        range: [-viewport.height * 0.65, 0],
       }),
-    [viewport.getCurrentViewport().height],
+    [viewport.height],
   );
 
   const baseModelOffset = useMemo(
@@ -356,7 +356,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
         (position / numPotatoes) *
         modelViewportVertical *
         viewport.height + // offset based on position
-      keyframes.group.positionYRatio(scroll.offset) * -ratioScaleY(potatoRatio);
+      keyframes.group.positionYRatio(scroll.offset) * ratioScaleY(potatoRatio);
 
     // model
     modelRef.current.position.x =

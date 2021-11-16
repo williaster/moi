@@ -24,7 +24,6 @@ const MorphingPotatoPrivate = forwardRef(
     const wedge = model.useWedgeModel();
     const potato = model.usePotatoModel();
 
-    const rotationMatrix = useRef({ value: new THREE.Matrix4() });
     const opacity = useRef({ value: 0 });
     const morph = useRef({ value: 0 });
     const morphDelta = useRef(0.002);
@@ -44,7 +43,10 @@ const MorphingPotatoPrivate = forwardRef(
         ridged.toNonIndexed().scale(1.5, 1.5, 1.5),
         waffle.toNonIndexed().scale(1.5, 1.5, 1.5),
         curly.toNonIndexed(),
-        fry.toNonIndexed().translate(-1, 1.75, 0),
+        fry
+          .toNonIndexed()
+          .translate(0.2, 2, 0)
+          .rotateY(Math.PI),
         tot.toNonIndexed().scale(1.5, 1.5, 1.5),
         wedge.toNonIndexed(),
         potato.toNonIndexed(),
@@ -109,10 +111,9 @@ const MorphingPotatoPrivate = forwardRef(
     }, []);
 
     useFrame(({ clock }) => {
-      rotationMatrix.current.value.makeRotationY(Math.PI * clock.elapsedTime * 0.15);
+      // reset at 1
       if (morph.current.value >= 1) morph.current.value = 0;
       morph.current.value = Math.max(0, Math.min(1, morph.current.value + morphDelta.current));
-      // if (morph.current.value <= 0 || morph.current.value >= 1) morphDelta.current *= -1;
     });
 
     return (
@@ -122,7 +123,6 @@ const MorphingPotatoPrivate = forwardRef(
           side={THREE.DoubleSide}
           uniforms={{
             morph: morph.current,
-            rotationMatrix: rotationMatrix.current,
             color,
             opacity: opacity.current,
             // toon shading
@@ -133,7 +133,6 @@ const MorphingPotatoPrivate = forwardRef(
             float morphSteps = 8.0;
 
             uniform float morph;
-            uniform mat4 rotationMatrix;
             
             // attribute vec3 position;
             attribute vec3 position_1;
@@ -217,13 +216,10 @@ const MorphingPotatoPrivate = forwardRef(
 
               float easedMorph = ease(withinStep);
               vec3 morphedPosition = mix(positionStart, positionEnd, easedMorph);
-              vec4 rotatedPosition = rotationMatrix * vec4(morphedPosition, 1.0);
-              gl_Position = projectionMatrix * modelViewMatrix * rotatedPosition;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition, 1.0);
 
-              // rotate the normal so the light appears is constant
               vec3 morphedNormal = mix(normalStart, normalEnd, easedMorph);
-              vec4 rotatedNormal = rotationMatrix * vec4(morphedNormal, 1.0);
-              vNormal = rotatedNormal.xyz;
+              vNormal = morphedNormal;
             }
           `}
           fragmentShader={`

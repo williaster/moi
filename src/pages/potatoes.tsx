@@ -24,7 +24,7 @@ import MorphingPotato from '../components/potatoes/MorphingPotato';
 const PotatoesPage = () => (
   <>
     <Page
-      title="Why some potatoes are better than others 🥔"
+      title="Visualizing potatoes 🥔"
       previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-potatoes.png"
       description="3D modeling of various potato forms enabled precise understanding of what differentiates them."
       centerContent={false}

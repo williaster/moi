@@ -29,7 +29,7 @@ export default function Loader() {
   return active ? (
     <div style={styles.container}>
       <div>
-        <div style={styles.title}>Potato ranks 🥔</div>
+        <div style={styles.title}>Visualizing potatoes 🥔</div>
         <div style={styles.inner}>
           <div style={{ ...styles.bar, transform: `scaleX(${progress / 100})` }}></div>
           <span ref={progressSpanRef} style={styles.data}>
@@ -80,7 +80,7 @@ const styles = {
     left: '50%',
     top: '43%',
     transform: 'translateX(-50%)',
-    fontSize: '4.5vh',
+    fontSize: '6vmin',
     lineHeight: '1em',
     fontWeight: 'bold',
     width: 'fit-content',
