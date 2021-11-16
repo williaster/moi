@@ -5,7 +5,7 @@ export type CopyProps = {
   /** String of text to be copied to the clipboard. */
   text: string;
   /** Size of the copy icon. */
-  size: string;
+  size?: string;
 };
 
 const buttonStyle = { cursor: 'pointer', verticalAlign: 'sub' };

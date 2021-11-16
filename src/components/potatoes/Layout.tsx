@@ -179,7 +179,7 @@ const labelKeyFrames = {
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([-0.03, -0.03, -0.03, -0.03, 0, -0.07, -0.07, -0.07], 'easeInCubic'),
+    friedUnfried: getKeyframes([-0.02, -0.02, -0.02, -0.02, 0, 0, 0, 0], 'easeInCubic'),
   },
 };
 export function useLabelPositioning() {
@@ -294,9 +294,18 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     () =>
       scaleLog({
         domain: potatoFriedRatioExtent,
-        range: [-viewport.height * 0.65, 0],
+        range: [
+          -viewport.height * 0.65,
+          // when width is small, top text overflows down
+          // so we need to take up less space with the vis
+          viewport.width * viewport.dpr <= 390
+            ? viewport.height * -0.05
+            : viewport.width * viewport.dpr <= 520
+            ? viewport.height * 0.05
+            : viewport.height * 0.1,
+        ],
       }),
-    [viewport.height],
+    [viewport.width, viewport.height, viewport.dpr],
   );
 
   const baseModelOffset = useMemo(
