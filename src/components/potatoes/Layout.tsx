@@ -8,6 +8,7 @@ import potatoData from './potatoData';
 import getKeyframes from './utils/getKeyframes';
 
 const numPotatoes = 7;
+const numPages = 8;
 const titleViewportVertical = 0.22;
 const axisViewportVertical = 0.05;
 const modelViewportVertical = 1 - (titleViewportVertical + axisViewportVertical);
@@ -235,7 +236,6 @@ const axisRotation = getKeyframes(
 );
 const axisPositionY = getKeyframes([1, 1, 1, 1, 1.1, 1.1, 1.1, 1.1]); // times height * title space
 
-// @TODO new file
 export function useAxisPositioning() {
   // refs which are modified by this hook
   const groupRef = useRef<THREE.Group>();
@@ -298,7 +298,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
           -viewport.height * 0.65,
           // when width is small, top text overflows down
           // so we need to take up less space with the vis
-          viewport.width * viewport.dpr <= 390 ? viewport.height * -0.05 : viewport.height * 0.02,
+          viewport.width * viewport.dpr <= 390 ? viewport.height * -0.05 : viewport.height * 0.04,
         ],
       }),
     [viewport.width, viewport.height, viewport.dpr],
@@ -306,7 +306,9 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
   const baseModelOffset = useMemo(
     () =>
-      keyframes.model[shouldHighlight ? 'scaleHighlight' : 'scale'](7 / 8 - 0.01) *
+      keyframes.model[shouldHighlight ? 'scaleHighlight' : 'scale'](
+        (numPages - 1) / numPages - 0.01,
+      ) *
       modelScalar *
       viewport.height,
     [viewport.height, shouldHighlight],
@@ -360,6 +362,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
       keyframes.group.positionYRows(scroll.offset) *
         (position / numPotatoes) *
         modelViewportVertical *
+        0.98 *
         viewport.height + // offset based on position
       keyframes.group.positionYRatio(scroll.offset) * ratioScaleY(potatoRatio);
 

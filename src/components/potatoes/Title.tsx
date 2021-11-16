@@ -64,7 +64,8 @@ const headerStyle = {
   position: 'absolute',
   top: '0.6em',
   left: '0.6em',
-  maxWidth: '80vw',
+  width: '80vw',
+  maxWidth: '600px',
   lineHeight: '1.1em',
 } as const;
 
