@@ -1,7 +1,7 @@
 import React, { forwardRef, useMemo, useRef, useEffect } from 'react';
 import { useScroll } from '@react-three/drei';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as model from './useModel';
 import * as colors from './colors';
 import getKeyframes from './utils/getKeyframes';
@@ -27,6 +27,7 @@ const MorphingPotatoPrivate = forwardRef(
     const opacity = useRef({ value: 0 });
     const morph = useRef({ value: 0 });
     const morphDelta = useRef(0.002);
+    const height = useThree(state => state.viewport.height);
 
     useEffect(() => {
       if (opacityRef) {
@@ -42,10 +43,10 @@ const MorphingPotatoPrivate = forwardRef(
       const nonIndexed = [
         ridged.toNonIndexed().scale(1.5, 1.5, 1.5),
         waffle.toNonIndexed().scale(1.5, 1.5, 1.5),
-        curly.toNonIndexed(),
+        curly.toNonIndexed().translate(-0.5, 0, 0),
         fry
           .toNonIndexed()
-          .translate(0.2, 2, 0)
+          .translate(0, 3, 0)
           .rotateY(Math.PI),
         tot.toNonIndexed().scale(1.5, 1.5, 1.5),
         wedge.toNonIndexed(),
@@ -117,7 +118,7 @@ const MorphingPotatoPrivate = forwardRef(
     });
 
     return (
-      <mesh ref={ref} geometry={morphGeo}>
+      <mesh ref={ref} position-y={0.1 * height} geometry={morphGeo}>
         <shaderMaterial
           key={Math.random()} // @todo remove, how to handle disposal?
           side={THREE.DoubleSide}
@@ -260,7 +261,7 @@ const MorphingPotatoPrivate = forwardRef(
 );
 
 const keyframes = {
-  scale: getKeyframes([0, 0, 0, 0, 0, 0, 0, { steps: [0, 0.05], ease: 'easeInOutCubic' }]),
+  scale: getKeyframes([0, 0, 0, 0, 0, 0, 0, { steps: [0, 0.07], ease: 'easeInOutCubic' }]),
   opacity: getKeyframes([0, 0, 0, 0, 0, 0, 0, { steps: [0, 1], ease: 'easeInOutCubic' }]),
 };
 
@@ -273,7 +274,6 @@ function MorphingPotato() {
     ref.current.scale.setScalar(
       keyframes.scale(scroll.offset) * Math.min(viewport.width, viewport.height),
     );
-    ref.current.position.x = -0.25 * viewport.width;
     opacityRef.current.value = keyframes.opacity(scroll.offset);
   });
 

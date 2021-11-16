@@ -174,14 +174,13 @@ export default function Title() {
           style={{
             ...headerStyle,
             fontSize: '6vmin',
-            left: '-1em',
-            top: '-2em',
+            left: '-35vw',
+            top: '15vh',
             width: '70vw',
-            height: '10vh',
+            height: '11vh',
           }}
         >
-          Visualizing
-          <br /> potatoes 🥔
+          Visualizing potatoes 🥔
           <p style={{ ...textStyle, lineHeight: '1.5em' }}>
             Know others who like potatoes?
             <br />
@@ -194,9 +193,9 @@ export default function Title() {
   );
 }
 
-const linkStyle = { verticalAlign: 'sub' };
+const linkStyle = { verticalAlign: 'middle' };
 
-function TwitterLink({ size = '3.5vw' }) {
+function TwitterLink({ size = '5vw' }) {
   return (
     <a
       href="https://twitter.com/intent/tweet?url=https://www.chris-williams.me/potatoes&text="
@@ -222,7 +221,7 @@ function TwitterLink({ size = '3.5vw' }) {
   );
 }
 
-function FacebookLink({ size = '3.5vw' }) {
+function FacebookLink({ size = '5vw' }) {
   return (
     <a
       href="https://www.facebook.com/sharer/sharer.php?u=https://www.chris-williams.me/potatoes"

@@ -8,7 +8,7 @@ export type CopyProps = {
   size?: string;
 };
 
-const buttonStyle = { cursor: 'pointer', verticalAlign: 'sub' };
+const buttonStyle = { cursor: 'pointer', verticalAlign: 'middle' };
 
 /** A component for easily copying a string of text to the clipboard. */
 export default function Copy({ text, size = '3vw' }: CopyProps) {

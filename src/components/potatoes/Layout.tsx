@@ -298,11 +298,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
           -viewport.height * 0.65,
           // when width is small, top text overflows down
           // so we need to take up less space with the vis
-          viewport.width * viewport.dpr <= 390
-            ? viewport.height * -0.05
-            : viewport.width * viewport.dpr <= 520
-            ? viewport.height * 0.05
-            : viewport.height * 0.1,
+          viewport.width * viewport.dpr <= 390 ? viewport.height * -0.05 : viewport.height * 0.02,
         ],
       }),
     [viewport.width, viewport.height, viewport.dpr],
