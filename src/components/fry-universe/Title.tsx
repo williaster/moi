@@ -121,11 +121,11 @@ export default function Title() {
           <div ref={one} style={headerStyle}>
             The fry universe 🍟
             <p style={textStyle}>
-              You probably like some types of fries more than others. 3D modeling of various fry
+              You probably like some types of fries more than others. The 3D modeling of various fry
               shapes illuminates why this might be.
               <br />
               <br />
-              <span style={friedStyle}>Scroll ⬇️ to find out</span>.
+              <span style={friedStyle}>Scroll ⬇️ for more</span>.
             </p>
           </div>
 
@@ -146,7 +146,7 @@ export default function Title() {
             <p style={textStyle}>
               It turns out that a key difference between fry forms is{' '}
               <span style={emphasisStyle}>how fried</span> they can be. To quantify this, fries were
-              modeled in 3D to measure <span style={friedStyle}>fried</span> and{' '}
+              modeled in 3D to measure their <span style={friedStyle}>fried</span> and{' '}
               <span style={unfriedStyle}>unfried</span> portions:
             </p>
           </div>
@@ -154,23 +154,23 @@ export default function Title() {
             Visualizing fried vs unfried
             <p style={textStyle}>
               Using 3D model data, <span style={friedStyle}>fried</span> and{' '}
-              <span style={unfriedStyle}>unfried</span> portions of fries were visualized as nested
-              circles:
+              <span style={unfriedStyle}>unfried</span> portions of fry shapes were visualized as
+              nested circles:
             </p>
           </div>
           <div ref={five} style={headerStyle}>
             The fried universe
             <p style={textStyle}>
-              Visualizing <span style={friedStyle}>fried</span> vs{' '}
-              <span style={unfriedStyle}>unfried</span> measurements across fry forms shows they are
-              each <strong>unique</strong>.
+              Visualizing <span style={friedStyle}>fried</span> and{' '}
+              <span style={unfriedStyle}>unfried</span> measurements across the fry universe shows
+              they are each <strong>unique</strong>.
             </p>
           </div>
           <div ref={six} style={headerStyle}>
             The <span style={ratioStyle}>fried ratio</span>
             <p style={textStyle}>
-              To more easily compare <span style={friedStyle}>fried</span>-ness across fries, we can
-              compute the{' '}
+              To more easily compare <span style={friedStyle}>fried</span>-ness across the universe,
+              we can compute the{' '}
               <span style={monospaceStyle}>
                 <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span>{' '}
                 / <span style={unfriedStyle}>unfried</span>)
