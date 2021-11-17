@@ -70,7 +70,7 @@ const headerStyle = {
   position: 'absolute',
   top: '0.6em',
   left: '50%',
-  maxWidth: getViewportWidth(1000, 0.5),
+  maxWidth: getViewportWidth(1000, 1),
   margin: '0 auto',
   width: '90%', // padding effectively
   lineHeight: '1.1em',
