@@ -193,10 +193,10 @@ export default function Title() {
         <div ref={eight} style={sharePageStyle}>
           The fry universe 🍟
           <p style={sharePageParagraphStyle}>
-            Know others who like fries?
+            What's your favorite fry shape?
             <br />
             <TwitterLink /> <FacebookLink /> or copy{' '}
-            <Copy size="2em" text="https://www.chris-williams.me/potatoes" /> to share.
+            <Copy size="2em" text="https://www.chris-williams.me/fry-universe" /> to share.
           </p>
         </div>
       </Html>
@@ -209,7 +209,7 @@ const linkStyle = { verticalAlign: 'middle' };
 function TwitterLink({ size = '2em' }) {
   return (
     <a
-      href="https://twitter.com/intent/tweet?url=https://www.chris-williams.me/potatoes&text="
+      href="https://twitter.com/intent/tweet?url=https://www.chris-williams.me/fry-universe&text="
       target="_blank"
       rel="noreferrer"
       style={linkStyle}
@@ -235,7 +235,7 @@ function TwitterLink({ size = '2em' }) {
 function FacebookLink({ size = '2em' }) {
   return (
     <a
-      href="https://www.facebook.com/sharer/sharer.php?u=https://www.chris-williams.me/potatoes"
+      href="https://www.facebook.com/sharer/sharer.php?u=https://www.chris-williams.me/fry-universe"
       target="_blank"
       rel="noreferrer"
       style={linkStyle}
