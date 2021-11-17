@@ -57,6 +57,12 @@ function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8) {
   return containerRef;
 }
 
+const wrapperStyle = {
+  lineHeight: '1em',
+  fontSize: '2vh',
+  width: '100%',
+};
+
 const headerStyle = {
   fontSize: '2em',
   fontWeight: 700,
@@ -64,9 +70,9 @@ const headerStyle = {
   position: 'absolute',
   top: '0.6em',
   left: '50%',
-  maxWidth: getViewportWidth(1000, 1) + 200,
+  maxWidth: getViewportWidth(1000, 0.5),
   margin: '0 auto',
-  width: '90%',
+  width: '90%', // padding effectively
   lineHeight: '1.1em',
 } as const;
 
@@ -111,18 +117,12 @@ export default function Title() {
   return (
     <>
       <Html fullscreen style={htmlStyle}>
-        <div
-          style={{
-            lineHeight: '1em',
-            fontSize: '2vh',
-            width: '100%',
-          }}
-        >
+        <div style={wrapperStyle}>
           <div ref={one} style={headerStyle}>
             The fry universe 🍟
             <p style={textStyle}>
               You probably like some types of potatoes more than others. 3D modeling of various fry
-              shapes helped illuminate why this might be.
+              shapes illuminates why this might be.
               <br />
               <br />
               <span style={friedStyle}>Scroll ⬇️ to find out</span>.
@@ -195,7 +195,7 @@ export default function Title() {
             Know others who like potatoes?
             <br />
             <TwitterLink /> <FacebookLink /> or copy{' '}
-            <Copy text="https://www.chris-williams.me/potatoes" /> to share.
+            <Copy size="2em" text="https://www.chris-williams.me/potatoes" /> to share.
           </p>
         </div>
       </Html>
@@ -205,7 +205,7 @@ export default function Title() {
 
 const linkStyle = { verticalAlign: 'middle' };
 
-function TwitterLink({ size = '5.5vw' }) {
+function TwitterLink({ size = '2em' }) {
   return (
     <a
       href="https://twitter.com/intent/tweet?url=https://www.chris-williams.me/potatoes&text="
@@ -231,7 +231,7 @@ function TwitterLink({ size = '5.5vw' }) {
   );
 }
 
-function FacebookLink({ size = '6vw' }) {
+function FacebookLink({ size = '2em' }) {
   return (
     <a
       href="https://www.facebook.com/sharer/sharer.php?u=https://www.chris-williams.me/potatoes"

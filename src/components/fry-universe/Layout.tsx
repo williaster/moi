@@ -271,7 +271,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
   const viewport = useThree(state => state.viewport);
   const viewportWidth = getViewportWidth(viewport.width, viewport.dpr);
   const scroll = useScroll();
-
+  console.log(viewport.width, viewport.dpr, viewportWidth);
   // fried / unfried ratio scale
   const ratioScaleX = useMemo(
     () =>

@@ -1,31 +1,30 @@
 import React from 'react';
-import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { Stats, ScrollControls, Scroll } from '@react-three/drei';
 
 import Page from '../components/Page';
-import Loader from '../components/potatoes/Loader';
-import Background from '../components/potatoes/Background';
-import FriedAxis from '../components/potatoes/FriedAxis';
-import { backgroundColor, textColor } from '../components/potatoes/colors';
-import Title from '../components/potatoes/Title';
-import { cssFontRules, FontUriLinks } from '../components/potatoes/font';
-import * as colors from '../components/potatoes/colors';
-import Labels from '../components/potatoes/Labels';
-import Curly from '../components/potatoes/models/Curly';
-import Potato from '../components/potatoes/models/Potato';
-import Ridged from '../components/potatoes/models/Ridged';
-import Waffle from '../components/potatoes/models/Waffle';
-import Fry from '../components/potatoes/models/Fry';
-import Tot from '../components/potatoes/models/Tot';
-import Wedge from '../components/potatoes/models/Wedge';
-import MorphingPotato from '../components/potatoes/MorphingPotato';
+import Loader from '../components/fry-universe/Loader';
+import Background from '../components/fry-universe/Background';
+import FriedAxis from '../components/fry-universe/FriedAxis';
+import { backgroundColor, textColor } from '../components/fry-universe/colors';
+import Title from '../components/fry-universe/Title';
+import { cssFontRules, FontUriLinks } from '../components/fry-universe/font';
+import * as colors from '../components/fry-universe/colors';
+import Labels from '../components/fry-universe/Labels';
+import Curly from '../components/fry-universe/models/Curly';
+import Potato from '../components/fry-universe/models/Potato';
+import Ridged from '../components/fry-universe/models/Ridged';
+import Waffle from '../components/fry-universe/models/Waffle';
+import Fry from '../components/fry-universe/models/Fry';
+import Tot from '../components/fry-universe/models/Tot';
+import Wedge from '../components/fry-universe/models/Wedge';
+import MorphingPotato from '../components/fry-universe/MorphingPotato';
 
 const PotatoesPage = () => (
   <>
     <Page
       title="The fry universe 🍟"
-      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-potatoes.png"
+      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-fry-universe.png"
       description="3D modeling of various potato forms reveals why you like some more than others."
       centerContent={false}
       showNav={false}
