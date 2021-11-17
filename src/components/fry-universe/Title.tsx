@@ -180,9 +180,10 @@ export default function Title() {
           <div ref={seven} style={headerStyle}>
             The <span style={ratioStyle}>fried ratio</span>
             <p style={textStyle}>
-              Plotting this <span style={ratioStyle}>fried ratio</span> along the{' '}
-              <span style={ratioStyle}>x-axis</span> shows that potato forms are vastly different.
-              What's your favorite <span style={friedStyle}>fried</span> level?
+              Plotting this <span style={ratioStyle}>fried ratio</span> = (
+              <span style={friedStyle}>fried</span> / <span style={unfriedStyle}>unfried</span>)
+              along the <span style={ratioStyle}>x-axis</span> shows that potato forms are vastly
+              different. What's your favorite <span style={friedStyle}>fried</span> level?
             </p>
           </div>
         </div>
