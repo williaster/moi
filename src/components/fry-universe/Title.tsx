@@ -70,7 +70,7 @@ const headerStyle = {
   position: 'absolute',
   top: '0.6em',
   left: '50%',
-  maxWidth: getViewportWidth(1000, 1),
+  maxWidth: getViewportWidth(1000, 1) + 250,
   margin: '0 auto',
   width: '90%', // padding effectively
   lineHeight: '1.1em',
@@ -121,7 +121,7 @@ export default function Title() {
           <div ref={one} style={headerStyle}>
             The fry universe 🍟
             <p style={textStyle}>
-              You probably like some types of potatoes more than others. 3D modeling of various fry
+              You probably like some types of fries more than others. 3D modeling of various fry
               shapes illuminates why this might be.
               <br />
               <br />
@@ -144,9 +144,9 @@ export default function Title() {
           <div ref={three} style={headerStyle}>
             Fried potential
             <p style={textStyle}>
-              It turns out that a key difference between potato forms is{' '}
-              <span style={emphasisStyle}>how fried</span> they can be. To quantify this, potatoes
-              were modeled in 3D to measure <span style={friedStyle}>fried</span> and{' '}
+              It turns out that a key difference between fry forms is{' '}
+              <span style={emphasisStyle}>how fried</span> they can be. To quantify this, fries were
+              modeled in 3D to measure <span style={friedStyle}>fried</span> and{' '}
               <span style={unfriedStyle}>unfried</span> portions:
             </p>
           </div>
@@ -154,23 +154,23 @@ export default function Title() {
             Visualizing fried vs unfried
             <p style={textStyle}>
               Using 3D model data, <span style={friedStyle}>fried</span> and{' '}
-              <span style={unfriedStyle}>unfried</span> portions of potatoes were visualized as
-              nested circles:
+              <span style={unfriedStyle}>unfried</span> portions of fries were visualized as nested
+              circles:
             </p>
           </div>
           <div ref={five} style={headerStyle}>
-            The fry universe
+            The fried universe
             <p style={textStyle}>
               Visualizing <span style={friedStyle}>fried</span> vs{' '}
-              <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
-              are each <strong>unique</strong>.
+              <span style={unfriedStyle}>unfried</span> measurements across fry forms shows they are
+              each <strong>unique</strong>.
             </p>
           </div>
           <div ref={six} style={headerStyle}>
             The <span style={ratioStyle}>fried ratio</span>
             <p style={textStyle}>
-              To more easily compare <span style={friedStyle}>fried</span>-ness across potatoes, we
-              can compute the{' '}
+              To more easily compare <span style={friedStyle}>fried</span>-ness across fries, we can
+              compute the{' '}
               <span style={monospaceStyle}>
                 <span style={ratioStyle}>fried ratio</span> = (<span style={friedStyle}>fried</span>{' '}
                 / <span style={unfriedStyle}>unfried</span>)
@@ -182,7 +182,7 @@ export default function Title() {
             <p style={textStyle}>
               Plotting this <span style={ratioStyle}>fried ratio</span> = (
               <span style={friedStyle}>fried</span> / <span style={unfriedStyle}>unfried</span>)
-              along the <span style={ratioStyle}>x-axis</span> shows that potato forms are vastly
+              along the <span style={ratioStyle}>x-axis</span> shows that fry forms are vastly
               different. What's your favorite <span style={friedStyle}>fried</span> level?
             </p>
           </div>
@@ -193,7 +193,7 @@ export default function Title() {
         <div ref={eight} style={sharePageStyle}>
           The fry universe 🍟
           <p style={sharePageParagraphStyle}>
-            Know others who like potatoes?
+            Know others who like fries?
             <br />
             <TwitterLink /> <FacebookLink /> or copy{' '}
             <Copy size="2em" text="https://www.chris-williams.me/potatoes" /> to share.

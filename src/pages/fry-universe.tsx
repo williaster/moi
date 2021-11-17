@@ -25,7 +25,7 @@ const PotatoesPage = () => (
     <Page
       title="The fry universe 🍟"
       previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-fry-universe.png"
-      description="3D modeling of various potato forms reveals why you like some more than others."
+      description="3D modeling of various fry shapes reveals why you like some more than others."
       centerContent={false}
       showNav={false}
     >
