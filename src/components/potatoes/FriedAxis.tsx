@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { highlightColor, highlightColorDark } from './colors';
 import { useAxisPositioning } from './Layout';
 import Text from './Text';
+import getViewportWidth from './utils/getViewportWidth';
 
 const axisHeight = 0.015;
 const fontSize = 0.022;
@@ -13,15 +14,16 @@ const fontColor = highlightColorDark;
 export default function FriedAxis() {
   const { groupRef, axisRef, axisWidth } = useAxisPositioning();
   const viewport = useThree(state => state.viewport);
+  const viewportWidth = getViewportWidth(viewport.width, viewport.dpr);
   const triangleGeometry = useMemo(() => {
     const triangleShape = new THREE.Shape();
     triangleShape.moveTo(0, 0);
-    triangleShape.lineTo(viewport.width * axisWidth, 0);
-    triangleShape.lineTo(viewport.width * axisWidth, viewport.height * axisHeight);
+    triangleShape.lineTo(viewportWidth * axisWidth, 0);
+    triangleShape.lineTo(viewportWidth * axisWidth, viewport.height * axisHeight);
     triangleShape.lineTo(0, 0);
     return new THREE.ShapeGeometry(triangleShape);
-  }, [viewport.width, viewport.height]);
-  const scaledFontSize = fontSize * Math.min(viewport.width * 2, viewport.height);
+  }, [viewportWidth, viewport.height]);
+  const scaledFontSize = fontSize * Math.min(viewportWidth * 2, viewport.height);
   return (
     <group ref={groupRef}>
       <mesh ref={axisRef} geometry={triangleGeometry}>
@@ -36,7 +38,7 @@ export default function FriedAxis() {
           fontSize={scaledFontSize}
           anchorY="bottom"
           anchorX="right"
-          position={[viewport.width * axisWidth, 0, 0]}
+          position={[viewportWidth * axisWidth, 0, 0]}
         >
           More fried
         </Text>

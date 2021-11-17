@@ -3,6 +3,7 @@ import React from 'react';
 import * as colors from './colors';
 import { useLabelPositioning } from './Layout';
 import Text from './Text';
+import getViewportWidth from './utils/getViewportWidth';
 
 const fontSize = 0.05;
 
@@ -10,7 +11,8 @@ export default function Labels() {
   const { betterRef, worseRef, friedUnfriedRef } = useLabelPositioning();
   const viewport = useThree(state => state.viewport);
 
-  const scaledFontSize = fontSize * Math.min(viewport.height, viewport.width);
+  const scaledFontSize =
+    fontSize * Math.min(viewport.height, getViewportWidth(viewport.width, viewport.dpr));
   const scaledFontSizeSmall = scaledFontSize * 0.8;
   const scaledFontSizeSmaller = scaledFontSizeSmall * 0.8;
 

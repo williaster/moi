@@ -5,6 +5,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as model from './useModel';
 import * as colors from './colors';
 import getKeyframes from './utils/getKeyframes';
+import getViewportWidth from './utils/getViewportWidth';
 
 const coordsPerVertex = 3;
 const verticesPerFace = 3;
@@ -272,7 +273,8 @@ function MorphingPotato() {
 
   useFrame(({ viewport }) => {
     ref.current.scale.setScalar(
-      keyframes.scale(scroll.offset) * Math.min(viewport.width, viewport.height),
+      keyframes.scale(scroll.offset) *
+        Math.min(getViewportWidth(viewport.width, viewport.dpr), viewport.height),
     );
     opacityRef.current.value = keyframes.opacity(scroll.offset);
   });

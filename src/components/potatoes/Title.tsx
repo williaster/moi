@@ -5,6 +5,7 @@ import { textColorDark, textColor, highlightColor } from './colors';
 import { useFrame } from '@react-three/fiber';
 import Copy from '../Copy';
 import easingFunctions from './utils/easingFunctions';
+import getViewportWidth from './utils/getViewportWidth';
 
 const numPages = 8;
 const singlePageSize = 1 / numPages;
@@ -48,10 +49,9 @@ function useTitlePositioning(page: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8) {
 
     const tEased = isLastPage ? easingFunctions.easeInQuad(t) : easingFunctions.easeOutQuad(t);
     containerRef.current.style.opacity = `${tEased}`;
-    containerRef.current.style.transform = `translateY(${(1 - tEased) * sign * 15}vh)rotateX(${(1 -
-      tEased) *
+    containerRef.current.style.transform = `translateX(-50%)translateY(${(1 - tEased) *
       sign *
-      -90}deg)`;
+      15}vh)rotateX(${(1 - tEased) * sign * -90}deg)`;
   });
 
   return containerRef;
@@ -63,9 +63,10 @@ const headerStyle = {
   color: textColorDark,
   position: 'absolute',
   top: '0.6em',
-  left: '0.6em',
-  width: '80vw',
-  maxWidth: '600px',
+  left: '50%',
+  maxWidth: getViewportWidth(1000, 1) + 200,
+  margin: '0 auto',
+  width: '90%',
   lineHeight: '1.1em',
 } as const;
 
@@ -79,6 +80,15 @@ const emphasisStyle = {
   color: textColorDark,
   fontWeight: 700,
 };
+
+const sharePageStyle = {
+  ...headerStyle,
+  top: '15vh',
+  width: '70vw',
+  height: '11vh',
+};
+
+const sharePageParagraphStyle = { ...textStyle, lineHeight: '1.5em' };
 
 const friedStyle = emphasisStyle;
 const unfriedStyle = { ...emphasisStyle, color: textColor };
@@ -101,12 +111,21 @@ export default function Title() {
   return (
     <>
       <Html fullscreen style={htmlStyle}>
-        <div style={{ lineHeight: '1em', fontSize: '2vh' }}>
+        <div
+          style={{
+            lineHeight: '1em',
+            fontSize: '2vh',
+            width: '100%',
+          }}
+        >
           <div ref={one} style={headerStyle}>
-            Visualizing potatoes 🥔
+            The fry universe 🍟
             <p style={textStyle}>
-              3D modeling of potato forms enabled precise understanding of what differentiates them.
-              Scroll ⬇️&nbsp;&nbsp;to find out why you might like some more than others.
+              You probably like some types of potatoes more than others. 3D modeling of various fry
+              shapes helped illuminate why this might be.
+              <br />
+              <br />
+              <span style={friedStyle}>Scroll ⬇️ to find out</span>.
             </p>
           </div>
 
@@ -140,11 +159,11 @@ export default function Title() {
             </p>
           </div>
           <div ref={five} style={headerStyle}>
-            All potatoes
+            The fry universe
             <p style={textStyle}>
               Visualizing <span style={friedStyle}>fried</span> vs{' '}
               <span style={unfriedStyle}>unfried</span> measurements across potato forms shows they
-              are <strong>not all created equal</strong>.
+              are each <strong>unique</strong>.
             </p>
           </div>
           <div ref={six} style={headerStyle}>
@@ -170,19 +189,9 @@ export default function Title() {
       </Html>
 
       <Html center={false} transform={false}>
-        <div
-          ref={eight}
-          style={{
-            ...headerStyle,
-            fontSize: '6vmin',
-            left: '-35vw',
-            top: '15vh',
-            width: '70vw',
-            height: '11vh',
-          }}
-        >
-          Visualizing potatoes 🥔
-          <p style={{ ...textStyle, lineHeight: '1.5em' }}>
+        <div ref={eight} style={sharePageStyle}>
+          The fry universe 🍟
+          <p style={sharePageParagraphStyle}>
             Know others who like potatoes?
             <br />
             <TwitterLink /> <FacebookLink /> or copy{' '}
@@ -196,7 +205,7 @@ export default function Title() {
 
 const linkStyle = { verticalAlign: 'middle' };
 
-function TwitterLink({ size = '5vw' }) {
+function TwitterLink({ size = '5.5vw' }) {
   return (
     <a
       href="https://twitter.com/intent/tweet?url=https://www.chris-williams.me/potatoes&text="
@@ -222,7 +231,7 @@ function TwitterLink({ size = '5vw' }) {
   );
 }
 
-function FacebookLink({ size = '5vw' }) {
+function FacebookLink({ size = '6vw' }) {
   return (
     <a
       href="https://www.facebook.com/sharer/sharer.php?u=https://www.chris-williams.me/potatoes"

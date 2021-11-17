@@ -24,9 +24,9 @@ import MorphingPotato from '../components/potatoes/MorphingPotato';
 const PotatoesPage = () => (
   <>
     <Page
-      title="Visualizing potatoes 🥔"
+      title="The fry universe 🍟"
       previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-potatoes.png"
-      description="3D modeling of various potato forms enabled precise understanding of what differentiates them."
+      description="3D modeling of various potato forms reveals why you like some more than others."
       centerContent={false}
       showNav={false}
     >

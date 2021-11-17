@@ -6,6 +6,7 @@ import { useScroll } from '@react-three/drei';
 
 import potatoData from './potatoData';
 import getKeyframes from './utils/getKeyframes';
+import getViewportWidth from './utils/getViewportWidth';
 
 const numPotatoes = 7;
 const numPages = 8;
@@ -49,7 +50,7 @@ const keyframes = {
       0.3,
       0.26,
       0.5,
-    ]), // relative to viewport.width
+    ]), // relative to morphPosition
     positionXHighlight: getKeyframes([
       0,
       0.5,
@@ -59,7 +60,7 @@ const keyframes = {
       0.3,
       0.26,
       0.5,
-    ]), // relative to viewport.width
+    ]), // relative to morphPosition
     positionXRatio: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]), // relative to ratio scale
     scale: getKeyframes([
       1.7,
@@ -95,7 +96,7 @@ const keyframes = {
       0.7,
       0.41,
       0.5,
-    ]), // relative to viewport.width
+    ]), // relative to morphPosition
     scale: getKeyframes([
       0,
       0,
@@ -117,7 +118,7 @@ const keyframes = {
       0.7,
       0.41,
       0.5,
-    ]), // relative to viewport.width
+    ]), // relative to morphPosition
     scaleHighlight: getKeyframes([
       0,
       0,
@@ -132,22 +133,11 @@ const keyframes = {
   },
   line: {
     scaleX: getKeyframes([0, 0, 0, 0, 0, 1, 1, 1]),
-    positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41, 0.41]), // relative to viewport.width
+    positionX: getKeyframes([0.3, 0.3, 0.3, 0.41, 0.41, 0.41, 0.41, 0.41]),
   },
   label: {
-    scale: getKeyframes([0.024, 0, 0, 0.024, 0.024, 0.024, 0.024, 0]),
-    positionX: getKeyframes([
-      -0.075,
-      0.5,
-      -0.2,
-      -0.2,
-      { step: 0.19, ease: 'linear' },
-      0.19,
-      0.19,
-      0.19,
-    ]), // relative to viewport.width
-    positionY: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
-    rotateX: getKeyframes([-0.5, -0.5, -0.5, -0.5, 0, 0, 0, { step: -0.5, ease: 'easeOutQuad' }]), // relative to Math.PI
+    scale: getKeyframes([0.024, 0, 0, 0, 0.024, 0.024, 0.024, 0]),
+    positionX: getKeyframes([-0.075, 0, 0, 0.19, 0.19, 0.19, 0.19, 0.19]),
   },
 };
 
@@ -190,14 +180,15 @@ export function useLabelPositioning() {
   const friedUnfriedRef = useRef<THREE.Group>();
 
   const viewport = useThree(state => state.viewport);
+  const viewportWidth = getViewportWidth(viewport.width, viewport.dpr);
   const scroll = useScroll();
 
   useFrame(() => {
     // better
     betterRef.current.scale.setScalar(labelKeyFrames.scale.better(scroll.offset));
     betterRef.current.position.x =
-      -0.5 * viewport.width + // set to 0
-      labelKeyFrames.x.better(scroll.offset) * viewport.width;
+      -0.5 * viewportWidth + // set to 0
+      labelKeyFrames.x.better(scroll.offset) * viewportWidth;
 
     betterRef.current.position.y =
       0.5 * viewport.height -
@@ -207,8 +198,8 @@ export function useLabelPositioning() {
     // worse
     worseRef.current.scale.setScalar(labelKeyFrames.scale.worse(scroll.offset));
     worseRef.current.position.x =
-      -0.5 * viewport.width + // set to 0
-      labelKeyFrames.x.worse(scroll.offset) * viewport.width;
+      -0.5 * viewportWidth + // set to 0
+      labelKeyFrames.x.worse(scroll.offset) * viewportWidth;
 
     worseRef.current.position.y =
       0.5 * viewport.height -
@@ -217,8 +208,8 @@ export function useLabelPositioning() {
 
     // fried unfried
     friedUnfriedRef.current.position.x =
-      -0.5 * viewport.width + // set to 0
-      labelKeyFrames.x.friedUnfried(scroll.offset) * viewport.width;
+      -0.5 * viewportWidth + // set to 0
+      labelKeyFrames.x.friedUnfried(scroll.offset) * viewportWidth;
     friedUnfriedRef.current.position.y =
       0.5 * viewport.height -
       (1 - modelViewportVertical) * viewport.height -
@@ -242,6 +233,7 @@ export function useAxisPositioning() {
   const axisRef = useRef<THREE.Mesh>();
 
   const viewport = useThree(state => state.viewport);
+  const viewportWidth = getViewportWidth(viewport.width, viewport.dpr);
   const scroll = useScroll();
 
   useFrame(() => {
@@ -250,8 +242,8 @@ export function useAxisPositioning() {
       axisPositionY(scroll.offset) * titleViewportVertical * viewport.height; // offset text at top;
 
     groupRef.current.position.x =
-      -0.5 * viewport.width + // set to 0
-      keyframes.line.positionX(scroll.offset) * viewport.width;
+      -0.5 * viewportWidth + // set to 0
+      keyframes.line.positionX(scroll.offset) * viewportWidth;
 
     // groupRef.current.scale.y = axisOpacity(scroll.offset);
     groupRef.current.rotation.x = 0.5 * Math.PI * axisRotation(scroll.offset);
@@ -277,6 +269,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
   }>();
 
   const viewport = useThree(state => state.viewport);
+  const viewportWidth = getViewportWidth(viewport.width, viewport.dpr);
   const scroll = useScroll();
 
   // fried / unfried ratio scale
@@ -284,9 +277,9 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     () =>
       scaleLinear({
         domain: potatoFriedRatioExtent,
-        range: [0, viewport.width * axisWidth],
+        range: [0, viewportWidth * axisWidth],
       }),
-    [viewport.getCurrentViewport().width],
+    [viewportWidth],
   );
   // this is not meant to be visually accurate, but to spread potatoes
   // out across entire viewport hence log scale
@@ -298,10 +291,10 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
           -viewport.height * 0.65,
           // when width is small, top text overflows down
           // so we need to take up less space with the vis
-          viewport.width * viewport.dpr <= 350 ? viewport.height * -0.05 : 0,
+          viewportWidth * viewport.dpr <= 350 ? viewport.height * -0.05 : 0,
         ],
       }),
-    [viewport.width, viewport.height, viewport.dpr],
+    [viewportWidth, viewport.height, viewport.dpr],
   );
 
   const baseModelOffset = useMemo(
@@ -317,7 +310,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
   const potatoRatio = potatoData[potatoType].ratio;
 
   useFrame(({ clock }) => {
-    const viewportMin = Math.min(viewport.width, viewport.height * 0.8);
+    const viewportMin = Math.min(viewportWidth, viewport.height * 0.8);
 
     // group
     const groupRotationPosition =
@@ -325,14 +318,14 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
     const xPosition =
       keyframes.group.positionXZRotation(scroll.offset) *
-      viewport.width *
-      0.2 *
+      viewportWidth *
+      0.3 *
       (position / numPotatoes + 0.5) *
       Math.sin(groupRotationPosition);
 
     const zPosition =
       keyframes.group.positionXZRotation(scroll.offset) *
-      viewport.width *
+      viewportWidth *
       0.1 *
       Math.cos(groupRotationPosition);
 
@@ -351,7 +344,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     groupRef.current.scale.setScalar(scalar);
 
     groupRef.current.position.x =
-      keyframes.group.positionXZero(scroll.offset) * (-0.5 * viewport.width) + // set to 0
+      keyframes.group.positionXZero(scroll.offset) * (-0.5 * viewportWidth) + // set to 0
       xPosition;
 
     groupRef.current.position.z = zPosition + 5;
@@ -369,7 +362,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     // model
     modelRef.current.position.x =
       keyframes.model[shouldHighlight ? 'positionXHighlight' : 'positionX'](scroll.offset) *
-        viewport.width +
+        viewportWidth +
       keyframes.model.positionXRatio(scroll.offset) * ratioScaleX(potatoRatio);
 
     if (shouldHighlight) {
@@ -395,7 +388,7 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
     visRef.current.position.z = 25; // @TODO would distort vis with a perspective camera
     visRef.current.position.x =
       keyframes.vis[shouldHighlight ? 'positionXHighlight' : 'positionX'](scroll.offset) *
-        viewport.width +
+        viewportWidth +
       keyframes.vis.positionXRatio(scroll.offset) * ratioScaleX(potatoRatio);
 
     if (shouldHighlight) {
@@ -415,11 +408,11 @@ export function usePotatoPositioning(potatoType: keyof typeof potatoData) {
 
     // label
     labelRef.current.scale.setScalar(keyframes.label.scale(scroll.offset) * viewportMin);
-    labelRef.current.position.x = keyframes.label.positionX(scroll.offset) * viewport.width;
+    labelRef.current.position.x = keyframes.label.positionX(scroll.offset) * viewportWidth;
     labelRef.current.position.z = 2 * position;
 
     // lines
-    lineRef.current.position.x = keyframes.line.positionX(scroll.offset) * viewport.width;
+    lineRef.current.position.x = keyframes.line.positionX(scroll.offset) * viewportWidth;
     lineRef.current.scale.y = keyframes.line.scaleX(scroll.offset) ** 2;
   });
 

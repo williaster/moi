@@ -28,14 +28,12 @@ export default function Loader() {
 
   return active ? (
     <div style={styles.container}>
-      <div>
-        <div style={styles.title}>Visualizing potatoes 🥔</div>
-        <div style={styles.inner}>
-          <div style={{ ...styles.bar, transform: `scaleX(${progress / 100})` }}></div>
-          <span ref={progressSpanRef} style={styles.data}>
-            Loading
-          </span>
-        </div>
+      <div style={styles.title}>The fry universe 🍟</div>
+      <div style={styles.inner}>
+        <div style={{ ...styles.bar, transform: `scaleX(${progress / 100})` }}></div>
+        <span ref={progressSpanRef} style={styles.data}>
+          Loading
+        </span>
       </div>
     </div>
   ) : null;
@@ -49,13 +47,23 @@ const styles = {
     width: '100%',
     height: '100%',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
     color: colors.textColorDark,
   },
+  title: {
+    textAlign: 'center',
+    fontSize: '2em',
+    fontWeight: 'bold',
+    width: '100%',
+    marginTop: '-2em',
+    marginBottom: '1em',
+  },
   inner: {
-    width: 200,
+    width: '80%',
+    maxWidth: 200,
     height: 4,
     background: colors.textColorDark,
     textAlign: 'center',
@@ -71,18 +79,8 @@ const styles = {
     display: 'inline-block',
     position: 'relative',
     fontVariantNumeric: 'tabular-nums',
-    marginTop: '0.3em',
-    fontSize: '1.5vh',
+    marginTop: '0.3vh',
+    fontSize: '0.6em',
     whiteSpace: 'nowrap',
-  },
-  title: {
-    position: 'absolute',
-    left: '50%',
-    top: '43%',
-    transform: 'translateX(-50%)',
-    fontSize: '6vmin',
-    lineHeight: '1em',
-    fontWeight: 'bold',
-    width: 'fit-content',
   },
 } as const;
