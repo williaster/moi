@@ -92,7 +92,7 @@ const potatoProps = {
 
 function Scene() {
   return (
-    <ScrollControls damping={20} pages={8}>
+    <ScrollControls damping={10} pages={8}>
       <Title />
       <FriedAxis />
       <Labels />
