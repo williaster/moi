@@ -24,8 +24,9 @@ const PotatoesPage = () => (
   <>
     <Page
       title="The fry universe 🍟"
-      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-fry-universe.png"
       description="3D modeling of various fry shapes reveals why you like some more than others."
+      previewImgUrl="https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview-fry-universe.png"
+      previewImgDescription="Image of the fry universe orbiting"
       centerContent={false}
       showNav={false}
     >
@@ -59,7 +60,6 @@ const PotatoesPage = () => (
       }
       p {
         margin-top: 0.6em;
-        margin-bottom: 0.5em;
       }
       .page {
         padding: 0;
@@ -71,6 +71,7 @@ const PotatoesPage = () => (
         top: 0;
         left: 0;
         overflow: hidden;
+        z-index: 10;
       }
       .stats {
         top: initial !important;
@@ -91,7 +92,7 @@ const potatoProps = {
 
 function Scene() {
   return (
-    <ScrollControls damping={3} pages={8}>
+    <ScrollControls damping={20} pages={8}>
       <Title />
       <FriedAxis />
       <Labels />

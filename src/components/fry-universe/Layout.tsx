@@ -157,10 +157,16 @@ const labelKeyFrames = {
   scale: {
     better: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
     worse: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
-    friedUnfried: getKeyframes(
-      [0, 0, 1, 1, { step: 0, ease: 'easeInOutQuint' }, 0, 0, 0],
-      'easeInOutCubic',
-    ),
+    friedUnfried: getKeyframes([
+      0,
+      0,
+      { step: 1, ease: 'easeInCubic' },
+      1,
+      { step: 0, ease: 'easeInOutQuint' },
+      0,
+      0,
+      0,
+    ]),
   },
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
@@ -170,7 +176,10 @@ const labelKeyFrames = {
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([-0.02, -0.02, -0.02, -0.02, 0, 0, 0, 0], 'easeInCubic'),
+    friedUnfried: getKeyframes(
+      [-0.02, -0.02, -0.02, -0.02, -0.02, -0.02, -0.02, -0.02],
+      'easeInCubic',
+    ),
   },
 };
 export function useLabelPositioning() {

@@ -13,6 +13,7 @@ if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
 const Meta = ({
   title = 'chris williams',
   previewImgUrl = 'https://raw.githubusercontent.com/williaster/moi/gh-pages/static/site-preview.png',
+  previewImgDescription = 'chris williams logo is a collection of circles',
   description = 'a portfolio website for chris williams',
 }) => (
   <div>
@@ -26,19 +27,15 @@ const Meta = ({
       <meta property="og:image" content={previewImgUrl} />
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:secure_url" content={previewImgUrl} />
-      <meta
-        property="og:image:alt"
-        content="a collection of expressive, low-level visualization primitives for React"
-      />
       <meta property="og:url" content="https://williaster.github.io/moi/" />
       <meta property="og:description" content={description} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@williaster" />
       <meta name="twitter:creator" content="@williaster" />
-      <meta name="twitter:title" content="chris williams" />
+      <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={previewImgUrl} />
-      <meta name="twitter:image:alt" content="chris williams logo is a collection of circles" />
+      <meta name="twitter:image:alt" content={previewImgDescription} />
       <title>{title}</title>
       <link rel="shortcut icon" type="image/png" href={getStaticUrl('/static/favicon.png')} />
     </Head>
