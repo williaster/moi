@@ -46,8 +46,8 @@ const keyframes = {
       0.5,
       0.5,
       0.5,
-      { steps: [0.5, 0.3], ease: 'easeInCubic' },
-      0.3,
+      { steps: [0.5, 0.26], ease: 'easeInCubic' },
+      0.26,
       0.26,
       0.5,
     ]), // relative to morphPosition
@@ -55,9 +55,9 @@ const keyframes = {
       0,
       0.5,
       0.5,
-      { step: 0.3, ease: 'easeInCubic' },
-      0.3,
-      0.3,
+      { step: 0.26, ease: 'easeInCubic' },
+      0.26,
+      0.26,
       0.26,
       0.5,
     ]), // relative to morphPosition
@@ -152,7 +152,6 @@ const order: (keyof typeof potatoData)[] = [
   'potato',
 ];
 
-// @TODO new file
 const labelKeyFrames = {
   scale: {
     better: getKeyframes([0, 1, 0, 0, 0, 0, 0, 0], 'easeInOutCubic'),
@@ -162,23 +161,32 @@ const labelKeyFrames = {
       0,
       { step: 1, ease: 'easeInCubic' },
       1,
-      { step: 0, ease: 'easeInOutQuint' },
-      0,
-      0,
+      { step: 0.6, ease: 'easeOutQuint' },
+      0.6,
+      0.6,
       0,
     ]),
   },
   x: {
     better: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.5, 0.5, 0, 0, 0, 0, 0]),
-    friedUnfried: getKeyframes([0.47, 0.47, 0.47, 0.47, 0.47, 0.47, 0.47, 0.47]),
+    friedUnfried: getKeyframes([
+      0.47,
+      0.47,
+      0.47,
+      0.47,
+      { step: 0.25, ease: 'easeInQuint' },
+      0.25,
+      0.25,
+      0.25,
+    ]),
   },
   y: {
     better: getKeyframes([0, 0, 0, 0, 0, 0, 0, 0]),
     worse: getKeyframes([0.5, 0.39, 0.39, 0, 0, 0, 0, 0]),
     friedUnfried: getKeyframes(
-      [-0.02, -0.02, -0.02, -0.02, -0.02, -0.02, -0.02, -0.02],
-      'easeInCubic',
+      [-0.02, -0.02, -0.02, -0.02, -0.07, -0.07, -0.07, -0.07],
+      'easeOutQuint',
     ),
   },
 };

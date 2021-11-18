@@ -97,8 +97,8 @@ const titleStylesBottom = {
   outer: {
     ...titleStyles.outer,
     padding: 0,
-    top: '13vh', // note: linked to ease func for last page (determines how far it gets)
-    left: '-43vw',
+    top: '20vh', // note: linked to ease func for last page (determines how far it gets)
+    left: '-45vw',
     width: '90vw',
     textAlign: 'center',
   },
