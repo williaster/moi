@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import ReactGA from 'react-ga';
-import { linearGradient, linearGradientBlue } from '../theme';
+import { linearGradient, linearGradientBlue, colors } from '../theme';
 import getStaticUrl from '../utils/getStaticUrl';
 
 if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
@@ -138,10 +138,7 @@ const Meta = ({
       }
 
       a {
-        color: transparent;
-        background: ${linearGradientBlue};
-        background-clip: text;
-        -webkit-background-clip: text;
+        color: ${colors[3]};
         font-weight: 600;
         text-decoration: none;
       }

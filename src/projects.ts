@@ -2,6 +2,16 @@ import { Project } from './types';
 
 const projects: Project[] = [
   {
+    title: 'Fry universe',
+    subtitle:
+      '3D modeling and data vis were used to explore why you prefer some fry shapes to others.',
+    tags: ['personal', '3D', 'data vis'],
+    thumbnailUrl: '/static/images/fry-universe/site-preview.png',
+    href: 'projects/fry-universe',
+    dates: ['2021-12-01'],
+  },
+
+  {
     title: 'visx',
     subtitle:
       'visx is a collection of reusable low-level visualization components for React. visx combines the power of d3 to generate your visualization with the benefits of react for updating the DOM.',
@@ -17,7 +27,7 @@ const projects: Project[] = [
     subtitle:
       'A visual product for exploring the Airbnb company, both team hierarchies and their functional composition.',
     dates: ['2019-09-01', '2020-03-01'],
-    tags: ['color', 'data vis', 'web', 'tool'],
+    tags: ['data vis', 'web', 'tool'],
     href: 'projects/airbnb-org-chart',
     thumbnailUrl: '/static/images/org-chart/donut-circle-pack.png',
     employer: 'Airbnb',
@@ -48,7 +58,7 @@ const projects: Project[] = [
     title: 'Airbnb visualization colors',
     subtitle: 'The first Airbnb color palette designed specifically for data visualization.',
     dates: ['2019-06-01', '2019-09-01'],
-    tags: ['data vis', 'color'],
+    tags: ['data vis'],
     roles: ['design'],
     href: 'projects/airbnb-color-palette',
     thumbnailUrl: '/static/images/airbnb-color-palette/categorical-palette.png',
@@ -60,7 +70,7 @@ const projects: Project[] = [
     subtitle:
       'Product to facilitate improve reliability, coverage, and precision of Airbnb geo definitions worldwide.',
     dates: ['2018-03-01', '2018-06-01'],
-    tags: ['data vis', 'color', 'maps', 'tool', 'web'],
+    tags: ['data vis', 'maps', 'tool', 'web'],
     roles: ['engineering', 'design', 'visualization', 'product'],
     href: 'projects/geo-explorer',
     thumbnailUrl: '/static/images/geo-explorer/geo-explorer.png',
@@ -81,7 +91,7 @@ const projects: Project[] = [
   {
     title: '10 years of Airbnb pin map',
     subtitle: 'An interactive physical visualization presenting 10 years of Airbnb growth.',
-    tags: ['physical', 'maps', 'color', 'data vis'],
+    tags: ['maps', 'data vis'],
     thumbnailUrl: '/static/images/pin-map/pins-far.png',
     employer: 'Airbnb',
     href: 'projects/pin-map',
@@ -101,7 +111,7 @@ const projects: Project[] = [
   {
     title: 'Polka dot bike design',
     subtitle: 'Custom personal road bike paint job design',
-    tags: ['color', 'physical', 'personal'],
+    tags: ['personal'],
     thumbnailUrl: '/static/images/bike/figma.png',
     href: 'projects/bike',
     dates: ['2018'],
