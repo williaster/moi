@@ -103,11 +103,11 @@ function FraudTrace() {
           <div className="flex">
             <ProjectImage
               src="/static/images/fry-universe/toon-shading.png"
-              imageStyles={{ width: '75%', height: '75%', marginRight: 8 }}
+              imageStyles={{ width: '75%', height: '75%', marginRight: 8, minWidth: 'unset' }}
             />
             <ProjectImage
               src="/static/images/fry-universe/toon-shading-2.gif"
-              imageStyles={{ width: '25%', height: 'auto' }}
+              imageStyles={{ width: '25%', height: 'auto', minWidth: 'unset' }}
             />
           </div>
           A second visual effect I invested time in was transitioning fry models. I applied this to
@@ -117,11 +117,11 @@ function FraudTrace() {
           <div className="flex">
             <ProjectImage
               src="/static/images/fry-universe/morph-fry.gif"
-              imageStyles={{ width: '50%', height: '50%', marginRight: 8 }}
+              imageStyles={{ width: '50%', height: '50%', marginRight: 8, minWidth: 'unset' }}
             />
             <ProjectImage
               src="/static/images/fry-universe/morph-fry-2.gif"
-              imageStyles={{ width: '50%', height: '50%' }}
+              imageStyles={{ width: '50%', height: '50%', minWidth: 'unset' }}
             />
           </div>
           <p>
