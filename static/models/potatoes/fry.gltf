@@ -1,0 +1,100 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "straight.export"
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.005",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 70,
+            "max" : [
+                0.7428523898124695,
+                5.8979010581970215,
+                0.48837810754776
+            ],
+            "min" : [
+                -0.5913440585136414,
+                -5.984588623046875,
+                -1.359368085861206
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 70,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 70,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 318,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 840,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 840,
+            "byteOffset" : 840
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 560,
+            "byteOffset" : 1680
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 636,
+            "byteOffset" : 2240
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 2876,
+            "uri" : "data:application/octet-stream;base64,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0kFbP/bjGD9Mek4/3YJ2P66iUD89fnc/xClZP4KZbz9MF0w/J1odP4BXTD+1PSA/XEtLPzd8bT8NZ00/5A5tP4CSZj8Cpyk/RoQ1PxNKJT82xmg/y+EfP9q3Mz+NHTA/8iNpP0uTKj9wC2c/tQI6P4KXMj/5Vjs/Li5pP8R8NT+05DE/F9pGP5Y8aj/VtkA/kHlnP/eWUD9OnTE/BrVSP7gHaj/gs0w/aO4xP5wWXz+WPGo/BZhYP5oGND/ZC2s/wi1pPwfcZD82PmY/2ttnPyjYQD/nfXA/3A5BP32JZT/5X0A/H79aP1VJPT/cVmA/sq9AP8pZTz+OYj0/UhVOP3IsQT8jCEQ/KNc9P0E8Qz/Y00E/j/Q4P36RPj82cTg/yJhCP91/Lj/2jD8/LQ0uPzKfQz/d5SE/SoJLP3f5Yz/0j08/JAxbP4QtTD/NyFk/3+tMPz/RTj+4MVA/XY9EP+H7TD+d50M/+olNPxHtOD9SoVA/lOotP4yyTT9LPy4/iaZOPw01Hj+kBV0/oeVYP3qMXT+OmkI/rLRaPwWONT8aDl0/esUsP/xLWj+B+Cg/nHhcPwzcIT8qADYAOAALABUANgAzAD4AFAAxADwAPgAvADsAPAAtADkAOwArADgAOQAJADUAEwAJABMAAAApAAoACwATABQAPwAQABUACgAQAAoABABDAEQAQgAVAAsACgAOAAIAAAAEABEAEAAXABsAGQAUADUAMwA+ADMAMQA8ADEALwA7AC8ALQA5AC0AKwA4ACsAKgA2ACoACwAXAAMADwAXAA8ARQAYABoANAAmAAYAKQA6ADkANwAaAB0AMgAdAB8AMAAfACIALgAiACQALAAkACYALAA9ADwAOgA9ADoAQgA/AD0ARAA6ADcAQAA6AEAAQQAcABcAQwAgAB4AHABDAEIAQQBDAEEAHABFAEMAFwAhACAAHAAhABwAQQAoACUAIQAoACEAQAAsACkACwAsAAsAKgAuACwAKwAuACsALQAqACsALAAwAC4ALQAwAC0ALwAyADAALwAyAC8AMQA0ADIAMQA0ADEAMwAzADUACQAzAAkANAANAEQARQAIACcAKAAIACgABQAHAAQACgAHAAoAKQAjACAAIQAMAA4AEwAMABMAPwAWABUAEAAWABAAEQAeABsAFwAeABcAHABFAA8ADQADABcAGQAlACMAIQAnACUAKAA2ABUAFgA4ADYANwA5ADgANwA7ADkAOgA8ADsAOgA+ADwAPQAFACgAEgA3ADYAFgAUAD4APQAUAD0APwAoAEAAEgBDAEUARABEAA0APwBCAEQAPQA0AAkAGAAyADQAGgAwADIAHQAuADAAHwAsAC4AIgApACwAJgABABgACQAUABMANQACAAkAAAAOAAAAEwAhAEEAQAAWABIAQAAWAEAANwBCADoAQQA="
+        }
+    ]
+}
