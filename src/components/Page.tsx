@@ -15,19 +15,30 @@ const Page = ({
   children,
   title,
   className,
+  description,
   showNav = true,
   padding = true,
+  previewImgUrl,
+  previewImgDescription,
   centerContent = false,
 }: {
   children: React.ReactNode;
+  description?: string;
   title?: string;
   className?: string | boolean;
   showNav?: boolean;
   padding?: boolean;
+  previewImgUrl?: string;
+  previewImgDescription?: string;
   centerContent?: boolean;
 }) => (
   <div className={cx('main', className)}>
-    <Meta title={title} />
+    <Meta
+      title={title}
+      description={description}
+      previewImgUrl={previewImgUrl}
+      previewImgDescription={previewImgDescription}
+    />
     {showNav && (
       <div className="nav-container">
         <Nav />

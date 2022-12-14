@@ -30,6 +30,9 @@ const NavItem = ({ id, href, children, className, external }: NavItemProps) => (
         padding: 16px 0;
         text-decoration: none;
         font-size: 18px;
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
         background-image: ${linearGradientRed};
       }
       .nav-item {

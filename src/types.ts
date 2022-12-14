@@ -1,11 +1,10 @@
 export type ProjectTag =
+  | '3D'
   | 'data vis'
   | 'open-source'
   | 'web'
   | 'tool'
   | 'library'
-  | 'color'
-  | 'physical'
   | 'maps'
   | 'personal'
   | 'biology'
