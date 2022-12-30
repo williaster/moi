@@ -8,6 +8,7 @@ import CocktailScene from '../components/cocktails/CocktailScene';
 export default function CocktailPage() {
   const stats = typeof window !== 'undefined' && window.location.search.includes('stats');
   const orbit = typeof window !== 'undefined' && window.location.search.includes('orbit');
+  const axis = typeof window !== 'undefined' && window.location.search.includes('axis');
   return (
     <>
       <Page
@@ -31,7 +32,8 @@ export default function CocktailPage() {
             <directionalLight intensity={0.5} />
 
             {stats && <Stats className="stats" />}
-            {orbit && <OrbitControls />}
+            {orbit && <OrbitControls enableRotate={false} />}
+            {axis && <axisHelper />}
           </Canvas>
         </div>
       </Page>

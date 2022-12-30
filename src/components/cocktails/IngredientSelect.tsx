@@ -33,13 +33,10 @@ export default function IngredientSelect({ ingredients }: IngredientSelectProps)
     <MultiDownshift itemToString={item => item?.id} onChange={onChange}>
       {({
         getInputProps,
-        getToggleButtonProps,
+        // getToggleButtonProps,
         getMenuProps,
-        // note that the getRemoveButtonProps prop getter and the removeItem
-        // action are coming from MultiDownshift composibility for the win!
         getRemoveButtonProps,
         removeItem,
-
         isOpen,
         inputValue,
         selectedItems,

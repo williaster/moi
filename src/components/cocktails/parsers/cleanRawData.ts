@@ -24,11 +24,22 @@ export default function cleanRawData(rawData: RawData): RawData {
             /aperitif \((.*)\)/,
             '$1', // aperitif (salers gentian) => salers gentian
           ),
-        category: ingredient.ingredient.match(/lemon|lime|grapefruit|orange/)
-          ? 'citrus'
-          : ingredient.ingredient.match(/bitters/gi)
+        category: ingredient.ingredient.match(/bitters/gi)
           ? 'bitters'
+          : ingredient.ingredient.match(/lemon|lime|grapefruit|orange/)
+          ? 'citrus'
+          : ingredient.ingredient.match(/vermouth/gi)
+          ? 'liqueur'
           : ingredient.category,
+        quantity:
+          ingredient.quantity *
+          (ingredient.simple_ingredient === 'mint'
+            ? 0.25
+            : ingredient.simple_ingredient === 'vegetable'
+            ? 0.1
+            : ingredient.simple_ingredient === 'spice'
+            ? 0.25
+            : 1),
       };
     });
 

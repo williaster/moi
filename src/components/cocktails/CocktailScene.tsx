@@ -20,6 +20,7 @@ import getIngredientPack from './parsers/getIngredientPack';
 import IngredientPack from './IngredientPack';
 import CocktailPack from './CocktailPack';
 import IngredientIcicle from './IngredientIcicle';
+import RadialCocktails from './RadialCocktails';
 
 export default function CocktailScene() {
   const {
@@ -45,7 +46,7 @@ export default function CocktailScene() {
   // @TODO filter by selected ingredients
   const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
 
-  const lookup = useMemo(() => hierarchy && getCocktailLookup(hierarchy), [hierarchy]);
+  const lookup = useMemo(() => pack && getCocktailLookup(pack), [pack]);
   const distance = useMemo(() => hierarchy && getCocktailEditDistance(hierarchy), [hierarchy]);
 
   const ingredientPack = useMemo(
@@ -80,7 +81,7 @@ export default function CocktailScene() {
       )}
       {data && (
         <Html
-          calculatePosition={(_, __, { width: w }) => [w - 560, 0, 0]}
+          calculatePosition={() => [0, 0, 0]}
           style={{
             transform: 'translate(16px, 16px)',
             background: `${background}cc`,
@@ -94,8 +95,9 @@ export default function CocktailScene() {
           <IngredientSelect ingredients={ingredients} />
         </Html>
       )}
-      {data && <CocktailPack {...parsedData} />}
-      {ingredientHierarchy && <IngredientIcicle hierarchy={ingredientHierarchy} />}
+      {/* {data && <CocktailPack {...parsedData} />} */}
+      {pack && lookup && <RadialCocktails pack={pack} lookup={lookup} />}
+      {/* {ingredientHierarchy && <IngredientIcicle hierarchy={ingredientHierarchy} />} */}
       {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
     </>
   );

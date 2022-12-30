@@ -28,6 +28,11 @@ export interface CocktailRawHierarchy {
   type: 'cocktail';
   name: string;
   value: number;
+  balance: {
+    acid: number;
+    sweet: number;
+    alcohol: number;
+  };
   children: IngredientChild[];
 }
 
