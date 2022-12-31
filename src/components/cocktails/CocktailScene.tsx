@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import Text from '../fry-universe/Text';
 import getStaticUrl from '../../utils/getStaticUrl';
 import useData from '../../hooks/useData';
-import { background, blue, ingredientColorScale, text } from './colors';
+import { background, blue, categoryColorScale, ingredientColorScale, text } from './colors';
 import IngredientSelect from './IngredientSelect';
 import useStore from './appStore';
 import cleanRawData from './parsers/cleanRawData';
@@ -37,11 +37,20 @@ export default function CocktailScene() {
   });
 
   const hierarchy = useMemo(() => data && getCocktailHierarchy(data), [data]);
-  const pack = useMemo(() => hierarchy && getCocktailPack(hierarchy, size, selectedIngredients), [
-    hierarchy,
-    size,
-    selectedIngredients,
-  ]);
+  const pack = useMemo(() => {
+    if (!hierarchy) return hierarchy;
+    const unfilteredPack = getCocktailPack(hierarchy, size, []);
+    if (selectedIngredients) {
+      unfilteredPack.children = unfilteredPack.children.filter(cocktail =>
+        selectedIngredients.every(filterIngredient =>
+          cocktail.data.children.some(
+            ingredient => ingredient.simple_ingredient === filterIngredient,
+          ),
+        ),
+      );
+    }
+    return unfilteredPack;
+  }, [hierarchy, size, selectedIngredients]);
 
   // @TODO filter by selected ingredients
   const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
@@ -91,7 +100,17 @@ export default function CocktailScene() {
             padding: '16px 16px',
           }}
         >
-          <h2 style={{ color: text, padding: 0, margin: 0, marginBottom: 4 }}>Cocktails</h2>
+          <h2
+            style={{
+              // color: text,
+              padding: 0,
+              margin: 0,
+              marginBottom: 4,
+              color: categoryColorScale('alcohol'),
+            }}
+          >
+            Cocktails
+          </h2>
           <IngredientSelect ingredients={ingredients} />
         </Html>
       )}

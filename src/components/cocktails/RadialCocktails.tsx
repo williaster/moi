@@ -33,7 +33,13 @@ const AXIS_ANGLES = {
   acid: 0.33 * TWO_PI + AXIS_ROTATION,
   sweet: 0.667 * TWO_PI + AXIS_ROTATION,
 };
+const AXIS_LABEL = {
+  alcohol: 'alcoholic',
+  acid: 'citrus-y',
+  sweet: 'sweet',
+};
 const AXES = Object.keys(AXIS_ANGLES);
+const RADIUS_MULTIPLE = 1.5;
 
 export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) {
   const {
@@ -41,7 +47,7 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
   } = useThree();
 
   const size = Math.min(width, height);
-  const radius = size;
+  const radius = 2 * size;
   const layoutInProgress = useRef(false);
 
   const cocktailXY = useMemo(() => {
@@ -59,18 +65,18 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
 
     // compute extent of each axis
     const axisExtents: Record<keyof typeof AXIS_ANGLES, [number, number]> = {
-      alcohol: [Infinity, -Infinity],
-      acid: [Infinity, -Infinity],
-      sweet: [Infinity, -Infinity],
+      alcohol: [0, 1], //[Infinity, -Infinity],
+      acid: [0, 1], //[Infinity, -Infinity],
+      sweet: [0, 1], //[Infinity, -Infinity],
     };
 
-    pack.children.forEach(cocktail => {
-      AXES.forEach(axis => {
-        const value = cocktail.data.balance[axis];
-        axisExtents[axis][0] = Math.min(axisExtents[axis][0], value);
-        axisExtents[axis][1] = Math.max(axisExtents[axis][1], value);
-      });
-    });
+    // pack.children.forEach(cocktail => {
+    //   AXES.forEach(axis => {
+    //     const value = cocktail.data.balance[axis];
+    //     axisExtents[axis][0] = Math.min(axisExtents[axis][0], value);
+    //     axisExtents[axis][1] = Math.max(axisExtents[axis][1], value);
+    //   });
+    // });
 
     pack.children.forEach(cocktail => {
       const axisCoords: AxisCoord[] = [];
@@ -106,7 +112,7 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
     // visual markers
     AXES.forEach(axis => {
       result[axis] = {
-        cocktail: `${axis}`,
+        cocktail: AXIS_LABEL[axis],
         color: 'white',
         isMarker: true,
         coords: [],
@@ -130,7 +136,7 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
         'radius',
         forceCollide().radius(d => {
           const r = lookup?.[d?.cocktail]?.r ?? 0;
-          return r * 1.1;
+          return r * (RADIUS_MULTIPLE * 1.1);
         }),
       )
       .force(
@@ -145,6 +151,8 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
     return simulation;
   }, [cocktailXY]);
 
+  // const [, forceUpdate] = useState(0);
+
   useFrame(() => {
     if (layoutInProgress.current && layout.alpha() >= layout.alphaMin()) {
       layout.tick(10);
@@ -152,11 +160,20 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
       //   console.log('update');
     } else if (layoutInProgress.current) {
       layoutInProgress.current = false;
+      // forceUpdate(Math.random());
     }
   });
 
   return (
     <>
+      {AXES.map(axis => (
+        <Line
+          key={axis}
+          start={[0, 0, 0]}
+          end={[radius * Math.cos(AXIS_ANGLES[axis]), radius * -Math.sin(AXIS_ANGLES[axis]), 0]}
+        />
+      ))}
+
       {layout.nodes().map(d => {
         const { cocktail: name, color } = d;
         const cocktail = lookup[name];
@@ -179,8 +196,9 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
                 distanceFactor={20}
                 style={{
                   pointerEvents: 'none',
+                  whiteSpace: 'nowrap',
                   color: categoryColorScale(d.cocktail),
-                  background: 'rgba(255,255,255,0.5)',
+                  background: d.cocktail === 'sweet' ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.5)',
                 }}
               >
                 {name}
@@ -194,10 +212,25 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
             // r={cocktail.r / size}
             // position={[d.x / size, d.y / size, 0]}
             color={color}
+            ingredients //={!layoutInProgress.current}
           />
         );
       })}
     </>
+  );
+}
+
+function Line({ start, end, color = 'darkgreen' }) {
+  const ref = useRef<THREE.Line>();
+  useEffect(() => {
+    ref.current.geometry.setFromPoints([start, end].map(point => new THREE.Vector3(...point)));
+  }, [start, end]);
+
+  return (
+    <line ref={ref}>
+      <bufferGeometry />
+      <lineBasicMaterial color={color} />
+    </line>
   );
 }
 
@@ -207,6 +240,7 @@ interface CocktailProps {
   //   position: [number, number, number];
   layout: { x: number; y: number };
   color?: string;
+  ingredients?: boolean;
 }
 
 const hoverScale = 5;
@@ -216,6 +250,7 @@ function Cocktail({
   layout,
   // passed color
   color,
+  ingredients,
 }: CocktailProps) {
   const {
     size: { width, height },
@@ -223,7 +258,7 @@ function Cocktail({
   //   const color = '#fff';
   const groupRef = useRef<THREE.Group>();
   const [isHovered, setIsHovered] = useState(false);
-  const multiplier = 1;
+  const multiplier = RADIUS_MULTIPLE;
   const size = Math.min(width, height);
   const r = cocktail.r / size;
   const positionVec3 = useMemo(() => new THREE.Vector3(), []);
@@ -245,6 +280,7 @@ function Cocktail({
         Math.abs(currPosition.x - layout.x) > 0.01 ||
         Math.abs(currPosition.y - layout.y) > 0.01
       ) {
+        positionVec3.setZ(0);
         positionVec3.setX(layout.x / size);
         positionVec3.setY(layout.y / size);
         currPosition.lerp(positionVec3, 0.1);
@@ -253,6 +289,8 @@ function Cocktail({
       const currScale = groupRef.current.scale;
       if (Math.abs(currScale.x - nextScale.x) > 0.01) {
         currScale.lerp(nextScale, 0.2);
+        positionVec3.setZ(2 * r);
+        currPosition.lerp(positionVec3, 0.1);
       }
     }
   });
@@ -269,11 +307,11 @@ function Cocktail({
           console.log(cocktail);
         }}
       >
-        <sphereGeometry args={[r * multiplier, 15, 30]} />
+        <sphereGeometry args={[r * multiplier, 8, isHovered ? 30 : 10]} />
         <meshBasicMaterial
-          color={isHovered ? 'white' : color}
+          color={color}
           transparent
-          opacity={isHovered ? 0.7 : 1}
+          opacity={isHovered ? 0.7 : 0.5}
           side={THREE.BackSide}
         />
 
@@ -282,8 +320,10 @@ function Cocktail({
             distanceFactor={10}
             style={{
               pointerEvents: 'none',
-              transform: `translate(-50%, -${hoverScale * r * size}px)`, // @TODO not perfect but r not good
+              transform: `translate(-50%, -${hoverScale * multiplier * r * size}px)`, // @TODO not perfect but r not good
               whiteSpace: 'nowrap',
+              color: '#222',
+              background: 'rgba(255,255,255,0.5)',
             }}
           >
             {cocktail.data.name}
@@ -291,24 +331,25 @@ function Cocktail({
         )}
       </mesh>
 
-      {cocktail.children.map(ingredient => (
-        <Ingredient
-          key={ingredient.data.verbose_ingredient}
-          ingredient={ingredient}
-          r={(multiplier * ingredient.r) / size}
-          position={[
-            (multiplier * (ingredient.x - ingredient.parent.x)) / size,
-            (multiplier * (ingredient.y - ingredient.parent.y)) / size,
-            0,
-          ]}
-          showLabel={isHovered}
-          color={
-            false
-              ? ingredientColorScale(ingredient.data.simple_ingredient)
-              : categoryColorScale(ingredient.data.category)
-          }
-        />
-      ))}
+      {ingredients &&
+        cocktail.children.map(ingredient => (
+          <Ingredient
+            key={ingredient.data.verbose_ingredient}
+            ingredient={ingredient}
+            r={(multiplier * ingredient.r) / size}
+            position={[
+              (multiplier * (ingredient.x - ingredient.parent.x)) / size,
+              (multiplier * (ingredient.y - ingredient.parent.y)) / size,
+              0,
+            ]}
+            showLabel={isHovered}
+            color={
+              false
+                ? ingredientColorScale(ingredient.data.simple_ingredient)
+                : categoryColorScale(ingredient.data.category)
+            }
+          />
+        ))}
     </group>
   );
 }
@@ -327,9 +368,10 @@ function Ingredient({
 }) {
   return (
     <mesh {...meshProps}>
-      <sphereGeometry args={[r, 15, 20]} />
+      <sphereGeometry args={[r, 10, 20]} />
       {/* <meshBasicMaterial color={color} /> */}
-      <meshPhongMaterial transparent opacity={0.7} shininess={100} color={color} />
+      <meshPhongMaterial shininess={100} color={color} />
+
       {showLabel && (
         <Html
           center

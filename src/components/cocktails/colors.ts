@@ -1,6 +1,5 @@
 import { scaleOrdinal } from '@visx/scale';
 
-export const background = '#ccc'; //'#87A9D4';
 export const text = '#fff';
 export const purple = '#9D7EE3';
 export const blue = '#6497D7';
@@ -109,10 +108,95 @@ export const ingredientColorScale = scaleOrdinal({
 // const sweet = '#EC9B3B';
 // const acid = '#F7D716';
 
-const alcohol = orange;
-const liqueur = yellow;
-const sweet = purple;
-const acid = '#F7D716';
+// const alcohol = orange;
+// const liqueur = yellow;
+// const sweet = purple;
+// const acid = '#F7D716';
+
+// good! red/white/blue
+// export const background = '#9ED2F7'; //'#87A9D4';
+// const alcohol = '#EB455F';
+// const liqueur = '#58508d';
+// const sweet = '#2B3467';
+// const acid = '#F1F7B5';
+
+// mint
+export const background = '#C7FDF8'; //'#87A9D4';
+const alcohol = '#2C786B'; // '#116058';
+const liqueur = '#2ABDA2';
+const sweet = '#F7D716';
+const acid = '#FF4A4A';
+
+// export const background = '#9ED2F7'; //'#87A9D4';
+// const alcohol = '#287ADA'; // '#116058';
+// const liqueur = '#ff6361';
+// const sweet = '#FF4A4A';
+// const acid = '#9ED2F7';
+
+// export const background = '#eaeaea'; //'#87A9D4';
+// const alcohol = '#1C54A8';
+// const liqueur = '#287ADA';
+// const sweet = '#9ED2F7';
+// const acid = '#FF4A4A';
+
+// export const background = '#E3FCA4'; //'#87A9D4';
+// const alcohol = '#B74374';
+// const liqueur = '#443E7A';
+// const sweet = '#3E78AA';
+// const acid = '#6C9944';
+
+// export const background = '#E3FCA4'; //'#87A9D4';
+// const alcohol = '#AA3138';
+// const liqueur = '#F69A4D';
+// const sweet = '#CFDE55';
+// const acid = '#759F53';
+
+// export const background = '#FFC6ED'; //'#87A9D4';
+// const alcohol = '#4C3A76';
+// const liqueur = '#945287';
+// const sweet = '#AA3138';
+// const acid = '#F69A4D';
+
+// export const background = '#DCFEE4'; //'#87A9D4';
+// const alcohol = '#2C786B';
+// const liqueur = '#C7FDF8';
+// const sweet = '#2ABDA2';
+// const acid = '#CFDE55';
+
+// export const background = '#DCFEE4'; //'#87A9D4';
+// const alcohol = '#2C786B';
+// const liqueur = '#2ABDA2';
+// const sweet = '#C7FDF8';
+// const acid = '#CFDE55';
+
+// export const background = '#eaeaea';
+// const alcohol = '#E86570';
+// const liqueur = '#9ED2F7';
+// const sweet = '#232930';
+// const acid = '#F8CB46';
+
+// export const background = '#4C3A76';
+// const alcohol = '#222222';
+// const liqueur = '#767676';
+// const sweet = '#ccc';
+// const acid = '#fff';
+
+// export const background = '#4C3A76';
+// const alcohol = '#190546';
+// const liqueur = '#563C94';
+// const sweet = '#9376D8';
+// const acid = '#FFFFFF';
+
+// export const background = '#222';
+// const alcohol = '#9B5A36';
+// const liqueur = '#F8CB46';
+// const sweet = '#F8CB46';
+// const acid = '#FFFFFF';
+
+// const alcohol = 'red';
+// const liqueur = 'green';
+// const sweet = 'blue';
+// const acid = 'yellow';
 
 const categoryColorPairs = [
   ['spirit', alcohol],
@@ -122,6 +206,7 @@ const categoryColorPairs = [
   ['sweet', sweet],
 
   ['citrus', acid],
+  ['citrus-y', acid],
   ['acid', acid],
 
   ['bitters', gray],

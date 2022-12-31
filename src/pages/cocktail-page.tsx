@@ -29,7 +29,7 @@ export default function CocktailPage() {
               <CocktailScene />
             </React.Suspense>
             <ambientLight intensity={0.5} />
-            <directionalLight intensity={0.5} />
+            <directionalLight intensity={5} position={[0, 0, 0.5]} color={'#FFC6ED'} />
 
             {stats && <Stats className="stats" />}
             {orbit && <OrbitControls enableRotate={false} />}
