@@ -21,6 +21,7 @@ import IngredientPack from './IngredientPack';
 import CocktailPack from './CocktailPack';
 import IngredientIcicle from './IngredientIcicle';
 import RadialCocktails from './RadialCocktails';
+import SelectedCocktail from './SelectedCocktail';
 
 export default function CocktailScene() {
   const {
@@ -28,7 +29,7 @@ export default function CocktailScene() {
   } = useThree();
 
   const size = Math.min(width, height);
-  const { selectedIngredients } = useStore();
+  const { selectedIngredients, selectedCocktail } = useStore();
 
   const { data, loading, error } = useData({
     url: getStaticUrl('static/data/cocktails.json'),
@@ -37,6 +38,7 @@ export default function CocktailScene() {
   });
 
   const hierarchy = useMemo(() => data && getCocktailHierarchy(data), [data]);
+
   const pack = useMemo(() => {
     if (!hierarchy) return hierarchy;
     const unfilteredPack = getCocktailPack(hierarchy, size, []);
@@ -65,16 +67,6 @@ export default function CocktailScene() {
 
   const ingredients = useMemo(() => pack && getIngredients(pack), [pack]);
 
-  const parsedData = data
-    ? {
-        hierarchy,
-        lookup,
-        distance,
-        ingredients,
-        pack,
-      }
-    : null;
-
   return (
     <>
       {/* <axisHelper /> */}
@@ -88,7 +80,7 @@ export default function CocktailScene() {
           Error
         </Text>
       )}
-      {data && (
+      {data && !selectedCocktail && (
         <Html
           calculatePosition={() => [0, 0, 0]}
           style={{
@@ -115,9 +107,12 @@ export default function CocktailScene() {
         </Html>
       )}
       {/* {data && <CocktailPack {...parsedData} />} */}
-      {pack && lookup && <RadialCocktails pack={pack} lookup={lookup} />}
+      {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />}
       {/* {ingredientHierarchy && <IngredientIcicle hierarchy={ingredientHierarchy} />} */}
       {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
+      {selectedCocktail && lookup && distance && (
+        <SelectedCocktail lookup={lookup} distance={distance} />
+      )}
     </>
   );
 }
