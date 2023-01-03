@@ -1,7 +1,7 @@
 /* eslint-disable react/require-default-props */
 import React, { useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
+import { Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 
 import useStore from './appStore';
@@ -9,6 +9,7 @@ import getCocktailEditDistance from './parsers/getCocktailEditDistance';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import { CocktailHierarchy, IngredientHierarchy } from './types';
 import { categoryColorScale, ingredientColorScale } from './colors';
+import HalfCircle from './HalfCircle';
 
 interface SelectedCocktailProps {
   lookup: ReturnType<typeof getCocktailLookup>;
@@ -18,8 +19,9 @@ interface SelectedCocktailProps {
 export default function SelectedCocktail({ lookup, distance }: SelectedCocktailProps) {
   const { selectedCocktail } = useStore();
   const {
-    size: { height },
+    size: { height, width },
   } = useThree();
+  const size = Math.min(width, height);
 
   const nearest = useMemo(() => {
     const cocktailDistances = distance[selectedCocktail.data.name];
@@ -49,13 +51,7 @@ export default function SelectedCocktail({ lookup, distance }: SelectedCocktailP
 
   console.log(nearest);
 
-  const distanceRingRadius = height * 0.25;
-  const distanceRingLength = Math.PI * distanceRingRadius;
-  const maxCocktailsInRing = Object.entries(nearest).reduce(
-    (max, curr) => Math.max(max, Object.keys(curr).length),
-    0,
-  );
-  const cocktailSize = (5 * distanceRingLength) / maxCocktailsInRing;
+  const distanceRingRadius = 0.35; // @TODo should account for available height
   const ringCount = Object.keys(nearest).length;
 
   return (
@@ -63,43 +59,67 @@ export default function SelectedCocktail({ lookup, distance }: SelectedCocktailP
       <group position={[-0.25, 0.1, 0]}>
         <Cocktail
           cocktail={selectedCocktail}
-          layout={{ x: 0, y: 0 }}
-          ingredients
+          showIngredients
+          showIngredientQuantities
           radiusMultiple={5}
           events={false}
         />
       </group>
 
       {Object.entries(nearest).map(([distance, cocktails], i) => {
-        const thetaStep = Math.PI / Object.keys(cocktails).length;
+        const cocktailCount = Object.keys(cocktails).length;
+        const thetaStep = Math.PI / cocktailCount;
+        // increase ring size as distance grows (generally will have more cocktails further out)
+        const ringRadius = distanceRingRadius * ((i + 1) / ringCount);
+        const ringLength = Math.PI * ringRadius; // half a circle
+        const cocktailSize = Math.min(0.1, 0.9 * (ringLength / cocktailCount));
+
         return (
-          <group key={i} position={[0.2 * i, 0.05, 0]}>
-            {Object.entries(cocktails).map(
-              ([name, cocktail], j) =>
+          <group key={i} position={[0.1 * i, 0.05, 0]}>
+            <HalfCircle radius={ringRadius} />
+
+            <mesh position={[0, ringRadius, 0]}>
+              <circleGeometry args={[0.1, 0]} />
+              <meshBasicMaterial transparent opacity={0} />
+              <Html
+                style={{
+                  pointerEvents: 'none',
+                  fontSize: 20,
+                  whiteSpace: 'nowrap',
+                  color: '#222',
+                  transform: `translate(-110%, -50%)`,
+                }}
+              >
+                ±{i + 1} ingredients
+              </Html>
+            </mesh>
+            {Object.entries(cocktails).map(([name, cocktail], j) => {
+              // @TODO build out from center not around the ring
+              const theta = -Math.PI * 0.5 + thetaStep * (j + 0.5);
+              const radiusMultiple = 30 * cocktailSize;
+
+              return (
+                // @TODO determine if we want filters to apply here
                 cocktail && (
                   <group
                     key={name}
-                    position={[
-                      (distanceRingRadius / height) *
-                        ((i + 1) / ringCount) *
-                        Math.cos(-Math.PI * 0.5 + thetaStep * (j + 0.5)),
-                      -(distanceRingRadius / height) *
-                        ((i + 1) / ringCount) *
-                        Math.sin(-Math.PI * 0.5 + thetaStep * (j + 0.5)),
-                      0,
-                    ]}
+                    position={[ringRadius * Math.cos(theta), -ringRadius * Math.sin(theta), 0]}
                   >
                     <Cocktail
                       cocktail={cocktail}
-                      layout={{ x: 0, y: 0 }}
-                      ingredients
-                      radiusMultiple={cocktailSize / height}
+                      showIngredients
+                      radiusMultiple={radiusMultiple}
                       events
                       showName
+                      label={{
+                        x: `${50 * Math.cos(theta)}px`,
+                        y: `${-10 + 50 * Math.sin(theta)}px`,
+                      }}
                     />
                   </group>
-                ),
-            )}
+                )
+              );
+            })}
           </group>
         );
       })}
@@ -109,23 +129,27 @@ export default function SelectedCocktail({ lookup, distance }: SelectedCocktailP
 
 interface CocktailProps {
   cocktail: CocktailHierarchy;
-  layout: { x: number; y: number };
+  layout?: { x: number; y: number };
+  label?: { x: string; y: string };
   color?: string;
-  ingredients?: boolean;
+  showIngredients?: boolean;
   radiusMultiple: number;
   events?: boolean;
   showName?: boolean;
+  showIngredientQuantities?: boolean;
 }
 
 const HOVER_SCALE = 5;
 
 function Cocktail({
   cocktail,
-  layout,
-  ingredients,
+  layout = { x: 0, y: 0 },
+  showIngredients,
   radiusMultiple,
   events,
   showName,
+  label,
+  showIngredientQuantities,
 }: CocktailProps) {
   const {
     size: { width, height },
@@ -135,6 +159,7 @@ function Cocktail({
   const [isHovered, setIsHovered] = useState(false);
   const { setCocktail } = useStore();
 
+  // have to use a multiplier to scale the cocktail and ingredients the same amount
   const multiplier = radiusMultiple;
   const size = Math.min(width, height);
   const r = cocktail.r / size;
@@ -153,20 +178,16 @@ function Cocktail({
     // update position + scale
     if (groupRef?.current) {
       const currPosition = groupRef.current.position;
-      if (
-        Math.abs(currPosition.x - layout.x) > 0.01 ||
-        Math.abs(currPosition.y - layout.y) > 0.01
-      ) {
-        positionVec3.setZ(0);
-        positionVec3.setX(layout.x / size);
-        positionVec3.setY(layout.y / size);
+      const currScale = groupRef.current.scale;
+
+      positionVec3.setZ((isHovered ? 5 : 1) * multiplier * r);
+
+      if (Math.abs(currScale.x - nextScale.x) > 0.01) {
+        currScale.lerp(nextScale, 0.2);
         currPosition.lerp(positionVec3, 0.1);
       }
 
-      const currScale = groupRef.current.scale;
-      if (Math.abs(currScale.x - nextScale.x) > 0.01) {
-        currScale.lerp(nextScale, 0.2);
-        positionVec3.setZ(2 * r);
+      if (Math.abs(currPosition.z - positionVec3.z) > 0.01) {
         currPosition.lerp(positionVec3, 0.1);
       }
     }
@@ -197,19 +218,22 @@ function Cocktail({
         <meshBasicMaterial
           color={color}
           transparent
-          opacity={isHovered ? 0.7 : 0.5}
+          opacity={isHovered ? 0.7 : 1}
           side={THREE.BackSide}
         />
         {showName && (
           <Html
-            center
             distanceFactor={5}
             style={{
+              zIndex: -1,
               pointerEvents: 'none',
-              transform: `translate(${r * size * multiplier * 2.5}px, -50%)`,
+              transform: label
+                ? `translate(${label.x}, ${label.y})`
+                : `translate(${r * size * multiplier * 2.5}px, -50%)`,
               whiteSpace: 'nowrap',
               color: '#222',
               background: 'rgba(255,255,255,0.5)',
+              fontSize: 24,
             }}
           >
             {cocktail.data.name}
@@ -225,39 +249,41 @@ function Cocktail({
               transform: `translate(-50%, ${r * size * multiplier * 1.1}px)`,
               whiteSpace: 'nowrap',
               color: '#222',
-              background: 'rgba(255,255,255,0.5)',
+              background: 'rgba(255,255,255,0.9)',
             }}
           >
-            {cocktail.data.name}
+            {!showName && cocktail.data.name}
 
-            <div
-              style={{
-                marginTop: 8,
-                fontSize: 14,
-                lineHeight: 1,
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                columnGap: 8,
-              }}
-            >
-              {cocktail.data.children.map(ingredient => (
-                <React.Fragment key={ingredient.verbose_ingredient}>
-                  <div
-                    style={{ color: categoryColorScale(ingredient.category), textAlign: 'right' }}
-                  >
-                    {ingredient.quantity}oz
-                  </div>
-                  <div style={{ color: categoryColorScale(ingredient.category) }}>
-                    {ingredient.ingredient}
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
+            {showIngredientQuantities && (
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 14,
+                  lineHeight: 1,
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  columnGap: 8,
+                }}
+              >
+                {cocktail.data.children.map(ingredient => (
+                  <React.Fragment key={ingredient.verbose_ingredient}>
+                    <div
+                      style={{ color: categoryColorScale(ingredient.category), textAlign: 'right' }}
+                    >
+                      {ingredient.quantity}oz
+                    </div>
+                    <div style={{ color: categoryColorScale(ingredient.category) }}>
+                      {ingredient.ingredient}
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
           </Html>
         )}
       </mesh>
 
-      {ingredients &&
+      {showIngredients &&
         cocktail.children.map(ingredient => (
           <Ingredient
             key={ingredient.data.verbose_ingredient}
@@ -269,11 +295,7 @@ function Cocktail({
               0,
             ]}
             showLabel={!events || isHovered}
-            color={
-              false
-                ? ingredientColorScale(ingredient.data.simple_ingredient)
-                : categoryColorScale(ingredient.data.category)
-            }
+            color={categoryColorScale(ingredient.data.category)}
           />
         ))}
     </group>
@@ -305,7 +327,7 @@ function Ingredient({
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
             color: '#222',
-            background: 'rgba(255,255,255,0.5)',
+            background: 'rgba(255,255,255,0.9)',
           }}
         >
           {ingredient.data.simple_ingredient}

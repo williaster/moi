@@ -1,12 +1,11 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import React, { useLayoutEffect, useMemo } from 'react';
+import { useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
-import * as THREE from 'three';
 
 import Text from '../fry-universe/Text';
 import getStaticUrl from '../../utils/getStaticUrl';
 import useData from '../../hooks/useData';
-import { background, blue, categoryColorScale, ingredientColorScale, text } from './colors';
+import { background, categoryColorScale, text } from './colors';
 import IngredientSelect from './IngredientSelect';
 import useStore from './appStore';
 import cleanRawData from './parsers/cleanRawData';
@@ -15,13 +14,9 @@ import getCocktailEditDistance from './parsers/getCocktailEditDistance';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import getCocktailPack from './parsers/getCocktailPack';
 import getIngredients from './parsers/getIngredients';
-import getIngredientHierarchy from './parsers/getIngredientHierarchy';
-import getIngredientPack from './parsers/getIngredientPack';
-import IngredientPack from './IngredientPack';
-import CocktailPack from './CocktailPack';
-import IngredientIcicle from './IngredientIcicle';
 import RadialCocktails from './RadialCocktails';
 import SelectedCocktail from './SelectedCocktail';
+import useSetCocktailFromUrl from './useSetCocktailFromUrl';
 
 export default function CocktailScene() {
   const {
@@ -29,7 +24,7 @@ export default function CocktailScene() {
   } = useThree();
 
   const size = Math.min(width, height);
-  const { selectedIngredients, selectedCocktail } = useStore();
+  const { selectedIngredients, selectedCocktail, setCocktail } = useStore();
 
   const { data, loading, error } = useData({
     url: getStaticUrl('static/data/cocktails.json'),
@@ -55,24 +50,24 @@ export default function CocktailScene() {
   }, [hierarchy, size, selectedIngredients]);
 
   // @TODO filter by selected ingredients
-  const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
-
+  // const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
   const lookup = useMemo(() => pack && getCocktailLookup(pack), [pack]);
   const distance = useMemo(() => hierarchy && getCocktailEditDistance(hierarchy), [hierarchy]);
 
-  const ingredientPack = useMemo(
-    () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
-    [ingredientHierarchy, size],
-  );
+  // const ingredientPack = useMemo(
+  //   () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
+  //   [ingredientHierarchy, size],
+  // );
 
   const ingredients = useMemo(() => pack && getIngredients(pack), [pack]);
 
+  useSetCocktailFromUrl(lookup);
+
   return (
     <>
-      {/* <axisHelper /> */}
       {loading && (
-        <Text scale={0.2} color={text}>
-          Loading...
+        <Text scale={0.05} color={text}>
+          Loading
         </Text>
       )}
       {error && (
@@ -86,9 +81,9 @@ export default function CocktailScene() {
           style={{
             transform: 'translate(16px, 16px)',
             background: `${background}cc`,
-            border: `1px solid rgb(150, 200, 218)`,
+            border: `1px solid ${background}`,
             borderRadius: '4px',
-            fontSize: '24px',
+            fontSize: 24,
             padding: '16px 16px',
           }}
         >
@@ -106,10 +101,8 @@ export default function CocktailScene() {
           <IngredientSelect ingredients={ingredients} />
         </Html>
       )}
-      {/* {data && <CocktailPack {...parsedData} />} */}
       {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />}
-      {/* {ingredientHierarchy && <IngredientIcicle hierarchy={ingredientHierarchy} />} */}
-      {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
+
       {selectedCocktail && lookup && distance && (
         <SelectedCocktail lookup={lookup} distance={distance} />
       )}

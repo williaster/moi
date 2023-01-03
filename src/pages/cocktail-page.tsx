@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stats } from '@react-three/drei';
+import { Stats, OrbitControls } from '@react-three/drei';
 import Page from '../components/Page';
 import { background, text } from '../components/cocktails/colors';
 import CocktailScene from '../components/cocktails/CocktailScene';
@@ -21,7 +21,7 @@ export default function CocktailPage() {
       >
         <div className="canvas">
           <Canvas
-            camera={{ zoom: 10 }}
+            camera={{ zoom: 8, near: 0.1, far: 100 }}
             gl={{ antialias: true }}
             dpr={Math.max(typeof window === 'undefined' ? 2 : window.devicePixelRatio, 2)}
           >
@@ -32,7 +32,7 @@ export default function CocktailPage() {
             <directionalLight intensity={3} position={[0.25, 0.25, 0.25]} color={'#FFC6ED'} />
 
             {stats && <Stats className="stats" />}
-            {orbit && <OrbitControls enableRotate={false} />}
+            {orbit && <OrbitControls enableRotate={true} />}
             {axis && <axisHelper />}
           </Canvas>
         </div>

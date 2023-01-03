@@ -12,6 +12,7 @@ import getCocktailPack from './parsers/getCocktailPack';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import { forceCollide, forceSimulation, forceX, forceY } from 'd3-force';
 import useStore from './appStore';
+import useUrlCocktail from './useUrlCocktail';
 
 type RadialCocktailsProps = {
   pack: ReturnType<typeof getCocktailPack>;
@@ -167,7 +168,7 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
   });
 
   return (
-    <>
+    <group position={[0, -0.1, 0]}>
       {/** axis lines */}
       {AXES.map(axis => (
         <React.Fragment key={axis}>
@@ -208,7 +209,7 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
 
         return <Cocktail key={name} cocktail={cocktail} layout={d} color={color} ingredients />;
       })}
-    </>
+    </group>
   );
 }
 
@@ -287,6 +288,8 @@ function Cocktail({
     }
   });
 
+  const setCocktailUrl = useUrlCocktail();
+
   return (
     <group ref={groupRef}>
       <mesh
@@ -298,6 +301,7 @@ function Cocktail({
         onClick={() => {
           console.log(cocktail);
           setCocktail(cocktail);
+          setCocktailUrl(cocktail.data.name);
         }}
       >
         <sphereGeometry args={[r * multiplier, 8, isHovered ? 30 : 10]} />
