@@ -16,7 +16,8 @@ import getCocktailPack from './parsers/getCocktailPack';
 import getIngredients from './parsers/getIngredients';
 import RadialCocktails from './RadialCocktails';
 import SelectedCocktail from './SelectedCocktail';
-import useSetCocktailFromUrl from './useSetCocktailFromUrl';
+import useSetCocktailFromUrl from './hooks/useSetCocktailFromUrl';
+import CocktailLayout from './CocktailLayout';
 
 export default function CocktailScene() {
   const {
@@ -24,7 +25,7 @@ export default function CocktailScene() {
   } = useThree();
 
   const size = Math.min(width, height);
-  const { selectedIngredients, selectedCocktail, setCocktail } = useStore();
+  const { selectedIngredients, selectedCocktail } = useStore();
 
   const { data, loading, error } = useData({
     url: getStaticUrl('static/data/cocktails.json'),
@@ -101,7 +102,8 @@ export default function CocktailScene() {
           <IngredientSelect ingredients={ingredients} />
         </Html>
       )}
-      {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />}
+      {/* {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />} */}
+      {pack && lookup && !selectedCocktail && <CocktailLayout pack={pack} lookup={lookup} />}
 
       {selectedCocktail && lookup && distance && (
         <SelectedCocktail lookup={lookup} distance={distance} />

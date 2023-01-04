@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { useLayoutEffect, useMemo } from 'react';
-import useStore from './appStore';
-import getCocktailLookup from './parsers/getCocktailLookup';
+import useStore from '../appStore';
+import getCocktailLookup from '../parsers/getCocktailLookup';
 
 export default function useSetCocktailFromUrl(lookup: ReturnType<typeof getCocktailLookup>) {
   const { setCocktail } = useStore();

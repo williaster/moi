@@ -12,7 +12,9 @@ import getCocktailPack from './parsers/getCocktailPack';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import { forceCollide, forceSimulation, forceX, forceY } from 'd3-force';
 import useStore from './appStore';
-import useUrlCocktail from './useUrlCocktail';
+import useUrlCocktail from './hooks/useUrlCocktail';
+import useAxisLayout from './hooks/useAxisLayout';
+import Line from './Line';
 
 type RadialCocktailsProps = {
   pack: ReturnType<typeof getCocktailPack>;
@@ -50,122 +52,8 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
 
   const size = Math.min(width, height);
   const radius = 2 * size;
-  const layoutInProgress = useRef(false);
 
-  const cocktailXY = useMemo(() => {
-    layoutInProgress.current = true;
-    const result: {
-      [cocktail: string]: {
-        cocktail: string;
-        color: string;
-        x: number;
-        y: number;
-        coords: AxisCoord[];
-        isMarker?: boolean;
-      };
-    } = {};
-
-    // compute extent of each axis
-    const axisExtents: Record<keyof typeof AXIS_ANGLES, [number, number]> = {
-      alcohol: [0, 1], //[Infinity, -Infinity],
-      acid: [0, 1], //[Infinity, -Infinity],
-      sweet: [0, 1], //[Infinity, -Infinity],
-    };
-
-    // pack.children.forEach(cocktail => {
-    //   AXES.forEach(axis => {
-    //     const value = cocktail.data.balance[axis];
-    //     axisExtents[axis][0] = Math.min(axisExtents[axis][0], value);
-    //     axisExtents[axis][1] = Math.max(axisExtents[axis][1], value);
-    //   });
-    // });
-
-    pack.children.forEach(cocktail => {
-      const axisCoords: AxisCoord[] = [];
-
-      AXES.forEach(axis => {
-        const angle = AXIS_ANGLES[axis];
-        const value = cocktail.data.balance[axis];
-        const [min, max] = axisExtents[axis];
-        const scaledValue = (value - min) / (max - min);
-
-        axisCoords.push({
-          axis,
-          scaledValue,
-          value,
-          x: Math.cos(angle) * scaledValue * radius,
-          y: -Math.sin(angle) * scaledValue * radius,
-        });
-      });
-
-      // compute overall x,y as the mean of individual axes
-      const colors = axisCoords.map(c => new THREE.Color(categoryColorScale(c.axis)));
-      const color = new THREE.Color();
-      axisCoords.forEach((c, i) => color.lerp(colors[i], c.scaledValue));
-      result[cocktail.data.name] = {
-        cocktail: cocktail.data.name,
-        coords: axisCoords,
-        color: `#${color.getHexString()}`,
-        x: axisCoords.reduce((x, coord) => x + coord.x, 0) / axisCoords.length,
-        y: axisCoords.reduce((y, coord) => y + coord.y, 0) / axisCoords.length,
-      };
-    });
-
-    // visual markers
-    // AXES.forEach(axis => {
-    //   result[axis] = {
-    //     cocktail: AXIS_LABEL[axis],
-    //     color: 'white',
-    //     isMarker: true,
-    //     coords: [],
-    //     x: Math.cos(AXIS_ANGLES[axis]) * axisExtents[axis][1] * 0.2 * radius,
-    //     y: -Math.sin(AXIS_ANGLES[axis]) * axisExtents[axis][1] * 0.2 * radius,
-    //   };
-
-    //   // fix these in the simulation
-    //   result[axis].fx = result[axis].x;
-    //   result[axis].fy = result[axis].y;
-    // });
-
-    console.log(result);
-    return result;
-  }, [pack, radius]);
-
-  // simulation
-  const layout = useMemo(() => {
-    const simulation = forceSimulation(Object.values(cocktailXY))
-      .force(
-        'radius',
-        forceCollide().radius(d => {
-          const r = lookup?.[d?.cocktail]?.r ?? 0;
-          return r * (RADIUS_MULTIPLE * 1.1);
-        }),
-      )
-      .force(
-        'x',
-        forceX().x(d => d.x),
-      )
-      .force(
-        'y',
-        forceY().y(d => d.y),
-      )
-      .stop();
-    return simulation;
-  }, [cocktailXY]);
-
-  // const [, forceUpdate] = useState(0);
-
-  // progress layout
-  useFrame(() => {
-    if (layoutInProgress.current && layout.alpha() >= layout.alphaMin()) {
-      layout.tick(10);
-      //   forceUpdate(Math.random());
-      //   console.log('update');
-    } else if (layoutInProgress.current) {
-      layoutInProgress.current = false;
-      // forceUpdate(Math.random());
-    }
-  });
+  const layout = useAxisLayout({ lookup, pack });
 
   return (
     <group position={[0, -0.1, 0]}>
@@ -173,7 +61,6 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
       {AXES.map(axis => (
         <React.Fragment key={axis}>
           <Line
-            key={axis}
             start={[0, 0, 0]}
             end={[radius * Math.cos(AXIS_ANGLES[axis]), radius * -Math.sin(AXIS_ANGLES[axis]), 0]}
           />
@@ -210,20 +97,6 @@ export default function RadialCocktails({ pack, lookup }: RadialCocktailsProps) 
         return <Cocktail key={name} cocktail={cocktail} layout={d} color={color} ingredients />;
       })}
     </group>
-  );
-}
-
-function Line({ start, end, color = 'darkgreen' }) {
-  const ref = useRef<THREE.Line>();
-  useEffect(() => {
-    ref.current.geometry.setFromPoints([start, end].map(point => new THREE.Vector3(...point)));
-  }, [start, end]);
-
-  return (
-    <line ref={ref}>
-      <bufferGeometry />
-      <lineBasicMaterial color={color} />
-    </line>
   );
 }
 
