@@ -1,9 +1,11 @@
 import { Html } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import React from 'react';
+import * as THREE from 'three';
+import React, { useMemo } from 'react';
+import Text from '../fry-universe/Text';
 
 import { categoryColorScale } from './colors';
-import { AXES, AXIS_ANGLES, AXIS_LABEL } from './constants';
+import { AXES, AXIS_ANGLES, AXIS_LABEL, AXIS_LABEL_ANGLES } from './constants';
 import Line from './Line';
 
 interface BalanceAxesProps {
@@ -16,40 +18,40 @@ export default function BalanceAxes({ radius }: BalanceAxesProps) {
   } = useThree();
 
   const size = Math.min(width, height);
+  const colors = useMemo(
+    () => AXES.map(axis => new THREE.Color(categoryColorScale(axis)).offsetHSL(0, 0, -0.2)),
+    [],
+  );
+  const colorsDark = useMemo(
+    () => AXES.map(axis => new THREE.Color(categoryColorScale(axis)).offsetHSL(0, 0, -0.8)),
+    [],
+  );
 
   return (
-    <>
-      {AXES.map(axis => (
+    <group position={[0, 0, 0.01]}>
+      {AXES.map((axis, i) => (
         <React.Fragment key={axis}>
           <Line
             start={[0, 0, 0]}
             end={[radius * Math.cos(AXIS_ANGLES[axis]), radius * -Math.sin(AXIS_ANGLES[axis]), 0]}
+            color={colors[i]}
           />
-          <mesh
+          <Text
+            scale={0.05}
+            rotation={[0, 0, AXIS_LABEL_ANGLES[axis]]}
+            color={colors[i]}
+            outlineColor="#fff"
+            outlineWidth={0.1}
             position={[
-              (Math.cos(AXIS_ANGLES[axis]) * 0.2 * radius) / size,
-              (-Math.sin(AXIS_ANGLES[axis]) * 0.2 * radius) / size,
+              (Math.cos(AXIS_ANGLES[axis]) * 0.5 * radius) / size,
+              (-Math.sin(AXIS_ANGLES[axis]) * 0.5 * radius) / size,
               0,
             ]}
           >
-            <sphereGeometry args={[0.008, 1, 1]} />
-            <meshBasicMaterial transparent opacity={0} />
-
-            <Html
-              center
-              distanceFactor={20}
-              style={{
-                pointerEvents: 'none',
-                whiteSpace: 'nowrap',
-                color: categoryColorScale(axis),
-                background: axis === 'sweet' ? 'rgba(0,0,0,.5)' : 'rgba(255,255,255,0.5)',
-              }}
-            >
-              {AXIS_LABEL[axis]}
-            </Html>
-          </mesh>
+            {AXIS_LABEL[axis]}
+          </Text>
         </React.Fragment>
       ))}
-    </>
+    </group>
   );
 }

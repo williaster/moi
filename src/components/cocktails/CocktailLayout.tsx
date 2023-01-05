@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-undef */
 import React, { useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -7,11 +8,24 @@ import getCocktailLookup from './parsers/getCocktailLookup';
 import useAxisLayout from './hooks/useAxisLayout';
 import BalanceAxes from './BalanceAxes';
 import { categoryColorScale } from './colors';
+import Text from '../fry-universe/Text';
 
 interface CocktailLayoutProps {
   pack: ReturnType<typeof getCocktailPack>;
   lookup: ReturnType<typeof getCocktailLookup>;
 }
+
+const getPositionFromMatrix = (matrix: number[], offset: number) => [
+  matrix[offset + 12],
+  matrix[offset + 13],
+  matrix[offset + 14],
+];
+
+const getScaleFromMatrix = (matrix: number[], offset: number) => [
+  matrix[offset + 0],
+  matrix[offset + 5],
+  matrix[offset + 10],
+];
 
 export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
   // refs + constants
@@ -22,7 +36,8 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
   const cocktailMeshRef = useRef<THREE.Mesh>();
   const ingredientMeshRef = useRef<THREE.Mesh>();
   const tempObject = useMemo(() => new THREE.Object3D(), []);
-  const tempVec3 = useMemo(() => new THREE.Vector3(), []);
+  const tempPosition = useMemo(() => new THREE.Vector3(), []);
+  const tempScale = useMemo(() => new THREE.Vector3(), []);
   const tempColor = useMemo(() => new THREE.Color('purple'), []);
 
   // state
@@ -43,7 +58,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         layout.nodes().flatMap(node => {
           const cocktailColor = tempColor
             .set(node.color)
-            .offsetHSL(0, 0, -0.2)
+            .offsetHSL(0, 0, -0.1)
             .toArray();
           return cocktailColor;
         }),
@@ -69,6 +84,8 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
     [layout, lookup, tempColor],
   );
 
+  const cocktailTextRef = useRef<THREE.Group>();
+
   // update per frame
   useFrame(() => {
     let currIngredientIndex = 0;
@@ -84,14 +101,34 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         return;
       }
 
+      // transition cocktail from their current position/scale to the target
+      const itemSize = 16; // size of transform matrix
+      tempObject.position.set(
+        ...getPositionFromMatrix(cocktailMeshRef.current.instanceMatrix.array, i * itemSize),
+      );
+      tempObject.scale.set(
+        ...getScaleFromMatrix(cocktailMeshRef.current.instanceMatrix.array, i * itemSize),
+      );
+
+      // computed based on the latest layout
       const scale = (scaleMultiplier * cocktail.r) / size;
       const x = node.x / size;
       const y = node.y / size;
-      tempObject.position.set(x, y, 0);
-      tempObject.scale.set(scale, scale, scale);
+      const z = isHovered ? scale : 0;
+
+      tempPosition.set(x, y, z);
+      tempScale.set(scale, scale, scale);
+
+      tempObject.position.lerp(tempPosition, 0.1);
+      tempObject.scale.lerp(tempScale, 0.1);
       tempObject.updateMatrix();
 
       cocktailMeshRef.current.setMatrixAt(i, tempObject.matrix);
+
+      if (isHovered && cocktailTextRef.current) {
+        cocktailTextRef.current.position.set(x, y + scale * 1.1, scale * 2);
+        cocktailTextRef.current.scale.set(scale, scale, scale);
+      }
 
       // update ingredient circles
       if (cocktail.children.length === 0) {
@@ -105,9 +142,26 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         const ingredientScale = (scaleMultiplier * ingredient.r) / size;
         const ingredientX = x + (ingredient.x - ingredient.parent.x) / (size / scaleMultiplier);
         const ingredientY = y + (ingredient.y - ingredient.parent.y) / (size / scaleMultiplier);
+        const ingredientZ = z;
 
-        tempObject.position.set(ingredientX, ingredientY, 0);
-        tempObject.scale.set(ingredientScale, ingredientScale, ingredientScale);
+        tempObject.position.set(
+          ...getPositionFromMatrix(
+            ingredientMeshRef.current.instanceMatrix.array,
+            currIngredientIndex * itemSize,
+          ),
+        );
+        tempObject.scale.set(
+          ...getScaleFromMatrix(
+            ingredientMeshRef.current.instanceMatrix.array,
+            currIngredientIndex * itemSize,
+          ),
+        );
+
+        tempPosition.set(ingredientX, ingredientY, ingredientZ);
+        tempScale.set(ingredientScale, ingredientScale, ingredientScale);
+
+        tempObject.position.lerp(tempPosition, 0.1);
+        tempObject.scale.lerp(tempScale, 0.1);
         tempObject.updateMatrix();
 
         ingredientMeshRef.current.setMatrixAt(currIngredientIndex, tempObject.matrix);
@@ -121,7 +175,10 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
   return (
     <>
       <BalanceAxes radius={size * 0.7} />
+
+      {/** cocktails */}
       <instancedMesh
+        key={cocktailCount}
         ref={cocktailMeshRef}
         args={[null, null, cocktailCount]} // [geometry, material, count]
         onPointerOver={e => {
@@ -140,15 +197,15 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
             args={[cocktailColors, 3]}
           />
         </sphereBufferGeometry>
-
         <meshBasicMaterial
-          transparent
+          // transparent
           side={THREE.BackSide}
-          opacity={0.5}
+          // opacity={0.5}
           vertexColors={THREE.VertexColors}
         />
       </instancedMesh>
 
+      {/** ingredients */}
       <instancedMesh
         ref={ingredientMeshRef}
         args={[null, null, ingredientCount]} // [geometry, material, count]
@@ -161,6 +218,43 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         </sphereBufferGeometry>
         <meshPhongMaterial vertexColors={THREE.VertexColors} shininess={20} />
       </instancedMesh>
+
+      {/** text labels for hovered instances */}
+      {hovered != null && (
+        // Cocktail text label
+        <group ref={cocktailTextRef}>
+          <Text
+            scale={0.5}
+            outlineWidth={0.1}
+            outlineColor="#ffffff"
+            anchorX="center"
+            anchorY="middle"
+            textAlign="center"
+          >
+            {pack.children[hovered].data.name}
+          </Text>
+
+          {/** ingredient labels */}
+          {pack.children[hovered].children.map((ingredient, i) => (
+            <Text
+              key={ingredient.data.verbose_ingredient}
+              position={[
+                (ingredient.x - ingredient.parent.x) / ingredient.parent.r,
+                (ingredient.y - ingredient.parent.y - ingredient.parent.r) / ingredient.parent.r,
+                0,
+              ]}
+              scale={0.15}
+              anchorX="center"
+              anchorY="middle"
+              textAlign="center"
+              outlineWidth={0.1}
+              outlineColor="#ffffff"
+            >
+              {ingredient.data.simple_ingredient}
+            </Text>
+          ))}
+        </group>
+      )}
     </>
   );
 }
