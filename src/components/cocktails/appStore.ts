@@ -14,7 +14,7 @@ export interface AppState {
 const useStore = create<AppState>(set => ({
   selectedCocktail: null,
   clearCocktail: () => set({ selectedCocktail: null }),
-  setCocktail: selectedCocktail => set({ selectedCocktail }),
+  setCocktail: selectedCocktail => set({ selectedCocktail, selectedIngredients: null }),
   selectedIngredients: null,
   setSelectedIngredients: (ingredients: string[]) => set({ selectedIngredients: ingredients }),
 }));

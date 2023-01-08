@@ -43,23 +43,31 @@ interface CocktailItem extends BaseItem {
 
 type Item = IngredientItem | CocktailItem;
 
-const ITEM_TYPE_LABELS = {
-  ingredient: 'Ingredient',
-  verbose_ingredient: 'Ingredient',
-  cocktail: 'Cocktail',
+const EMPTY_ITEM: Item = {
+  type: 'cocktail',
+  id: 'empty',
+  label: 'empty',
+  value: 'empty',
 };
 
 export default function IngredientSelect({ pack, lookup }: IngredientSelectProps) {
   //   const items = useMemo(() => ingredients.map(i => ({ value: i, label: i })), [ingredients]);
-  const { selectedIngredients, selectedCocktail, setSelectedIngredients } = useStore();
+  const { selectedIngredients, setCocktail, selectedCocktail, setSelectedIngredients } = useStore();
 
   const onChange = useCallback(
-    items => {
+    (items: Item[]) => {
       console.log('Next selected items', items);
-      if (items) {
-        const vals = items.map(i => i.value);
-        setSelectedIngredients(vals);
+      const ingredients = items.filter(item => item.type !== 'cocktail');
+      const [cocktail] = items.filter(item => item.type === 'cocktail');
+
+      if (ingredients.toString() !== selectedIngredients?.toString()) {
+        const nextIngredients = ingredients.map(i => i.value);
+        setSelectedIngredients(nextIngredients.length ? nextIngredients : null);
       }
+      if (cocktail) {
+        setCocktail(lookup[cocktail.value]);
+      }
+      inputRef.current.blur();
     },
     [setSelectedIngredients],
   );
@@ -67,17 +75,30 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
   const inputRef = useRef<HTMLInputElement>();
 
   const allIngredients = useMemo(() => getIngredients(pack), [pack]);
-  const allCocktails = useMemo(() => Object.keys(pack), [pack]);
+  const allCocktails = useMemo(() => pack.children.map(cocktail => cocktail.data.name), [pack]);
 
   const getItems: (val: string) => Item[] = useCallback(
     value => {
       let items: Item[] = [];
       if (value) {
         const regex = new RegExp(value, 'gi');
-        // @TODO add cocktails
+
+        if (!selectedCocktail) {
+          allCocktails.forEach(cocktail => {
+            if (cocktail.match(regex)) {
+              items.push({
+                type: 'cocktail',
+                id: cocktail,
+                value: cocktail,
+                label: cocktail,
+              });
+            }
+          });
+        }
+
         Object.values(allIngredients).forEach((ingredient, i) => {
           const simple = ingredient.simple_ingredient;
-          let isSelected = selectedIngredients.includes(simple);
+          let isSelected = selectedIngredients?.includes(simple);
           // value matches simple ingredient name
           if (!isSelected && simple.match(regex)) {
             items.push({
@@ -94,7 +115,7 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
             let didMatch = false;
 
             Object.keys(ingredient.verbose_ingredients).forEach(verbose => {
-              isSelected = selectedIngredients.includes(verbose);
+              isSelected = selectedIngredients?.includes(verbose);
               if (!didMatch && !isSelected && verbose.match(regex)) {
                 const cocktail_count = ingredient.verbose_ingredients[verbose];
                 items.push({
@@ -112,7 +133,10 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
           }
         });
 
-        items.sort((a: IngredientItem, b: IngredientItem) => b.cocktail_count - a.cocktail_count);
+        items.sort(
+          (a: IngredientItem, b: IngredientItem) =>
+            (b?.cocktail_count ?? Infinity) - (a?.cocktail_count ?? Infinity),
+        );
       } else {
         items = Object.values(allIngredients)
           .sort((a, b) => b.cocktail_count - a.cocktail_count)
@@ -136,10 +160,9 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
           )
           .filter(i => !!i);
       }
-
-      return items;
+      return items.length ? items : [EMPTY_ITEM];
     },
-    [allIngredients, allCocktails],
+    [allIngredients, allCocktails, selectedCocktail],
   );
 
   const selectedItems = (selectedIngredients || [])
@@ -216,7 +239,9 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
             >
               <input
                 ref={inputRef}
-                placeholder="Search ingredients & cocktails"
+                placeholder={
+                  selectedCocktail ? 'Filter by ingredient' : 'Search ingredients & cocktails'
+                }
                 {...getInputProps({
                   ref: inputRef,
                   onKeyDown: event => {
@@ -236,49 +261,10 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
                     minWidth: '100%',
                   },
                 })}
+                onFocus={() => {
+                  setSelectedIngredients(selectedIngredients ? [...selectedIngredients] : null);
+                }}
               />
-              {selectedItems.length > 0
-                ? selectedItems.map(item => (
-                    <div
-                      key={item.id}
-                      style={{
-                        fontSize: 12,
-                        padding: '4px 8px',
-                        backgroundColor:
-                          item.type === 'cocktail' ? color : categoryColorScale(item.category),
-                        color: '#222',
-                        borderRadius: 4,
-                        lineHeight: '1em',
-                        marginBottom: 8,
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'nowrap',
-                          columnGap: 4,
-                          alignItems: 'center',
-                          lineHeight: 'inherit',
-                        }}
-                      >
-                        <div>{item.label}</div>
-                        <button
-                          {...getRemoveButtonProps({ item })}
-                          style={{
-                            cursor: 'pointer',
-                            border: 'none',
-                            backgroundColor: 'transparent',
-                            padding: '0 4px',
-                            fontSize: '1.2em',
-                            lineHeight: 'inherit',
-                          }}
-                        >
-                          𝘅
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                : null}
             </div>
           </div>
           <ul
@@ -287,7 +273,7 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
                 padding: 0,
                 marginTop: 0,
                 position: 'absolute',
-                backgroundColor: 'rgba(255,255,255,0.8)',
+                backgroundColor: 'rgba(255,255,255)',
                 width: '100%',
                 maxHeight: '20rem',
                 overflowY: 'auto',
@@ -316,27 +302,64 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
                       item,
                       index,
                     })}
-                    style={{
-                      position: 'relative',
-                      cursor: 'pointer',
-                      display: 'block',
-                      border: 'none',
-                      height: 'auto',
-                      textAlign: 'left',
-                      borderTop: 'none',
-                      lineHeight: '0.5em',
-                      color: 'rgba(0,0,0,.87)',
-                      fontSize: '0.5em',
-                      textTransform: 'none',
-                      fontWeight: '400',
-                      boxShadow: 'none',
-                      padding: '.8em 0.8em',
-                      whiteSpace: 'nowrap',
-                    }}
                   />
                 ))
               : null}
           </ul>
+          {selectedItems.length > 0 ? (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                columnGap: 4,
+                rowGap: 8,
+                lineHeight: '1em',
+                marginTop: 8,
+                marginBottom: 8,
+              }}
+            >
+              {selectedItems.map(item => (
+                <div
+                  key={item.id}
+                  style={{
+                    fontSize: 12,
+                    padding: '4px 8px',
+                    backgroundColor:
+                      item.type === 'cocktail' ? color : categoryColorScale(item.category),
+                    color: '#222',
+                    borderRadius: 4,
+                    lineHeight: '1em',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'nowrap',
+                      columnGap: 4,
+                      alignItems: 'center',
+                      lineHeight: 'inherit',
+                    }}
+                  >
+                    <div>{item.label}</div>
+                    <button
+                      {...getRemoveButtonProps({ item })}
+                      style={{
+                        cursor: 'pointer',
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        padding: '0 4px',
+                        fontSize: '1.2em',
+                        lineHeight: 'inherit',
+                      }}
+                    >
+                      𝘅
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       )}
     </MultiSelect>
@@ -348,6 +371,7 @@ function RenderItem({
   highlight,
   ...props
 }: { item: Item; highlight: boolean } & React.HTMLProps<HTMLLIElement>) {
+  const isEmpty = item === EMPTY_ITEM;
   return (
     <li
       {...props}
@@ -358,41 +382,65 @@ function RenderItem({
         flexWrap: 'nowrap',
         alignItems: 'center',
         justifyContent: 'space-between',
+        position: 'relative',
+        cursor: 'pointer',
+        border: 'none',
+        height: 'auto',
+        textAlign: 'left',
+        borderTop: 'none',
+        color: 'rgba(0,0,0,.87)',
+        fontSize: '0.5em',
+        textTransform: 'none',
+        fontWeight: 400,
+        boxShadow: 'none',
+        padding: '.8em 0.8em',
+        whiteSpace: 'nowrap',
+        lineHeight: '1em',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'nowrap',
-          alignItems: 'center',
-          columnGap: 4,
-        }}
-      >
-        {item.type === 'cocktail' && (
-          <div style={{ borderRadius: 2, background: '#ddd', padding: '4px 4px' }}>Cocktail</div>
-        )}
-        {(item.type === 'ingredient' || item.type === 'verbose_ingredient') && (
+      {isEmpty ? (
+        'No matches'
+      ) : (
+        <>
           <div
             style={{
-              borderRadius: 2,
-              background: `${categoryColorScale(item.category)}aa`, // assumes hex
-              padding: '4px 4px',
+              display: 'flex',
+              flexWrap: 'nowrap',
+              alignItems: 'center',
+              columnGap: 4,
             }}
           >
-            {item.category}
+            {item.type === 'cocktail' && (
+              <div
+                style={{ borderRadius: 2, background: '#222', color: '#fff', padding: '4px 4px' }}
+              >
+                Cocktail
+              </div>
+            )}
+            {(item.type === 'ingredient' || item.type === 'verbose_ingredient') && (
+              <div
+                style={{
+                  borderRadius: 2,
+                  background: `${categoryColorScale(item.category)}aa`, // assumes hex
+                  padding: '2px 8px',
+                }}
+              >
+                {item.category}
+              </div>
+            )}
+            <div>{item.label}</div>
           </div>
-        )}
-        <div>{item.label}</div>
-      </div>
-      <div>
-        {item.type === 'ingredient' || item.type === 'verbose_ingredient'
-          ? `n=${item.cocktail_count}${
-              item.fraction_of_cocktails == null
-                ? ''
-                : ` (${(item.fraction_of_cocktails * 100).toFixed(0)}%)`
-            }`
-          : ''}
-      </div>
+          <div>
+            {item.type === 'ingredient' || item.type === 'verbose_ingredient'
+              ? `n=${item.cocktail_count}${
+                  item.fraction_of_cocktails == null
+                    ? ''
+                    : ` (${(item.fraction_of_cocktails * 100).toFixed(0)}%)`
+                }`
+              : ''}
+          </div>
+        </>
+      )}
     </li>
   );
 }

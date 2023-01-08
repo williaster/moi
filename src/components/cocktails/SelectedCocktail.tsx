@@ -273,7 +273,7 @@ function Cocktail({
                       {ingredient.quantity}oz
                     </div>
                     <div style={{ color: categoryColorScale(ingredient.category) }}>
-                      {ingredient.ingredient}
+                      {ingredient.verbose_ingredient}
                     </div>
                   </React.Fragment>
                 ))}

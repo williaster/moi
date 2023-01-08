@@ -27,7 +27,7 @@ export default function CocktailScene() {
   } = useThree();
 
   const size = Math.min(width, height);
-  const { selectedIngredients, selectedCocktail } = useStore();
+  const { selectedIngredients, selectedCocktail, setCocktail } = useStore();
 
   const { data, loading, error } = useData({
     url: getStaticUrl('static/data/cocktails.json'),
@@ -100,21 +100,39 @@ export default function CocktailScene() {
               margin: 0,
               marginBottom: 4,
               color: categoryColorScale('alcohol'),
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'nowrap',
+              columnGap: 8,
             }}
           >
-            Cocktails
+            {selectedCocktail ? selectedCocktail.data.name : 'Cocktails'}
+            {selectedCocktail && (
+              <button
+                type="button"
+                style={{
+                  cursor: 'pointer',
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '0.5em',
+                }}
+                onClick={() => setCocktail(null)}
+              >
+                x
+              </button>
+            )}
           </h2>
           <IngredientSelect pack={pack} lookup={lookup} />
         </Html>
       )}
       {/* {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />} */}
-      {pack && lookup && <CocktailLayout pack={pack} lookup={lookup} />}
+      {pack && lookup && !selectedCocktail && <CocktailLayout pack={pack} lookup={lookup} />}
 
       {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
 
-      {/* {selectedCocktail && lookup && distance && (
+      {selectedCocktail && lookup && distance && (
         <SelectedCocktail lookup={lookup} distance={distance} />
-      )} */}
+      )}
     </>
   );
 }
