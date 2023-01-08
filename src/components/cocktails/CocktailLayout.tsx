@@ -7,8 +7,9 @@ import getCocktailPack from './parsers/getCocktailPack';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import useAxisLayout from './hooks/useAxisLayout';
 import BalanceAxes from './BalanceAxes';
-import { categoryColorScale } from './colors';
+import { categoryColorScale, ingredientColorScale } from './colors';
 import Text from '../fry-universe/Text';
+import useStore from './appStore';
 
 interface CocktailLayoutProps {
   pack: ReturnType<typeof getCocktailPack>;
@@ -27,6 +28,8 @@ const getScaleFromMatrix = (matrix: number[], offset: number) => [
   matrix[offset + 10],
 ];
 
+const INGREDIENT_LABEL_SCALE = 0.15;
+
 export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
   // refs + constants
   const {
@@ -41,7 +44,8 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
   const tempColor = useMemo(() => new THREE.Color('purple'), []);
 
   // state
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { setCocktail } = useStore();
 
   // counts
   const cocktailCount = pack.children.length;
@@ -70,14 +74,15 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       Float32Array.from(
         layout.nodes().flatMap(node => {
           const cocktail = lookup[node.cocktail];
-          if (!cocktail) return [];
+          if (!cocktail) return [0, 0, 0];
           return (
-            cocktail?.children.flatMap(ingredient =>
-              tempColor
+            cocktail?.children.flatMap(ingredient => {
+              const ingredientColor = tempColor
                 .set(categoryColorScale(ingredient.data.category))
                 .offsetHSL(0, 0, -0.2)
-                .toArray(),
-            ) ?? []
+                .toArray();
+              return ingredientColor;
+            }) ?? []
           );
         }),
       ),
@@ -92,7 +97,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
 
     layout.nodes().forEach((node, i) => {
       if (!cocktailMeshRef.current) return;
-      const isHovered = i === hovered;
+      const isHovered = i === hoveredIndex;
       const scaleMultiplier = isHovered ? 5 : 1;
       const cocktail = lookup[node.cocktail];
 
@@ -138,7 +143,6 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       cocktail.children.forEach(ingredient => {
         if (!ingredientMeshRef.current) return;
 
-        currIngredientIndex += 1;
         const ingredientScale = (scaleMultiplier * ingredient.r) / size;
         const ingredientX = x + (ingredient.x - ingredient.parent.x) / (size / scaleMultiplier);
         const ingredientY = y + (ingredient.y - ingredient.parent.y) / (size / scaleMultiplier);
@@ -165,6 +169,8 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         tempObject.updateMatrix();
 
         ingredientMeshRef.current.setMatrixAt(currIngredientIndex, tempObject.matrix);
+
+        currIngredientIndex += 1;
       });
     });
 
@@ -183,13 +189,18 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         args={[null, null, cocktailCount]} // [geometry, material, count]
         onPointerOver={e => {
           e.stopPropagation(); // don't trigger hover on other cocktails
-          setHovered(e.instanceId);
+          setHoveredIndex(e.instanceId);
+          console.log(lookup[pack.children[e.instanceId].data.name].children.map(i => i.data));
         }}
         onPointerOut={e => {
           e.stopPropagation(); // don't trigger hover on other cocktails
-          setHovered(null);
+          setHoveredIndex(null);
         }}
-        onClick={() => {}}
+        onClick={e => {
+          e.stopPropagation();
+          const cocktail = pack.children[e.instanceId];
+          if (cocktail) setCocktail(cocktail);
+        }}
       >
         <sphereBufferGeometry args={[1, 10, 30]}>
           <instancedBufferAttribute
@@ -197,12 +208,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
             args={[cocktailColors, 3]}
           />
         </sphereBufferGeometry>
-        <meshBasicMaterial
-          // transparent
-          side={THREE.BackSide}
-          // opacity={0.5}
-          vertexColors={THREE.VertexColors}
-        />
+        <meshBasicMaterial side={THREE.BackSide} vertexColors={THREE.VertexColors} />
       </instancedMesh>
 
       {/** ingredients */}
@@ -219,8 +225,8 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         <meshPhongMaterial vertexColors={THREE.VertexColors} shininess={20} />
       </instancedMesh>
 
-      {/** text labels for hovered instances */}
-      {hovered != null && (
+      {/** text labels for hoveredIndex instances */}
+      {hoveredIndex != null && (
         // Cocktail text label
         <group ref={cocktailTextRef}>
           <Text
@@ -231,24 +237,24 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
             anchorY="middle"
             textAlign="center"
           >
-            {pack.children[hovered].data.name}
+            {pack.children[hoveredIndex].data.name}
           </Text>
 
           {/** ingredient labels */}
-          {pack.children[hovered].children.map((ingredient, i) => (
+          {pack.children[hoveredIndex].children.map((ingredient, i) => (
             <Text
               key={ingredient.data.verbose_ingredient}
               position={[
                 (ingredient.x - ingredient.parent.x) / ingredient.parent.r,
                 (ingredient.y - ingredient.parent.y - ingredient.parent.r) / ingredient.parent.r,
-                0,
+                ingredient.r * INGREDIENT_LABEL_SCALE,
               ]}
-              scale={0.15}
+              scale={INGREDIENT_LABEL_SCALE}
               anchorX="center"
               anchorY="middle"
               textAlign="center"
               outlineWidth={0.1}
-              outlineColor="#ffffff"
+              outlineColor={categoryColorScale(ingredient.data.category)}
             >
               {ingredient.data.simple_ingredient}
             </Text>

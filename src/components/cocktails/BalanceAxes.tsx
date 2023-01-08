@@ -22,10 +22,6 @@ export default function BalanceAxes({ radius }: BalanceAxesProps) {
     () => AXES.map(axis => new THREE.Color(categoryColorScale(axis)).offsetHSL(0, 0, -0.2)),
     [],
   );
-  const colorsDark = useMemo(
-    () => AXES.map(axis => new THREE.Color(categoryColorScale(axis)).offsetHSL(0, 0, -0.8)),
-    [],
-  );
 
   return (
     <group position={[0, 0, 0.01]}>

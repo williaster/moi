@@ -12,7 +12,9 @@ export default function getCocktailPack(
     copy.children = copy.children.filter(cocktail =>
       ingredients.every(filterIngredient =>
         cocktail.data.children.some(
-          ingredient => ingredient.simple_ingredient === filterIngredient,
+          ingredient =>
+            ingredient.simple_ingredient === filterIngredient ||
+            ingredient.verbose_ingredient === filterIngredient,
         ),
       ),
     );

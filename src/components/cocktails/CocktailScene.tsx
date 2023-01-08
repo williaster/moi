@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 
@@ -14,10 +14,12 @@ import getCocktailEditDistance from './parsers/getCocktailEditDistance';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import getCocktailPack from './parsers/getCocktailPack';
 import getIngredients from './parsers/getIngredients';
-import RadialCocktails from './RadialCocktails';
 import SelectedCocktail from './SelectedCocktail';
 import useSetCocktailFromUrl from './hooks/useSetCocktailFromUrl';
 import CocktailLayout from './CocktailLayout';
+import IngredientPack from './IngredientPack';
+import getIngredientHierarchy from './parsers/getIngredientHierarchy';
+import getIngredientPack from './parsers/getIngredientPack';
 
 export default function CocktailScene() {
   const {
@@ -38,11 +40,14 @@ export default function CocktailScene() {
   const pack = useMemo(() => {
     if (!hierarchy) return hierarchy;
     const unfilteredPack = getCocktailPack(hierarchy, size, []);
+
     if (selectedIngredients) {
       unfilteredPack.children = unfilteredPack.children.filter(cocktail =>
         selectedIngredients.every(filterIngredient =>
           cocktail.data.children.some(
-            ingredient => ingredient.simple_ingredient === filterIngredient,
+            ingredient =>
+              ingredient.simple_ingredient === filterIngredient ||
+              ingredient.verbose_ingredient === filterIngredient,
           ),
         ),
       );
@@ -51,14 +56,14 @@ export default function CocktailScene() {
   }, [hierarchy, size, selectedIngredients]);
 
   // @TODO filter by selected ingredients
-  // const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
+  const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
   const lookup = useMemo(() => pack && getCocktailLookup(pack), [pack]);
   const distance = useMemo(() => hierarchy && getCocktailEditDistance(hierarchy), [hierarchy]);
 
-  // const ingredientPack = useMemo(
-  //   () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
-  //   [ingredientHierarchy, size],
-  // );
+  const ingredientPack = useMemo(
+    () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
+    [ingredientHierarchy, size],
+  );
 
   const ingredients = useMemo(() => pack && getIngredients(pack), [pack]);
 
@@ -76,7 +81,7 @@ export default function CocktailScene() {
           Error
         </Text>
       )}
-      {data && !selectedCocktail && (
+      {pack && lookup && (
         <Html
           calculatePosition={() => [0, 0, 0]}
           style={{
@@ -99,15 +104,17 @@ export default function CocktailScene() {
           >
             Cocktails
           </h2>
-          <IngredientSelect ingredients={ingredients} />
+          <IngredientSelect pack={pack} lookup={lookup} />
         </Html>
       )}
       {/* {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />} */}
-      {pack && lookup && !selectedCocktail && <CocktailLayout pack={pack} lookup={lookup} />}
+      {pack && lookup && <CocktailLayout pack={pack} lookup={lookup} />}
 
-      {selectedCocktail && lookup && distance && (
+      {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
+
+      {/* {selectedCocktail && lookup && distance && (
         <SelectedCocktail lookup={lookup} distance={distance} />
-      )}
+      )} */}
     </>
   );
 }

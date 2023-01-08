@@ -50,13 +50,10 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
   const radius = 2 * size;
 
   // x,y coordinates of each cocktail based on their AXIS values
-  const cocktailXY: {
-    [cocktail: string]: CocktailXY;
-  } = useMemo(() => {
+  const cocktailCoords: CocktailXY[] = useMemo(() => {
     layoutInProgress.current = true;
-    const result = {};
 
-    pack.children.forEach(cocktail => {
+    const result = pack.children.map(cocktail => {
       // axis coords of each cocktail
       const axisCoords: AxisCoord[] = [];
 
@@ -82,7 +79,7 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
       // blend the color of each axis color into a single color
       axisCoords.forEach((c, i) => color.lerp(colors[i], c.scaledValue));
 
-      result[cocktail.data.name] = {
+      const coords: CocktailXY = {
         cocktail: cocktail.data.name,
         coords: axisCoords,
         color: `#${color.getHexString()}`,
@@ -90,6 +87,8 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
         x: axisCoords.reduce((x, coord) => x + coord.x, 0) / axisCoords.length,
         y: axisCoords.reduce((y, coord) => y + coord.y, 0) / axisCoords.length,
       };
+
+      return coords;
     });
 
     return result;
@@ -97,7 +96,7 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
 
   // use force simulation to compute layout from specific x/y coordinates
   const layout = useMemo(() => {
-    const simulation = forceSimulation(Object.values(cocktailXY))
+    const simulation = forceSimulation(cocktailCoords)
       .force(
         'radius',
         forceCollide().radius((d: CocktailXY) => {
@@ -115,7 +114,7 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
       )
       .stop();
     return simulation;
-  }, [cocktailXY, lookup]);
+  }, [cocktailCoords, lookup]);
 
   // progress layout until it reaches equilibrium
   useFrame(() => {
