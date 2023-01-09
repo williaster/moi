@@ -39,18 +39,22 @@ export default function CocktailScene() {
 
   const pack = useMemo(() => {
     if (!hierarchy) return hierarchy;
-    const unfilteredPack = getCocktailPack(hierarchy, size, []);
+    const unfilteredPack = getCocktailPack(hierarchy, size);
 
     if (selectedIngredients) {
-      unfilteredPack.children = unfilteredPack.children.filter(cocktail =>
-        selectedIngredients.every(filterIngredient =>
+      unfilteredPack.children = unfilteredPack.children.map(cocktail => {
+        const hasAllSelectedIngredients = selectedIngredients.every(filterIngredient =>
           cocktail.data.children.some(
             ingredient =>
               ingredient.simple_ingredient === filterIngredient ||
               ingredient.verbose_ingredient === filterIngredient,
           ),
-        ),
-      );
+        );
+
+        return hasAllSelectedIngredients
+          ? cocktail
+          : { ...cocktail, data: { ...cocktail.data, hidden: true } };
+      });
     }
     return unfilteredPack;
   }, [hierarchy, size, selectedIngredients]);
@@ -103,6 +107,7 @@ export default function CocktailScene() {
               display: 'flex',
               alignItems: 'center',
               flexWrap: 'nowrap',
+              whiteSpace: 'nowrap',
               columnGap: 8,
             }}
           >

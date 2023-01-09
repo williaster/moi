@@ -90,7 +90,7 @@ export default function SelectedCocktail({ lookup, distance }: SelectedCocktailP
                   transform: `translate(-110%, -50%)`,
                 }}
               >
-                ±{i + 1} ingredients
+                {i === 0 ? 'Same ingredients' : `±${i} ingredients`}
               </Html>
             </mesh>
             {Object.entries(cocktails).map(([name, cocktail], j) => {

@@ -208,7 +208,7 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
         highlightedIndex,
         toggleMenu,
       }) => (
-        <div style={{ minWidth: 200, width: '20vw', margin: 'auto', position: 'relative' }}>
+        <div style={{ minWidth: 300, width: '20vw', position: 'relative' }}>
           <div
             style={{
               cursor: 'pointer',
@@ -325,9 +325,13 @@ export default function IngredientSelect({ pack, lookup }: IngredientSelectProps
                   style={{
                     fontSize: 12,
                     padding: '4px 8px',
-                    backgroundColor:
-                      item.type === 'cocktail' ? color : categoryColorScale(item.category),
                     color: '#222',
+                    backgroundColor: `${
+                      item.type === 'cocktail' ? color : categoryColorScale(item.category)
+                    }66`,
+                    border: `1px solid ${
+                      item.type === 'cocktail' ? color : categoryColorScale(item.category)
+                    }`,
                     borderRadius: 4,
                     lineHeight: '1em',
                   }}
@@ -412,7 +416,15 @@ function RenderItem({
           >
             {item.type === 'cocktail' && (
               <div
-                style={{ borderRadius: 2, background: '#222', color: '#fff', padding: '4px 4px' }}
+                style={{
+                  borderRadius: 4,
+                  border: '1px solid #222',
+                  background: '#484848',
+                  color: '#fff',
+                  fontSize: 12,
+                  padding: '4px 8px',
+                  lineHeight: '1em',
+                }}
               >
                 Cocktail
               </div>
@@ -420,9 +432,17 @@ function RenderItem({
             {(item.type === 'ingredient' || item.type === 'verbose_ingredient') && (
               <div
                 style={{
-                  borderRadius: 2,
-                  background: `${categoryColorScale(item.category)}aa`, // assumes hex
-                  padding: '2px 8px',
+                  fontSize: 12,
+                  padding: '4px 8px',
+                  color: '#222',
+                  backgroundColor: `${
+                    item.type === 'cocktail' ? color : categoryColorScale(item.category)
+                  }66`,
+                  border: `1px solid ${
+                    item.type === 'cocktail' ? color : categoryColorScale(item.category)
+                  }`,
+                  borderRadius: 4,
+                  lineHeight: '1em',
                 }}
               >
                 {item.category}

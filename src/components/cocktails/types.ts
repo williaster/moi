@@ -34,6 +34,7 @@ export interface CocktailRawHierarchy {
     alcohol: number;
   };
   children: IngredientChild[];
+  hidden?: boolean;
 }
 
 export interface CocktailRawRoot {

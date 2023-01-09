@@ -16,7 +16,9 @@ export default function getIngredients(hierarchy: CocktailHierarchy): Ingredient
   const ingredients: IngredientMetaData = {};
   const cocktailCount = hierarchy.children.length;
 
-  hierarchy.children.forEach(cocktail =>
+  hierarchy.children.forEach(cocktail => {
+    if (cocktail.data.hidden) return;
+
     cocktail.data.children.forEach(({ simple_ingredient, verbose_ingredient, category }) => {
       ingredients[simple_ingredient] = ingredients[simple_ingredient] || {
         simple_ingredient,
@@ -34,8 +36,8 @@ export default function getIngredients(hierarchy: CocktailHierarchy): Ingredient
         ingredients[simple_ingredient].verbose_ingredients[verbose_ingredient] || 0;
 
       ingredients[simple_ingredient].verbose_ingredients[verbose_ingredient] += 1;
-    }),
-  );
+    });
+  });
 
   return ingredients;
 }

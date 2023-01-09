@@ -100,6 +100,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       const isHovered = i === hoveredIndex;
       const scaleMultiplier = isHovered ? 5 : 1;
       const cocktail = lookup[node.cocktail];
+      const isHidden = cocktail?.data.hidden;
 
       if (!cocktail) {
         console.log(`Missing cocktail ${node.cocktail}`);
@@ -116,7 +117,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       );
 
       // computed based on the latest layout
-      const scale = (scaleMultiplier * cocktail.r) / size;
+      const scale = isHidden ? 0 : (scaleMultiplier * cocktail.r) / size;
       const x = node.x / size;
       const y = node.y / size;
       const z = isHovered ? scale : 0;
@@ -143,7 +144,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       cocktail.children.forEach(ingredient => {
         if (!ingredientMeshRef.current) return;
 
-        const ingredientScale = (scaleMultiplier * ingredient.r) / size;
+        const ingredientScale = isHidden ? 0 : (scaleMultiplier * ingredient.r) / size;
         const ingredientX = x + (ingredient.x - ingredient.parent.x) / (size / scaleMultiplier);
         const ingredientY = y + (ingredient.y - ingredient.parent.y) / (size / scaleMultiplier);
         const ingredientZ = z;

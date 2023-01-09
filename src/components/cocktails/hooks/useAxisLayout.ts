@@ -100,8 +100,9 @@ export default function useAxisLayout({ pack, lookup }: AxisLayoutOptions) {
       .force(
         'radius',
         forceCollide().radius((d: CocktailXY) => {
-          const r = lookup?.[d?.cocktail]?.r ?? 0;
-          return r * RADIUS_MULTIPLE;
+          const cocktail = lookup?.[d?.cocktail];
+          const r = cocktail?.r ?? 0;
+          return cocktail?.data.hidden ? 0 : r * RADIUS_MULTIPLE;
         }),
       )
       .force(
