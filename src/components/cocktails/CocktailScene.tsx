@@ -20,6 +20,8 @@ import CocktailLayout from './CocktailLayout';
 import IngredientPack from './IngredientPack';
 import getIngredientHierarchy from './parsers/getIngredientHierarchy';
 import getIngredientPack from './parsers/getIngredientPack';
+import { CocktailHierarchy } from './types';
+import getRelatedCocktails from './parsers/getRelatedCocktails';
 
 export default function CocktailScene() {
   const {
@@ -36,10 +38,37 @@ export default function CocktailScene() {
   });
 
   const hierarchy = useMemo(() => data && getCocktailHierarchy(data), [data]);
+  const lookupHierarchy = useMemo(() => hierarchy && getCocktailLookup(hierarchy), [hierarchy]);
+  const distance = useMemo(() => hierarchy && getCocktailEditDistance(hierarchy), [hierarchy]);
+  const relatedCocktails = useMemo(
+    () =>
+      lookupHierarchy &&
+      getRelatedCocktails({ distance, lookup: lookupHierarchy, selectedCocktail }),
+    [selectedCocktail, lookupHierarchy, distance],
+  );
 
   const pack = useMemo(() => {
     if (!hierarchy) return hierarchy;
+
     const unfilteredPack = getCocktailPack(hierarchy, size);
+
+    if (selectedCocktail) {
+      const related = Object.keys(relatedCocktails ?? {}).reduce((all, distance) => {
+        Object.keys(relatedCocktails[distance]).forEach((cocktail: string) => {
+          all.add(cocktail);
+        });
+        return all;
+      }, new Set<string>());
+
+      console.log('filtering pack', { relatedCocktails, related });
+
+      related.add(selectedCocktail.data.name);
+
+      unfilteredPack.children = unfilteredPack.children.map(cocktail => {
+        const isRelated = related.has(cocktail.data.name);
+        return isRelated ? cocktail : { ...cocktail, data: { ...cocktail.data, hidden: true } };
+      });
+    }
 
     if (selectedIngredients) {
       unfilteredPack.children = unfilteredPack.children.map(cocktail => {
@@ -56,20 +85,19 @@ export default function CocktailScene() {
           : { ...cocktail, data: { ...cocktail.data, hidden: true } };
       });
     }
+
     return unfilteredPack;
-  }, [hierarchy, size, selectedIngredients]);
+  }, [hierarchy, size, selectedIngredients, selectedCocktail, relatedCocktails]);
 
-  // @TODO filter by selected ingredients
-  const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
   const lookup = useMemo(() => pack && getCocktailLookup(pack), [pack]);
-  const distance = useMemo(() => hierarchy && getCocktailEditDistance(hierarchy), [hierarchy]);
 
-  const ingredientPack = useMemo(
-    () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
-    [ingredientHierarchy, size],
-  );
+  // const ingredientHierarchy = useMemo(() => pack && getIngredientHierarchy(pack), [pack]);
+  // const ingredientPack = useMemo(
+  //   () => ingredientHierarchy && getIngredientPack(ingredientHierarchy, size),
+  //   [ingredientHierarchy, size],
+  // );
 
-  const ingredients = useMemo(() => pack && getIngredients(pack), [pack]);
+  // const ingredients = useMemo(() => pack && getIngredients(pack), [pack]);
 
   useSetCocktailFromUrl(lookup);
 
@@ -131,13 +159,15 @@ export default function CocktailScene() {
         </Html>
       )}
       {/* {pack && lookup && !selectedCocktail && <RadialCocktails pack={pack} lookup={lookup} />} */}
-      {pack && lookup && !selectedCocktail && <CocktailLayout pack={pack} lookup={lookup} />}
+      {pack && lookup && relatedCocktails && (
+        <CocktailLayout pack={pack} lookup={lookup} relatedCocktails={relatedCocktails} />
+      )}
 
       {/* {ingredientPack && <IngredientPack ingredientPack={ingredientPack} />} */}
 
-      {selectedCocktail && lookup && distance && (
+      {/* {selectedCocktail && lookup && distance && (
         <SelectedCocktail lookup={lookup} distance={distance} />
-      )}
+      )} */}
     </>
   );
 }

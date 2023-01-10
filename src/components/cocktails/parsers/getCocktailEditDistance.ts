@@ -7,19 +7,19 @@ export interface PairwiseDistance {
 export default function getCocktailEditDistance(
   hierarchy: CocktailHierarchy,
   // whether to return an nxn matrix of distances instead of a lookup
-  matrix?: boolean,
+  // matrix?: boolean,
 ) {
   const distances: PairwiseDistance = {};
 
   // nxn matrix of edit distances
-  const distancesArray: number[][] = [];
+  // const distancesArray: number[][] = [];
   let maxDist = 1;
 
   hierarchy.children.forEach(cocktailA => {
     distances[cocktailA.data.name] = distances[cocktailA.data.name] || {};
 
-    const array: number[] = [];
-    if (matrix) distancesArray.push(array);
+    // const array: number[] = [];
+    // if (matrix) distancesArray.push(array);
 
     hierarchy.children.forEach(cocktailB => {
       distances[cocktailB.data.name] = distances[cocktailB.data.name] || {};
@@ -33,12 +33,13 @@ export default function getCocktailEditDistance(
       distances[cocktailA.data.name][cocktailB.data.name] = distance;
       distances[cocktailB.data.name][cocktailA.data.name] = distance;
 
-      if (matrix) array.push(distance);
+      // if (matrix) array.push(distance);
       maxDist = Math.max(maxDist, distance);
     });
   });
 
-  return matrix ? distancesArray.map(dist => dist.map(d => d)) : distances;
+  // return matrix ? distancesArray.map(dist => dist.map(d => d)) : distances;
+  return distances;
 }
 
 /**

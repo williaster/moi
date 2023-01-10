@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undef */
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import getCocktailPack from './parsers/getCocktailPack';
@@ -10,10 +10,13 @@ import BalanceAxes from './BalanceAxes';
 import { categoryColorScale, ingredientColorScale } from './colors';
 import Text from '../fry-universe/Text';
 import useStore from './appStore';
+import getCocktailEditDistance from './parsers/getCocktailEditDistance';
+import getRelatedCocktails from './parsers/getRelatedCocktails';
 
 interface CocktailLayoutProps {
   pack: ReturnType<typeof getCocktailPack>;
   lookup: ReturnType<typeof getCocktailLookup>;
+  relatedCocktails: ReturnType<typeof getRelatedCocktails>;
 }
 
 const getPositionFromMatrix = (matrix: number[], offset: number) => [
@@ -30,7 +33,7 @@ const getScaleFromMatrix = (matrix: number[], offset: number) => [
 
 const INGREDIENT_LABEL_SCALE = 0.15;
 
-export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
+export default function CocktailLayout({ pack, lookup, relatedCocktails }: CocktailLayoutProps) {
   // refs + constants
   const {
     size: { width, height },
@@ -45,17 +48,21 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
 
   // state
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { setCocktail } = useStore();
-
-  // counts
-  const cocktailCount = pack.children.length;
-  const ingredientCount = useMemo(
-    () => pack.children.reduce((sum, cocktail) => sum + (cocktail?.children?.length ?? 0), 0),
-    [pack],
-  );
+  const { setCocktail, selectedCocktail } = useStore();
+  useEffect(() => setHoveredIndex(null), [selectedCocktail]);
 
   // layout
-  const layout = useAxisLayout({ pack, lookup });
+  const layout = useAxisLayout({ pack, lookup, relatedCocktails });
+
+  // counts
+  const cocktailCount = layout.nodes().length;
+
+  const ingredientCount = useMemo(
+    () =>
+      layout.nodes().reduce((sum, node) => sum + (lookup[node.cocktail]?.children?.length ?? 0), 0),
+    [layout, lookup],
+  );
+
   const cocktailColors = useMemo(
     () =>
       Float32Array.from(
@@ -117,7 +124,7 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
       );
 
       // computed based on the latest layout
-      const scale = isHidden ? 0 : (scaleMultiplier * cocktail.r) / size;
+      const scale = isHidden ? 0 : (scaleMultiplier * node.r) / size;
       const x = node.x / size;
       const y = node.y / size;
       const z = isHovered ? scale : 0;
@@ -141,12 +148,16 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         console.log(`Missing cocktail ingredients for ${node.cocktail}`);
       }
 
+      const cocktailScale = node.r / cocktail.r;
+      const ingredientScaleMultiplier = cocktailScale * scaleMultiplier;
       cocktail.children.forEach(ingredient => {
         if (!ingredientMeshRef.current) return;
 
-        const ingredientScale = isHidden ? 0 : (scaleMultiplier * ingredient.r) / size;
-        const ingredientX = x + (ingredient.x - ingredient.parent.x) / (size / scaleMultiplier);
-        const ingredientY = y + (ingredient.y - ingredient.parent.y) / (size / scaleMultiplier);
+        const ingredientScale = isHidden ? 0 : (ingredientScaleMultiplier * ingredient.r) / size;
+        const ingredientX =
+          x + (ingredient.x - ingredient.parent.x) / (size / ingredientScaleMultiplier);
+        const ingredientY =
+          y + (ingredient.y - ingredient.parent.y) / (size / ingredientScaleMultiplier);
         const ingredientZ = z;
 
         tempObject.position.set(
@@ -190,8 +201,10 @@ export default function CocktailLayout({ pack, lookup }: CocktailLayoutProps) {
         args={[null, null, cocktailCount]} // [geometry, material, count]
         onPointerOver={e => {
           e.stopPropagation(); // don't trigger hover on other cocktails
-          setHoveredIndex(e.instanceId);
-          console.log(lookup[pack.children[e.instanceId].data.name].children.map(i => i.data));
+          const index = e.instanceId;
+          const isSelected =
+            selectedCocktail && pack.children?.[index]?.data?.name === selectedCocktail?.data?.name;
+          if (!isSelected) setHoveredIndex(e.instanceId);
         }}
         onPointerOut={e => {
           e.stopPropagation(); // don't trigger hover on other cocktails

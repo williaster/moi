@@ -27,8 +27,6 @@ export default function SelectedCocktail({ lookup, distance }: SelectedCocktailP
     const cocktailDistances = distance[selectedCocktail.data.name];
     const top20 = Object.entries(cocktailDistances)
       .sort((a, b) => a[1] - b[1])
-
-      //
       .filter(
         ([name, distance], i) =>
           name !== selectedCocktail.data.name &&
