@@ -1,4 +1,5 @@
 import { scaleOrdinal } from '@visx/scale';
+import * as THREE from 'three';
 
 export const text = '#fff';
 export const purple = '#9D7EE3';
@@ -217,4 +218,17 @@ const categoryColorPairs = [
 export const categoryColorScale = scaleOrdinal({
   domain: categoryColorPairs.map(([name]) => name),
   range: categoryColorPairs.map(([, color]) => color),
+}).unknown('#222');
+
+const tempColor = new THREE.Color();
+
+export const categoryColorScaleDark = scaleOrdinal({
+  domain: categoryColorPairs.map(([name]) => name),
+  range: categoryColorPairs.map(
+    ([, color]) =>
+      `#${tempColor
+        .set(color)
+        .offsetHSL(0, 0, -0.1)
+        .getHexString()}`,
+  ),
 }).unknown('#222');

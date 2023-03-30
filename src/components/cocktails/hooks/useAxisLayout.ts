@@ -34,6 +34,7 @@ interface AxisLayoutOptions {
   pack: ReturnType<typeof getCocktailPack>;
   lookup: ReturnType<typeof getCocktailLookup>;
   relatedCocktails: ReturnType<typeof getRelatedCocktails>;
+  ringRadius: number;
 }
 
 interface CocktailXY {
@@ -43,10 +44,15 @@ interface CocktailXY {
   y: number;
   r: number;
   coords: AxisCoord[];
-  isMarker?: boolean;
+  theta?: number;
 }
 
-export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLayoutOptions) {
+export default function useAxisLayout({
+  pack,
+  lookup,
+  relatedCocktails,
+  ringRadius: distanceRingRadius,
+}: AxisLayoutOptions) {
   const layoutInProgress = useRef(false);
   const {
     size: { width, height },
@@ -127,31 +133,14 @@ export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLa
   const selectedCocktailLayout = useMemo(() => {
     if (!selectedCocktail) return null;
 
-    // invert relatedCocktails
-    // { distance: { cocktails } } => { cocktail: distance }
-    const cocktailToDistance = Object.keys(relatedCocktails).reduce((result, distance) => {
-      const cocktailsAtDistance = Object.keys(relatedCocktails[distance]).reduce(
-        (res, cocktail) => {
-          res[cocktail] = distance;
-          return res;
-        },
-        {},
-      );
-
-      return {
-        ...result,
-        ...cocktailsAtDistance,
-      };
-    }, {} as { [cocktail: string]: number });
-
     layoutInProgress.current = false;
 
-    const distanceRingRadius = 0.35; // @TODO should account for available height
     const distances = Object.keys(relatedCocktails);
     const ringCount = distances.length;
+    let minCocktailSize = Infinity;
 
     const relatedCocktailPositions = Object.entries(relatedCocktails).reduce(
-      (result, [distance, cocktails], i) => {
+      (result, [, cocktails], i) => {
         const cocktailCount = Object.keys(cocktails).length;
         const thetaStep = Math.PI / cocktailCount;
 
@@ -163,14 +152,16 @@ export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLa
         Object.entries(cocktails).forEach(([name, cocktail], j) => {
           // @TODO build out from center not around the ring
           const theta = -Math.PI * 0.5 + thetaStep * (j + 0.5);
-          // const radiusMultiple = 30 * cocktailSize;
+          const r = cocktailSize * size * distanceRingRadius;
+          minCocktailSize = Math.min(minCocktailSize, r);
 
           result[name] = {
             coords: [],
             x: ringRadius * Math.cos(theta) * size,
             y: ringRadius + -ringRadius * Math.sin(theta) * size,
-            r: cocktailSize * size * 0.4,
+            r,
             cocktail: cocktail.data.name,
+            theta,
             color: '#222',
           };
         });
@@ -182,6 +173,7 @@ export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLa
 
     const nodes = layout.nodes().map(node => {
       const cocktailName = node.cocktail;
+      if (cocktailName.startsWith('6th street')) debugger;
       // hidden cocktail
       if (lookup[cocktailName].data.hidden)
         return {
@@ -194,7 +186,7 @@ export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLa
           ...node,
           x: -0.3 * size,
           y: 0,
-          r: lookup[node.cocktail].r * 5,
+          r: lookup[node.cocktail].r * 13,
         };
       }
       // related cocktail
@@ -203,38 +195,9 @@ export default function useAxisLayout({ pack, lookup, relatedCocktails }: AxisLa
         ...relatedCocktailPositions[cocktailName],
         color: node.color,
         coords: node.coords,
+        r: selectedCocktail == null ? node.r : minCocktailSize, // make all consistent.
       };
     });
-
-    // [
-    //   {
-    //     cocktail: selectedCocktail.data.name,
-    //     color: 'yellow',
-    //     x: -0.5,
-    //     y: 0,
-    //   },
-    //   ...Object.entries(nearestCocktails).flatMap(([distance, cocktails], i) => {
-    //     const cocktailCount = Object.keys(cocktails).length;
-    //     const thetaStep = Math.PI / cocktailCount;
-    //     // increase ring size as distance grows (generally will have more cocktails further out)
-    //     const ringRadius = distanceRingRadius * ((i + 1) / ringCount);
-    //     const ringLength = Math.PI * ringRadius; // half a circle
-    //     const cocktailSize = Math.min(0.1, 0.9 * (ringLength / cocktailCount));
-
-    //     return Object.entries(cocktails).map(([name, cocktail], j) => {
-    //       // @TODO build out from center not around the ring
-    //       const theta = -Math.PI * 0.5 + thetaStep * (j + 0.5);
-    //       const radiusMultiple = 30 * cocktailSize;
-
-    //       return {
-    //         x: ringRadius * Math.cos(theta) * size,
-    //         y: ringRadius + -ringRadius * Math.sin(theta) * size,
-    //         cocktail: cocktail.data.name,
-    //         color: 'yellow',
-    //       };
-    //     });
-    //   }),
-    // ];
 
     return {
       nodes: () => nodes,

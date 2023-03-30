@@ -7,11 +7,13 @@ import getCocktailPack from './parsers/getCocktailPack';
 import getCocktailLookup from './parsers/getCocktailLookup';
 import useAxisLayout from './hooks/useAxisLayout';
 import BalanceAxes from './BalanceAxes';
-import { categoryColorScale, ingredientColorScale } from './colors';
+import { categoryColorScale, categoryColorScaleDark, ingredientColorScale } from './colors';
 import Text from '../fry-universe/Text';
 import useStore from './appStore';
 import getCocktailEditDistance from './parsers/getCocktailEditDistance';
 import getRelatedCocktails from './parsers/getRelatedCocktails';
+import HalfCircle from './HalfCircle';
+import { Html } from '@react-three/drei';
 
 interface CocktailLayoutProps {
   pack: ReturnType<typeof getCocktailPack>;
@@ -32,19 +34,27 @@ const getScaleFromMatrix = (matrix: number[], offset: number) => [
 ];
 
 const INGREDIENT_LABEL_SCALE = 0.15;
+const DISTANCE_RING_RADIUS = 0.35;
 
 export default function CocktailLayout({ pack, lookup, relatedCocktails }: CocktailLayoutProps) {
-  // refs + constants
+  // constants
   const {
     size: { width, height },
   } = useThree();
   const size = Math.min(width, height);
-  const cocktailMeshRef = useRef<THREE.Mesh>();
-  const ingredientMeshRef = useRef<THREE.Mesh>();
+  const relatedCocktailRingCount = Object.keys(relatedCocktails).length;
+
+  // helper objects
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempPosition = useMemo(() => new THREE.Vector3(), []);
   const tempScale = useMemo(() => new THREE.Vector3(), []);
-  const tempColor = useMemo(() => new THREE.Color('purple'), []);
+  const tempColor = useMemo(() => new THREE.Color(), []);
+
+  // refs
+  const cocktailMeshRef = useRef<THREE.Mesh>();
+  const ingredientMeshRef = useRef<THREE.Mesh>();
+  const hoveredCocktailTextRef = useRef<THREE.Group>();
+  const relatedCocktailsTextRef = useRef<THREE.Group>();
 
   // state
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -52,17 +62,22 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
   useEffect(() => setHoveredIndex(null), [selectedCocktail]);
 
   // layout
-  const layout = useAxisLayout({ pack, lookup, relatedCocktails });
+  const layout = useAxisLayout({
+    pack,
+    lookup,
+    relatedCocktails,
+    ringRadius: DISTANCE_RING_RADIUS,
+  });
 
   // counts
   const cocktailCount = layout.nodes().length;
-
   const ingredientCount = useMemo(
     () =>
       layout.nodes().reduce((sum, node) => sum + (lookup[node.cocktail]?.children?.length ?? 0), 0),
     [layout, lookup],
   );
 
+  // colors arrays (these are used for color in instance meshes)
   const cocktailColors = useMemo(
     () =>
       Float32Array.from(
@@ -96,19 +111,19 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
     [layout, lookup, tempColor],
   );
 
-  const cocktailTextRef = useRef<THREE.Group>();
-
-  // update per frame
+  // imperative updates per frame
   useFrame(() => {
     let currIngredientIndex = 0;
 
     layout.nodes().forEach((node, i) => {
       if (!cocktailMeshRef.current) return;
+
       const isHovered = i === hoveredIndex;
       const scaleMultiplier = isHovered ? 5 : 1;
       const cocktail = lookup[node.cocktail];
       const isHidden = cocktail?.data.hidden;
 
+      // shouldn't happen
       if (!cocktail) {
         console.log(`Missing cocktail ${node.cocktail}`);
         return;
@@ -123,7 +138,7 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
         ...getScaleFromMatrix(cocktailMeshRef.current.instanceMatrix.array, i * itemSize),
       );
 
-      // computed based on the latest layout
+      // computed cocktail coords based on the latest layout
       const scale = isHidden ? 0 : (scaleMultiplier * node.r) / size;
       const x = node.x / size;
       const y = node.y / size;
@@ -138,9 +153,9 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
 
       cocktailMeshRef.current.setMatrixAt(i, tempObject.matrix);
 
-      if (isHovered && cocktailTextRef.current) {
-        cocktailTextRef.current.position.set(x, y + scale * 1.1, scale * 2);
-        cocktailTextRef.current.scale.set(scale, scale, scale);
+      if (isHovered && hoveredCocktailTextRef.current) {
+        hoveredCocktailTextRef.current.position.set(x, y + scale * 1.1, scale * 2);
+        hoveredCocktailTextRef.current.scale.set(scale, scale, scale);
       }
 
       // update ingredient circles
@@ -192,9 +207,91 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
 
   return (
     <>
-      <BalanceAxes radius={size * 0.7} />
+      {/** axes for all-cocktails + single cocktails */}
+      {selectedCocktail ? (
+        Object.keys(relatedCocktails).map((distance, i) => {
+          const ringRadius = DISTANCE_RING_RADIUS * ((i + 1) / relatedCocktailRingCount);
+          return (
+            <React.Fragment key={distance}>
+              <HalfCircle
+                // start={0}
+                // total={2 * Math.PI}
+                radius={ringRadius}
+              />
 
-      {/** cocktails */}
+              <mesh position={[0, ringRadius, 0]}>
+                <circleGeometry args={[0.001, 0]} />
+                <meshBasicMaterial transparent opacity={0} />
+                <Html
+                  style={{
+                    pointerEvents: 'none',
+                    fontSize: 20,
+                    whiteSpace: 'nowrap',
+                    color: '#222',
+                    transform: `translate(-110%, -50%)`,
+                  }}
+                >
+                  {Number(distance) === 0 ? 'Same ingredients' : `±${distance} ingredients`}
+                </Html>
+              </mesh>
+            </React.Fragment>
+          );
+        })
+      ) : (
+        <BalanceAxes radius={size * 0.4} />
+      )}
+
+      {/** text labels for related cocktails and selected cocktails */}
+      {selectedCocktail && (
+        <>
+          {layout.nodes().map(node =>
+            // hidden
+            node.r === 0 ? null : node.cocktail === selectedCocktail.data.name ? (
+              // selected cocktail, render ingredients
+              <group position={[(node.x - node.r) / size, (node.y - 1.1 * node.r) / size, 0]}>
+                {selectedCocktail.children
+                  .sort((a, b) => b.data.quantity - a.data.quantity)
+                  .map((ingredient, i) => (
+                    <group key={i} position={[0.05, -i * 0.02, 0]}>
+                      <Text
+                        color={categoryColorScaleDark(ingredient.data.category)}
+                        scale={0.02}
+                        anchorX="right"
+                      >
+                        {ingredient.data.quantity}oz
+                      </Text>
+                      <Text
+                        position={[0.01, 0, 0]}
+                        color={categoryColorScaleDark(ingredient.data.category)}
+                        scale={0.02}
+                        anchorX="left"
+                      >
+                        {ingredient.data.verbose_ingredient}
+                      </Text>
+                    </group>
+                  ))}
+              </group>
+            ) : (
+              // related, just render name
+              <Text
+                key={node.cocktail}
+                position={[
+                  (node.x + 1.5 * Math.cos(node.theta) * node.r) / size,
+                  (node.y + -1.5 * Math.sin(node.theta) * node.r) / size,
+                  0,
+                ]}
+                scale={Math.min(0.01, node.r / size)}
+                anchorX="left"
+                rotation={[0, 0, -Math.sin(node.theta) * Math.PI * 0.25]}
+              >
+                {node.cocktail}
+              </Text>
+            ),
+          )}
+        </>
+      )}
+
+      {/** cocktails instance mesh */}
       <instancedMesh
         key={cocktailCount}
         ref={cocktailMeshRef}
@@ -225,7 +322,7 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
         <meshBasicMaterial side={THREE.BackSide} vertexColors={THREE.VertexColors} />
       </instancedMesh>
 
-      {/** ingredients */}
+      {/** ingredients instance mesh */}
       <instancedMesh
         ref={ingredientMeshRef}
         args={[null, null, ingredientCount]} // [geometry, material, count]
@@ -242,17 +339,19 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
       {/** text labels for hoveredIndex instances */}
       {hoveredIndex != null && (
         // Cocktail text label
-        <group ref={cocktailTextRef}>
-          <Text
-            scale={0.5}
-            outlineWidth={0.1}
-            outlineColor="#ffffff"
-            anchorX="center"
-            anchorY="middle"
-            textAlign="center"
-          >
-            {pack.children[hoveredIndex].data.name}
-          </Text>
+        <group ref={hoveredCocktailTextRef}>
+          {!selectedCocktail && (
+            <Text
+              scale={0.5}
+              outlineWidth={0.1}
+              outlineColor="#ffffff"
+              anchorX="center"
+              anchorY="middle"
+              textAlign="center"
+            >
+              {pack.children[hoveredIndex].data.name}
+            </Text>
+          )}
 
           {/** ingredient labels */}
           {pack.children[hoveredIndex].children.map((ingredient, i) => (
@@ -270,7 +369,9 @@ export default function CocktailLayout({ pack, lookup, relatedCocktails }: Cockt
               outlineWidth={0.1}
               outlineColor={categoryColorScale(ingredient.data.category)}
             >
-              {ingredient.data.simple_ingredient}
+              {ingredient.data.simple_ingredient === 'fruit'
+                ? ingredient.data.ingredient
+                : ingredient.data.simple_ingredient}
             </Text>
           ))}
         </group>
